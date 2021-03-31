@@ -1,0 +1,40 @@
+{
+	"name": "espack",
+	"author": "Szabolcs Csizmadia",
+	"version": "0.0.1",
+	"private": true,
+	"bin": {
+		"build": "dist/execute-build.js"
+	},
+	"scripts": {
+		"build": "ts-node ./src/execute-build.ts --profile prod",
+		"build:dev": "ts-node ./src/execute-build.ts --profile dev",
+		"build:dev:watch": "ts-node ./src/execute-build.ts --profile dev --watch",
+		"lint": "eslint && tsc --noEmit && prettier --check src",
+		"lint:tsc": "tsc --noEmit",
+		"lint:fix": "eslint --fix && prettier --write src"
+	},
+	"dependencies": {
+		"esbuild": "0.8.54",
+		"jsonschema": "1.4.0"
+	},
+	"peerDependencies": {
+		"html-minifier": "4.0.0",
+		"sass": "1.32.8"
+	},
+	"devDependencies": {
+		"html-minifier": "4.0.0",
+		"sass": "1.32.8",
+		"@types/html-minifier": "4.0.0",
+		"@types/node-sass": "4.11.1",
+		"@typescript-eslint/eslint-plugin": "4.16.1",
+		"@typescript-eslint/parser": "4.16.1",
+		"eslint": "7.21.0",
+		"eslint-config-airbnb-base": "14.2.1",
+		"eslint-config-prettier": "8.1.0",
+		"eslint-plugin-import": "^2.22.1",
+		"prettier": "2.2.1",
+		"ts-node": "9.1.1",
+		"typescript": "4.2.3"
+	}
+}

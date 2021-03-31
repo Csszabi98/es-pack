@@ -1,0 +1,23 @@
+{
+	"clientBuilds": [],
+	"regularBuilds": [
+		{
+			"defaultBuildProfiles": {
+				"dev": {
+					"platform": "node",
+					"format": "cjs"
+				},
+				"prod": {
+					"minify": false,
+					"platform": "node",
+					"format": "cjs"
+				}
+			},
+			"scripts": [
+				{
+					"src": "./src/execute-build.ts"
+				}
+			]
+		}
+	]
+}
