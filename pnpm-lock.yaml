@@ -1,11 +1,11 @@
 dependencies:
-  esbuild: 0.8.54
   jsonschema: 1.4.0
 devDependencies:
   '@types/html-minifier': 4.0.0
   '@types/node-sass': 4.11.1
   '@typescript-eslint/eslint-plugin': 4.16.1_db289a69270a1846aefbe377c7369d6d
   '@typescript-eslint/parser': 4.16.1_eslint@7.21.0+typescript@4.2.3
+  esbuild: 0.8.54
   eslint: 7.21.0
   eslint-config-airbnb-base: 14.2.1_7c15dd0cfa14fe651ab374dc3d7ac180
   eslint-config-prettier: 8.1.0_eslint@7.21.0
@@ -597,7 +597,7 @@ packages:
     resolution:
       integrity: sha512-QCOllgZJtaUo9miYBcLChTUaHNjJF3PYs1VidD7AwiEj1kYxKeQTctLAezAOH5ZKRH0g2IgPn6KwB4IT8iRpvA==
   /esbuild/0.8.54:
-    dev: false
+    dev: true
     hasBin: true
     requiresBuild: true
     resolution:

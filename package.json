@@ -15,14 +15,15 @@
 		"lint:fix": "eslint --fix && prettier --write src"
 	},
 	"dependencies": {
-		"esbuild": "0.8.54",
 		"jsonschema": "1.4.0"
 	},
 	"peerDependencies": {
+		"esbuild": "0.8.54",
 		"html-minifier": "4.0.0",
 		"sass": "1.32.8"
 	},
 	"devDependencies": {
+		"esbuild": "0.8.54",
 		"html-minifier": "4.0.0",
 		"sass": "1.32.8",
 		"@types/html-minifier": "4.0.0",
