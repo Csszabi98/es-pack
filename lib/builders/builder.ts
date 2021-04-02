@@ -1,4 +1,4 @@
-import { Cleanup, RegularBuild } from '../build.model';
+import { Cleanup, RegularBuild } from '../build/build.model';
 import { buildScripts } from './builder.helpers';
 import { checkScripts, copyAssets } from './utils/asset.utils';
 import { checkResources, watchResources } from './utils/resource.utils';

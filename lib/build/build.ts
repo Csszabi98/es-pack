@@ -1,7 +1,7 @@
 import { Builds, Cleanup } from './build.model';
-import { builder } from './builders/builder';
-import { clientBuilder } from './builders/client-builder';
-import { checkAllResourcesAreUnique } from './builders/utils/resource.utils';
+import { builder } from '../builders/builder';
+import { clientBuilder } from '../builders/client-builder';
+import { checkAllResourcesAreUnique } from '../builders/utils/resource.utils';
 
 export interface BuildProps {
 	builds: Builds;

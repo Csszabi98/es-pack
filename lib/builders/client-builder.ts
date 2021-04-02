@@ -1,4 +1,4 @@
-import { ClientBuild, Cleanup } from '../build.model';
+import { ClientBuild, Cleanup } from '../build/build.model';
 import { buildScripts } from './builder.helpers';
 import { checkScripts, copyAssets } from './utils/asset.utils';
 import { getAssetFileName } from './utils/get-asset-filename';

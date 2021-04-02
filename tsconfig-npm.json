@@ -1,0 +1,9 @@
+{
+	"extends": "./tsconfig",
+	"compilerOptions": {
+		"emitDeclarationOnly": true,
+		"isolatedModules": false,
+		"declaration": true
+	},
+	"include": ["./lib/index.ts"]
+}

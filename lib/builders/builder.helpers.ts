@@ -1,11 +1,11 @@
 import { build as esbuilder, Plugin, BuildOptions } from 'esbuild';
 import { deepStrictEqual } from 'assert';
 import fs from 'fs';
-import { DeterministicEntryAsset, EntryAsset, BuildProfiles, ImportFormat } from '../build.model';
+import { DeterministicEntryAsset, EntryAsset, BuildProfiles, ImportFormat } from '../build/build.model';
 import { BuildResult, CommonBuild } from './builder.model';
 import { createDeterministicEntryAsset } from './utils/asset.utils';
 import { mapEnvironmentVariables, defaultBuildOptionsFactory } from './utils/build.utils';
-import { BUILD_ENCODING } from '../build.constants';
+import { BUILD_ENCODING } from '../build/build.constants';
 import { getAssetFileName } from './utils/get-asset-filename';
 
 export const createBuilds = (
@@ -14,9 +14,6 @@ export const createBuilds = (
 	external: string[] | undefined
 ): Promise<BuildResult>[] => {
 	try {
-		const names = scripts.map(script => getAssetFileName(script.src));
-		names.forEach(console.log);
-
 		const builds = scripts.reduce<CommonBuild[]>((acc, curr) => {
 			const commonBuild = acc.find(build => deepStrictEqual(curr.buildProfile, build.buildProfile));
 			return commonBuild
@@ -95,9 +92,8 @@ export const groupBuilds = (
 	const standardBuilds = deterministicScripts.filter(script => !script.buildProfile.compat);
 
 	if (standardBuilds.length) {
-		console.log('Running in regular mode for files:');
+		console.log('Building scripts with the following profiles:');
 		standardBuilds.forEach(build => console.log(build));
-		console.log('Transpiling them to ES6!');
 	}
 
 	return standardBuilds;
@@ -125,8 +121,6 @@ export const buildScripts = async (
 		fs.readFileSync('package.json', BUILD_ENCODING)
 	);
 	const external = peerDependencies && Object.keys(peerDependencies);
-
-	console.log('Building scripts:');
 
 	return await Promise.all(createBuilds(compatBuilds, defaultBuildOptions, external));
 };

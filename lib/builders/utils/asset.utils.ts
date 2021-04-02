@@ -5,7 +5,7 @@ import {
 	OUTPUT_DIR,
 	ENTRY_POINT_NOT_EXISTS_ERROR_MESSAGE,
 	NON_EXISTENT_ENTRY_POINTS_ANNOUNCEMENT_MESSAGE,
-} from '../../build.constants';
+} from '../../build/build.constants';
 import {
 	EntryAsset,
 	DefaultBuildProfiles,
@@ -13,10 +13,10 @@ import {
 	DeterministicEntryAsset,
 	StringToDefaultBuildProfiles,
 	ImportFormat,
-} from '../../build.model';
+} from '../../build/build.model';
 import { checkAssetsExist } from './check-assets-exist';
-import { isEntryPoint } from './is-entry-points';
 import { getAssetFileName } from './get-asset-filename';
+import { isFile, FileExtensions } from '../../utils/is-file';
 
 export const createDeterministicEntryAsset = (
 	script: EntryAsset,
@@ -70,7 +70,13 @@ export const copyAssets = async (assets: string[]): Promise<void> => {
 };
 
 export const checkScripts = (entries: EntryAsset[]): Promise<void> => {
-	const nonEntryPoints = entries.filter(entryPoint => !isEntryPoint(entryPoint.src));
+	const allowedEntryPointExtensions = [
+		FileExtensions.JAVASCRIPT,
+		FileExtensions.TYPESCRIPT,
+		FileExtensions.JSX,
+		FileExtensions.TSX,
+	];
+	const nonEntryPoints = entries.filter(entryPoint => !isFile(entryPoint.src, ...allowedEntryPointExtensions));
 	if (nonEntryPoints.length) {
 		console.error('Some of your provided entry points have incorrect extensions:');
 		nonEntryPoints.forEach(console.log);

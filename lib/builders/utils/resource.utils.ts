@@ -3,8 +3,8 @@ import {
 	ENTRY_POINT_NOT_EXISTS_ERROR_MESSAGE,
 	NON_EXISTENT_ENTRY_POINTS_ANNOUNCEMENT_MESSAGE,
 	BUILD_ENCODING,
-} from '../../build.constants';
-import { Cleanup, Builds, EntryAsset } from '../../build.model';
+} from '../../build/build.constants';
+import { Cleanup, Builds, EntryAsset } from '../../build/build.model';
 import { checkAssetsExist } from './check-assets-exist';
 import { getOutputAsset } from './asset.utils';
 

@@ -1,4 +1,4 @@
-import { EntryAsset, EntryAssetTransformations } from '../build.model';
+import { EntryAsset, EntryAssetTransformations } from '../build/build.model';
 import esbuild from 'esbuild';
 
 export type CommonEntryAsset = Omit<EntryAsset, 'buildProfiles'>;

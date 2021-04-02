@@ -13,7 +13,7 @@ export const mapEnvironmentVariables = (environmentVariables: Record<string, str
 
 export const defaultBuildOptionsFactory = (watch: boolean): esbuild.BuildOptions => ({
 	watch,
-	target: ['chrome58', 'firefox57', 'safari11', 'edge16'],
+	target: ['chrome58', 'firefox57', 'safari11', 'edge16', 'node10'],
 	outdir: 'dist',
 	loader: {
 		'.ts': 'ts',
