@@ -30,12 +30,11 @@ module.exports = {
         'max-lines': ['error', 250],
         'max-len': ['error', { code: 125 }],
         'eol-last': ['error', 'always'],
+        'no-unused-vars': 'off',
+        'consistent-return': 'off',
         'unused-imports/no-unused-imports': 'error',
         'unused-imports/no-unused-imports-ts': 'error',
-        'unused-imports/no-unused-vars': [
-            'warn',
-            { vars: 'all', varsIgnorePattern: '^_', args: 'after-used', argsIgnorePattern: '^_' },
-        ],
+        'unused-imports/no-unused-vars': 'off',
         'node/no-unsupported-features/es-syntax': ['error', { ignores: ['modules'] }],
         'node/no-missing-import': 'off',
         'import/extensions': [

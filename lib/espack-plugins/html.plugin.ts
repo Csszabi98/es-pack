@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { minify as transformHtml } from 'html-minifier';
-import { BUILD_ENCODING } from '../../build/build.constants';
-import { getOutputAsset } from './asset.utils';
+import { BUILD_ENCODING } from '../build/build.constants';
+import { getOutputAsset } from '../utils/asset.utils';
 
 export const loadHtml = (htmlAsset: string, minify: boolean): Promise<string> =>
     new Promise((resolve, reject) => {
@@ -10,9 +10,9 @@ export const loadHtml = (htmlAsset: string, minify: boolean): Promise<string> =>
                 return reject(err);
             }
 
-            let result = data;
+            let result = data.toString();
             if (minify) {
-                result = transformHtml(data, {
+                result = transformHtml(result, {
                     removeComments: true,
                     collapseWhitespace: true,
                 });
@@ -22,7 +22,13 @@ export const loadHtml = (htmlAsset: string, minify: boolean): Promise<string> =>
         });
     });
 
-export const injectAndWriteHtml = (htmlName: string, html: string, scripts: string[], styles: string[]): Promise<void> => {
+export const injectAndWriteHtml = (
+    htmlName: string,
+    html: string,
+    outdir: string,
+    scripts: string[],
+    styles: string[]
+): Promise<void> => {
     let bundledHtml = html;
     bundledHtml = bundledHtml.replace(
         '</head>',
@@ -34,7 +40,7 @@ export const injectAndWriteHtml = (htmlName: string, html: string, scripts: stri
     );
 
     // TODO: Add build hashes
-    return fs.promises.writeFile(getOutputAsset(htmlName), bundledHtml, {
+    return fs.promises.writeFile(getOutputAsset(htmlName, outdir), bundledHtml, {
         encoding: BUILD_ENCODING,
     });
 };

@@ -2,7 +2,7 @@ import { Plugin } from 'esbuild';
 import sass from 'sass';
 import path from 'path';
 
-export const sassPlugin: () => Plugin = () => ({
+export const sassPlugin = (): Plugin => ({
     name: 'sass',
     setup(build) {
         build.onResolve({ filter: /\.scss$/ }, args => ({

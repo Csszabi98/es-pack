@@ -1,3 +1,6 @@
+import * as esbuild from 'esbuild';
+import type { EspackPlugin } from './build.plugin';
+
 export enum Asset {
     HTML = 'html',
     CSS = 'css',
@@ -22,22 +25,41 @@ export enum ImportFormat {
     ESM = 'esm',
 }
 
-export interface EntryAssetTransformations {
-    minify: boolean;
-    sourcemap: boolean;
-    bundle: boolean;
-    platform: Platforms;
-    format: ImportFormat;
-    codeSplitting: boolean;
-    environmentVariables?: Record<string, string>;
-    preact?: PreactBuildType;
-    [key: string]: boolean | string | Record<string, string> | undefined | PreactBuildType | ImportFormat;
+// TODO: Sanizize input for exlcuded values
+type OptionalEntryAssetTransformations = Omit<esbuild.BuildOptions, 'watch' | 'entryPoints' | 'write' | 'outfile' | 'stdin'>;
+
+type RequiredEntryAssetTransformations = {
+    [Key in keyof OptionalEntryAssetTransformations]-?: OptionalEntryAssetTransformations[Key];
+};
+
+type OmmitedEntryAssetTransformations =
+    | 'footer'
+    | 'metafile'
+    | 'banner'
+    | 'outbase'
+    | 'outdir'
+    | 'nodePaths'
+    | 'outExtension'
+    | 'nodePaths'
+    | 'publicPath'
+    | 'chunkNames'
+    | 'inject'
+    | 'pure';
+
+export interface EspackOptions {
+    excludePeerDependencies: boolean;
+    buildsDir: string;
 }
+
+export interface EntryAssetTransformations
+    extends Omit<RequiredEntryAssetTransformations, OmmitedEntryAssetTransformations>,
+        Pick<OptionalEntryAssetTransformations, OmmitedEntryAssetTransformations>,
+        EspackOptions {}
 
 export type BuildProfiles = Record<string, Partial<EntryAssetTransformations> | undefined>;
 
 export enum DefaultBuildProfiles {
-    DEV = 'dev',
+    DEV = 'development',
     PROD = 'production',
 }
 
@@ -48,21 +70,13 @@ export const StringToDefaultBuildProfiles: StringToDefaultBuildProfilesType = {
 };
 
 export type DefaultEntryAssetTransformations = {
-    [k in DefaultBuildProfiles]: EntryAssetTransformations;
+    [Key in DefaultBuildProfiles]: EntryAssetTransformations;
 };
 
-export type PreactBuildType = { development: boolean };
-
-export interface RegularBuild {
-    defaultBuildProfiles?: BuildProfiles;
+export interface Build {
+    buildProfiles?: BuildProfiles;
+    plugins?: EspackPlugin[];
     scripts: EntryAsset[];
-    copyResources?: string[];
-}
-
-export interface ClientBuild extends RegularBuild {
-    html: string;
-    minifyHtml?: boolean;
-    styles?: string[];
 }
 
 export interface EntryAsset {
@@ -70,15 +84,52 @@ export interface EntryAsset {
     buildProfiles?: BuildProfiles;
 }
 
+export type CommonEntryAsset = Omit<EntryAsset, 'buildProfiles'>;
+export type CommonBuild = {
+    buildProfile: BuildProfile;
+    espackBuildProfile: EspackOptions;
+    builds: CommonEntryAsset[];
+};
+export type BuildResult = {
+    build: CommonBuild;
+    buildResult: esbuild.BuildResult;
+};
+
 export interface Builds {
-    clientBuilds: ClientBuild[];
-    regularBuilds: RegularBuild[];
+    defaultBuildProfiles?: BuildProfiles;
+    defaultPlugins?: EspackPlugin[];
+    builds: Build[];
+}
+
+export type BuildProfile = Omit<EntryAssetTransformations, 'excludePeerDependencies' | 'buildsDir'> & {
+    watch: boolean;
+    outdir: string;
+};
+
+export interface Profiles {
+    espackBuildProfile: EspackOptions;
+    buildProfile: BuildProfile;
+}
+
+export interface IncompleteProfiles {
+    espackBuildProfile: Partial<EspackOptions>;
+    buildProfile: Partial<BuildProfile>;
 }
 
 // EntryAsset with a determined buildOption to use
-export interface DeterministicEntryAsset {
+export interface DeterministicEntryAsset extends Profiles {
     src: string;
-    buildProfile: EntryAssetTransformations;
 }
 
 export type Cleanup = { stop: () => void };
+
+/*
+    Outdir by default is BaseDir, if there is more than one build present, 
+    the outdir is then being prefixed by the BaseDir with the outDir option from under the build
+    (if provided), or a generated one (build-1, 2, 3...).
+
+    EntryPoint paths must be unique under each outdir (or baseDir if the outdir is the baseDir)
+
+    If future build hashes are enabled, then this check is skipped for the assets which the option
+    is enabled for.
+*/

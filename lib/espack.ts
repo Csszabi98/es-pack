@@ -1,8 +1,8 @@
 import fs from 'fs';
 import Vm from 'vm';
 import { Builds, Cleanup } from './build/build.model';
-import { build } from './build/build';
-import { getArgument } from './builders/utils/get-argument';
+import { builder } from './builder/builder';
+import { getArgument } from './utils/get-argument';
 import { buildsSchema } from './validation/build.validator';
 import { isFile, FileExtensions } from './utils/is-file';
 import { buildConfig } from './utils/build-config';
@@ -38,19 +38,23 @@ export const espack = async (): Promise<Cleanup[] | null> => {
         exports: configExports,
     });
 
-    const builds = configExports.default;
-    if (!builds) {
+    const espackConfig = configExports.default;
+    if (!espackConfig) {
         throw new Error(`Missing default export from config ${configPath}!`);
     }
 
-    const validation = buildsSchema.validate(builds);
+    const validation = buildsSchema.validate(espackConfig);
     if (validation.error) {
         console.error('The provided config is invalid!');
         console.error(validation.error);
         throw new Error('Could not validate config file!');
     }
 
-    const buildResult = await build({ builds, watch }, profile);
+    const buildResult = await Promise.all(
+        espackConfig.builds.map(build =>
+            builder(espackConfig.defaultBuildProfiles, espackConfig.defaultPlugins, build, watch, profile)
+        )
+    );
 
     return buildResult;
 };
