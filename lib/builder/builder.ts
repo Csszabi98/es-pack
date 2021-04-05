@@ -15,7 +15,8 @@ export const builder = async (
     defaultPlugins: EspackPlugin[] | undefined,
     { scripts, buildProfiles, plugins }: Build,
     watch: boolean,
-    buildProfile: string | undefined
+    buildProfile: string | undefined,
+    singleBuildMode: boolean
 ): Promise<Cleanup> => {
     const allPlugins = [...(defaultPlugins || []), ...(plugins || [])];
 
@@ -43,7 +44,14 @@ export const builder = async (
     afterResourceCheckPlugins.forEach(plugin => plugin.afterResourceCheck(basePluginContext));
 
     // Before build
-    const buildReadyScripts = createBuildReadyScripts(scripts, buildProfile, defaultBuildProfiles, buildProfiles, watch);
+    const buildReadyScripts = createBuildReadyScripts(
+        scripts,
+        buildProfile,
+        defaultBuildProfiles,
+        buildProfiles,
+        watch,
+        singleBuildMode
+    );
     const buildReadyPluginContext: BuildReadyPluginContext = { ...basePluginContext, buildReadyScripts };
 
     const beforeBuildPlugins = getPluginsForLifecycle(allPlugins, BuildLifecycles.BEFORE_BUILD);

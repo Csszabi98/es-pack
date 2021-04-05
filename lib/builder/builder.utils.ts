@@ -67,7 +67,7 @@ interface CreateBuildableScriptProps {
     script: EntryAsset;
     watch: boolean;
     peerDependencies: string[];
-    numberOfBuilds: number;
+    singleBuildMode: boolean;
     currentBuildIndex: number;
     buildProfile?: string;
     defaultBuildProfiles?: BuildProfiles;
@@ -78,7 +78,7 @@ export const createBuildableScript = ({
     script,
     watch,
     peerDependencies,
-    numberOfBuilds,
+    singleBuildMode,
     currentBuildIndex,
     buildProfile = DefaultBuildProfiles.PROD,
     defaultBuildProfiles,
@@ -122,9 +122,15 @@ export const createBuildableScript = ({
 
         result.buildProfile.define = mapEnvironmentVariables(result.buildProfile.define);
 
-        if (numberOfBuilds > 1 && result.buildProfile.outdir === result.espackBuildProfile.buildsDir) {
+        if (!singleBuildMode && result.buildProfile.outdir === result.espackBuildProfile.buildsDir) {
             const outdir = path.join(result.espackBuildProfile.buildsDir, `build_${currentBuildIndex}`);
             result.buildProfile.outdir = outdir;
+        }
+
+        if (!result.buildProfile.minify) {
+            result.buildProfile.minifyIdentifiers = false;
+            result.buildProfile.minifySyntax = false;
+            result.buildProfile.minifyWhitespace = false;
         }
 
         return result;

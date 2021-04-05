@@ -52,7 +52,14 @@ export const espack = async (): Promise<Cleanup[] | null> => {
 
     const buildResult = await Promise.all(
         espackConfig.builds.map(build =>
-            builder(espackConfig.defaultBuildProfiles, espackConfig.defaultPlugins, build, watch, profile)
+            builder(
+                espackConfig.defaultBuildProfiles,
+                espackConfig.defaultPlugins,
+                build,
+                watch,
+                profile,
+                espackConfig.builds.length === 1
+            )
         )
     );
 

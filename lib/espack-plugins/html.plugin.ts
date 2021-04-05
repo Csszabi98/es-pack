@@ -39,7 +39,6 @@ export const injectAndWriteHtml = (
         `${scripts.map(script => `<script src="${script}.js"></script>`).join('')}</body>`
     );
 
-    // TODO: Add build hashes
     return fs.promises.writeFile(getOutputAsset(htmlName, outdir), bundledHtml, {
         encoding: BUILD_ENCODING,
     });

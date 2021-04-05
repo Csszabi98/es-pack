@@ -40,7 +40,6 @@ type OmmitedEntryAssetTransformations =
     | 'outdir'
     | 'nodePaths'
     | 'outExtension'
-    | 'nodePaths'
     | 'publicPath'
     | 'chunkNames'
     | 'inject'
@@ -122,14 +121,3 @@ export interface DeterministicEntryAsset extends Profiles {
 }
 
 export type Cleanup = { stop: () => void };
-
-/*
-    Outdir by default is BaseDir, if there is more than one build present, 
-    the outdir is then being prefixed by the BaseDir with the outDir option from under the build
-    (if provided), or a generated one (build-1, 2, 3...).
-
-    EntryPoint paths must be unique under each outdir (or baseDir if the outdir is the baseDir)
-
-    If future build hashes are enabled, then this check is skipped for the assets which the option
-    is enabled for.
-*/
