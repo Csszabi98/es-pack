@@ -1,0 +1,48 @@
+{
+    "name": "espack",
+    "author": "Szabolcs Csizmadia",
+    "version": "0.0.1",
+    "private": true,
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "bin": {
+        "build": "dist/espack.js"
+    },
+    "scripts": {
+        "clean": "rimraf ./dist",
+        "build": "pnpm clean && tsc -p ./tsconfig-npm.json && ts-node ./src/espack.ts --profile prod",
+        "build:dev": "pnpm clean && ts-node ./src/espack.ts --profile dev",
+        "build:dev:watch": "pnpm clean && ts-node ./src/espack.ts --profile dev --watch",
+        "lint": "eslint src/** && tsc --noEmit && prettier --check src",
+        "lint:tsc": "tsc --noEmit",
+        "lint:fix": "eslint src/** --fix && prettier --write src"
+    },
+    "peerDependencies": {
+        "deep-equal": "2.0.5",
+        "esbuild": "0.8.54",
+        "html-minifier": "4.0.0",
+        "joi": "17.4.0",
+        "sass": "1.32.8"
+    },
+    "devDependencies": {
+        "espack-ts-config": "*",
+        "@rushstack/eslint-config": "^2.3.3",
+        "@types/deep-equal": "^1.0.1",
+        "@types/html-minifier": "4.0.0",
+        "@types/node-sass": "4.11.1",
+        "deep-equal": "2.0.5",
+        "esbuild": "0.8.54",
+        "eslint": "7.21.0",
+        "html-minifier": "4.0.0",
+        "joi": "17.4.0",
+        "prettier": "2.2.1",
+        "rimraf": "^3.0.2",
+        "sass": "1.32.8",
+        "ts-node": "9.1.1",
+        "typescript": "4.2.3"
+    },
+    "engines": {
+        "node": ">=12.9.0"
+    },
+    "license": "MIT"
+}

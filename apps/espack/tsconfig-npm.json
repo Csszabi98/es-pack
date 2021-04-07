@@ -1,0 +1,7 @@
+{
+    "extends": "espack-ts-config/src/node-npm-config.json",
+    "compilerOptions": {
+        "baseUrl": "."
+    },
+    "include": ["./src/index.ts"]
+}
