@@ -1,0 +1,11 @@
+{
+    "extends": "espack-ts-config/src/node-config.json",
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "sass": ["node_modules/@types/node-sass"]
+        }
+    },
+    "include": ["src", "espack.config.ts"],
+    "exclude": ["node_modules", "*.spec.ts"]
+}

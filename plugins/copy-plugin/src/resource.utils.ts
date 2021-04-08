@@ -5,8 +5,13 @@ import {
     BUILD_ENCODING
 } from '../build/build.constants';
 import { ICleanup } from '../build/build.model';
-import { checkAssetsExist } from './check-assets-exist';
-import { getOutputAsset } from './asset.utils';
+import { checkAssetsExist } from '../../../libraries/node-utils/src/asset/check-assets-exist';
+import { getOutputAsset } from '../../../libraries/node-utils/src/asset/get-output-asset';
+
+export const copyAssets = async (assets: string[], outdir: string): Promise<void> => {
+    const copyJobs = assets.map(asset => fs.promises.copyFile(asset, getOutputAsset(asset, outdir)));
+    await Promise.all(copyJobs);
+};
 
 export const checkResources = (resources: string[]): Promise<void> =>
     checkAssetsExist(resources, ENTRY_POINT_NOT_EXISTS_ERROR_MESSAGE, NON_EXISTENT_ENTRY_POINTS_ANNOUNCEMENT_MESSAGE);

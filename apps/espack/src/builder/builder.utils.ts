@@ -13,8 +13,7 @@ import {
     IProfiles,
     IIncompleteProfiles
 } from '../build/build.model';
-import { checkAssetsExist } from '../utils/check-assets-exist';
-import { isFile, FileExtensions } from '../utils/is-file';
+import { checkAssetsExist, isFile, FileExtensions } from '../utils';
 
 const mapEnvironmentVariables = (environmentVariables: Record<string, string>): Record<string, string> =>
     Object.entries(environmentVariables).reduce(

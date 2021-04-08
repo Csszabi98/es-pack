@@ -4,7 +4,7 @@ import { IBuilds, ICleanup } from './build/build.model';
 import { builder } from './builder/builder';
 import { getArgument } from './utils/get-argument';
 import { buildsSchema } from './validation/build.validator';
-import { isFile, FileExtensions } from './utils/is-file';
+import { isFile, FileExtensions } from './utils';
 import { buildConfig } from './utils/build-config';
 
 const timeLabel: string = 'Built under';

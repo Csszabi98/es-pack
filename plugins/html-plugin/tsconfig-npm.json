@@ -4,5 +4,5 @@
         "baseUrl": ".",
         "declarationDir": "dist"
     },
-    "include": ["./src/index.ts", "./src/utils/index.ts"]
+    "include": ["./src/index.ts"]
 }

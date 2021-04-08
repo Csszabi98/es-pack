@@ -1,13 +1,10 @@
 {
-    "name": "espack",
+    "name": "espack-html-plugin",
     "author": "Szabolcs Csizmadia",
     "version": "0.0.1",
     "private": true,
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
-    "bin": {
-        "espack": "dist/espack.js"
-    },
     "scripts": {
         "clean": "rimraf ./dist",
         "build": "pnpm clean && tsc -p ./tsconfig-npm.json && ts-node ./src/espack.ts --profile production",
@@ -17,20 +14,20 @@
         "lint:tsc": "tsc --noEmit",
         "lint:fix": "eslint src/** --fix"
     },
-    "dependencies": {
-        "deep-equal": "2.0.5",
-        "esbuild": "0.8.54",
-        "joi": "17.4.0"
+    "peerDependencies": {
+        "html-minifier": "4.0.0"
     },
     "devDependencies": {
+        "espack": "*",
         "espack-ts-config": "*",
         "@rushstack/eslint-config": "2.3.3",
-        "@types/deep-equal": "1.0.1",
+        "@types/html-minifier": "4.0.0",
+        "@types/node": "14.14.37",
+        "esbuild": "0.8.54",
         "eslint": "7.21.0",
         "rimraf": "3.0.2",
         "ts-node": "9.1.1",
-        "typescript": "4.2.3",
-        "@types/node": "14.14.37"
+        "typescript": "4.2.3"
     },
     "engines": {
         "node": ">=12.9.0"

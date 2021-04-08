@@ -124,7 +124,7 @@
      * LTS schedule: https://nodejs.org/en/about/releases/
      * LTS versions: https://nodejs.org/en/download/releases/
      */
-    "nodeSupportedVersionRange": ">=14.15.0 <15.0.0",
+    "nodeSupportedVersionRange": ">=12.9.0 <13.0.0 || >=14.15.0 <15.0.0",
 
     /**
      * Odd-numbered major versions of Node.js are experimental.  Even-numbered releases
@@ -445,7 +445,8 @@
         {
             "packageName": "espack",
             "projectFolder": "apps/espack",
-            "reviewCategory": "production"
+            "reviewCategory": "production",
+            "shouldPublish": true
         },
         // libraries
         {
@@ -453,7 +454,25 @@
             "projectFolder": "libraries/ts-config",
             "reviewCategory": "tools",
             "shouldPublish": false
-        }
+        },
         // plugins
+        {
+            "packageName": "esbuild-sass-plugin",
+            "projectFolder": "plugins/esbuild-sass-plugin",
+            "reviewCategory": "production",
+            "shouldPublish": true
+        },
+        {
+            "packageName": "espack-copy-plugin",
+            "projectFolder": "plugins/copy-plugin",
+            "reviewCategory": "production",
+            "shouldPublish": true
+        },
+        {
+            "packageName": "espack-html-plugin",
+            "projectFolder": "plugins/html-plugin",
+            "reviewCategory": "production",
+            "shouldPublish": true
+        }
     ]
 }

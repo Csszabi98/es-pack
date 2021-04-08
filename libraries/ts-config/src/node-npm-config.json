@@ -1,5 +1,5 @@
 {
-    "extends": "../node-config/node-config.json",
+    "extends": "./node-config.json",
     "compilerOptions": {
         "emitDeclarationOnly": true,
         "isolatedModules": false,

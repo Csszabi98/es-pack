@@ -3,6 +3,6 @@
     "compilerOptions": {
         "baseUrl": "."
     },
-    "include": ["src", "espack.config.ts", "../../plugins/html-plugin/src/html.plugin.ts"],
+    "include": ["src", "espack.config.ts"],
     "exclude": ["node_modules", "*.spec.ts"]
 }

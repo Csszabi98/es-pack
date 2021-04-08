@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { minify as transformHtml } from 'html-minifier';
-import { BUILD_ENCODING } from '../build/build.constants';
+import { BUILD_ENCODING } from '../../../apps/espack/src/build/build.constants';
 import { getOutputAsset } from '../utils/asset.utils';
 
 export const loadHtml = (htmlAsset: string, minify: boolean): Promise<string> =>
