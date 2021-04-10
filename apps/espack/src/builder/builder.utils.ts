@@ -11,7 +11,8 @@ import {
     IDeterministicEntryAsset,
     StringToDefaultBuildProfiles,
     IProfiles,
-    IIncompleteProfiles
+    IIncompleteProfiles,
+    IEntryAssetTransformations
 } from '../build/build.model';
 import { checkAssetsExist, isFile, FileExtensions } from '../utils';
 
@@ -25,7 +26,7 @@ const mapEnvironmentVariables = (environmentVariables: Record<string, string>): 
         {}
     );
 
-const getGlobalBuildProfile = (buildProfileName: DefaultBuildProfiles, watch: boolean): IProfiles => {
+const getGlobalBuildProfile = (buildProfileName: DefaultBuildProfiles): IProfiles => {
     const { buildsDir, excludePeerDependencies, ...buildProfile } = DEFAULT_ENTRY_ASSET_TRANSFORMATIONS[buildProfileName];
     return {
         espackBuildProfile: {
@@ -34,8 +35,7 @@ const getGlobalBuildProfile = (buildProfileName: DefaultBuildProfiles, watch: bo
         },
         buildProfile: {
             ...buildProfile,
-            outdir: buildsDir,
-            watch
+            outdir: buildsDir
         }
     };
 };
@@ -47,7 +47,7 @@ const extractPartialBuildProfile = (
     if (!buildProfiles) {
         return;
     }
-    const commonBuildProfile = buildProfiles[buildProfileName];
+    const commonBuildProfile: Partial<IEntryAssetTransformations> | undefined = buildProfiles[buildProfileName];
     if (!commonBuildProfile) {
         return;
     }
@@ -75,7 +75,6 @@ interface ICreateBuildableScriptProps {
 
 export const createBuildableScript = ({
     script,
-    watch,
     peerDependencies,
     singleBuildMode,
     currentBuildIndex,
@@ -83,12 +82,13 @@ export const createBuildableScript = ({
     defaultBuildProfiles,
     buildProfiles
 }: ICreateBuildableScriptProps): IDeterministicEntryAsset => {
-    const defaultBuildProfile = StringToDefaultBuildProfiles[buildProfile] || DefaultBuildProfiles.PROD;
+    const defaultBuildProfile: DefaultBuildProfiles =
+        StringToDefaultBuildProfiles[buildProfile] || DefaultBuildProfiles.PROD;
     const { src, buildProfiles: scriptBuildProfiles } = script;
-    const globalOptions = getGlobalBuildProfile(defaultBuildProfile, watch);
-    const defaultOptions = extractPartialBuildProfile(defaultBuildProfiles, buildProfile);
-    const buildOptions = extractPartialBuildProfile(buildProfiles, buildProfile);
-    const scriptOptions = extractPartialBuildProfile(scriptBuildProfiles, buildProfile);
+    const globalOptions: IProfiles = getGlobalBuildProfile(defaultBuildProfile);
+    const defaultOptions: IIncompleteProfiles | undefined = extractPartialBuildProfile(defaultBuildProfiles, buildProfile);
+    const buildOptions: IIncompleteProfiles | undefined = extractPartialBuildProfile(buildProfiles, buildProfile);
+    const scriptOptions: IIncompleteProfiles | undefined = extractPartialBuildProfile(scriptBuildProfiles, buildProfile);
 
     if (defaultOptions || buildOptions || scriptOptions) {
         const result: IDeterministicEntryAsset = {
@@ -103,11 +103,10 @@ export const createBuildableScript = ({
                 ...globalOptions.buildProfile,
                 ...defaultOptions?.buildProfile,
                 ...buildOptions?.buildProfile,
-                ...scriptOptions?.buildProfile,
-                watch
+                ...scriptOptions?.buildProfile
             }
         };
-        const external = result.espackBuildProfile.excludePeerDependencies
+        const external: string[] = result.espackBuildProfile.excludePeerDependencies
             ? [...result.buildProfile.external, ...peerDependencies]
             : result.buildProfile.external;
         result.buildProfile.external = external;
@@ -121,9 +120,12 @@ export const createBuildableScript = ({
 
         result.buildProfile.define = mapEnvironmentVariables(result.buildProfile.define);
 
-        if (!singleBuildMode && result.buildProfile.outdir === result.espackBuildProfile.buildsDir) {
-            const outdir = path.join(result.espackBuildProfile.buildsDir, `build_${currentBuildIndex}`);
-            result.buildProfile.outdir = outdir;
+        const { outdir } = result.buildProfile;
+        const { buildsDir } = result.espackBuildProfile;
+        if (!singleBuildMode && outdir === buildsDir) {
+            result.buildProfile.outdir = path.join(buildsDir, `build_${currentBuildIndex}`);
+        } else if (outdir !== buildsDir) {
+            result.buildProfile.outdir = path.join(buildsDir, outdir);
         }
 
         if (!result.buildProfile.minify) {
@@ -141,13 +143,15 @@ export const createBuildableScript = ({
 };
 
 export const checkScripts = (entries: IEntryAsset[]): Promise<void> => {
-    const allowedEntryPointExtensions = [
+    const allowedEntryPointExtensions: FileExtensions[] = [
         FileExtensions.JAVASCRIPT,
         FileExtensions.TYPESCRIPT,
         FileExtensions.JSX,
         FileExtensions.TSX
     ];
-    const nonEntryPoints = entries.filter(entryPoint => !isFile(entryPoint.src, ...allowedEntryPointExtensions));
+    const nonEntryPoints: IEntryAsset[] = entries.filter(
+        entryPoint => !isFile(entryPoint.src, ...allowedEntryPointExtensions)
+    );
     if (nonEntryPoints.length) {
         console.error('Some of your provided entry points have incorrect extensions:');
         nonEntryPoints.forEach(console.log);

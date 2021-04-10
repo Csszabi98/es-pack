@@ -1,14 +1,19 @@
-import { build as esbuilder } from 'esbuild';
+import { build as esbuilder, BuildFailure, BuildResult } from 'esbuild';
 import deepEqual from 'deep-equal';
 import fs from 'fs';
 import { IBuildResult, ICommonBuild, IDeterministicEntryAsset, IEntryAsset, BuildProfiles } from '../build/build.model';
 import { createBuildableScript as createBuildReadyScript } from './builder.utils';
 import { BUILD_ENCODING } from '../build/build.constants';
 
-export const executeBuilds = async (scripts: IDeterministicEntryAsset[]): Promise<IBuildResult[]> => {
-    const commonBuilds = scripts.reduce<ICommonBuild[]>((acc, curr) => {
+export type Watcher = (buildId: string, error: BuildFailure | undefined, result: BuildResult | undefined) => void;
+
+export const executeBuilds = async (
+    scripts: IDeterministicEntryAsset[],
+    onWatch: Watcher | undefined
+): Promise<IBuildResult[]> => {
+    const commonBuilds: ICommonBuild[] = scripts.reduce<ICommonBuild[]>((acc, curr) => {
         const { src, ...currProfiles } = curr;
-        const commonBuildIndex = acc.findIndex(build =>
+        const commonBuildIndex: number = acc.findIndex(build =>
             deepEqual(currProfiles.buildProfile, build.buildProfile, { strict: true })
         );
 
@@ -29,7 +34,7 @@ export const executeBuilds = async (scripts: IDeterministicEntryAsset[]): Promis
         ];
     }, []);
 
-    const createOutdirPromises = commonBuilds.map(
+    const createOutdirPromises: Promise<void>[] = commonBuilds.map(
         async ({ buildProfile: { outdir }, espackBuildProfile: { buildsDir } }) => {
             if (!fs.existsSync(buildsDir)) {
                 await fs.promises.mkdir(buildsDir);
@@ -43,13 +48,25 @@ export const executeBuilds = async (scripts: IDeterministicEntryAsset[]): Promis
     await Promise.all(createOutdirPromises);
 
     return Promise.all(
-        commonBuilds.map(async build => ({
-            build,
-            buildResult: await esbuilder({
-                ...build.buildProfile,
-                entryPoints: build.builds.map(script => script.src)
-            })
-        }))
+        commonBuilds.map(async (build, index) => {
+            // TODO: Replace with proper buildIds
+            const buildId: string = `build_${index}`;
+            return {
+                buildId,
+                build,
+                buildResult: await esbuilder({
+                    ...build.buildProfile,
+                    entryPoints: build.builds.map(script => script.src),
+                    watch: onWatch
+                        ? {
+                              onRebuild(error: BuildFailure | null, result: BuildResult | null) {
+                                  onWatch(buildId, error || undefined, result || undefined);
+                              }
+                          }
+                        : false
+                })
+            };
+        })
     );
 };
 
@@ -64,9 +81,9 @@ export const createBuildReadyScripts = (
     const { peerDependencies }: { peerDependencies: Record<string, string> | undefined } = JSON.parse(
         fs.readFileSync('package.json', BUILD_ENCODING)
     );
-    const external = peerDependencies ? Object.keys(peerDependencies) : [];
+    const external: string[] = peerDependencies ? Object.keys(peerDependencies) : [];
 
-    const buildReadyScripts = scripts.map((script, index) =>
+    const buildReadyScripts: IDeterministicEntryAsset[] = scripts.map((script, index) =>
         createBuildReadyScript({
             script,
             watch,

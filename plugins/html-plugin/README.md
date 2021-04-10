@@ -1,1 +1,1 @@
-# espack-html-plugin
+# @espack/html-plugin

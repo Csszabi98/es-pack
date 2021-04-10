@@ -443,33 +443,33 @@
         //
         // apps
         {
-            "packageName": "espack",
+            "packageName": "@espack/espack",
             "projectFolder": "apps/espack",
             "reviewCategory": "production",
             "shouldPublish": true
         },
         // libraries
         {
-            "packageName": "espack-ts-config",
+            "packageName": "@espack/ts-config",
             "projectFolder": "libraries/ts-config",
             "reviewCategory": "tools",
             "shouldPublish": false
         },
         // plugins
         {
-            "packageName": "esbuild-sass-plugin",
+            "packageName": "@espack/esbuild-sass-plugin",
             "projectFolder": "plugins/esbuild-sass-plugin",
             "reviewCategory": "production",
             "shouldPublish": true
         },
         {
-            "packageName": "espack-copy-plugin",
+            "packageName": "@espack/copy-plugin",
             "projectFolder": "plugins/copy-plugin",
             "reviewCategory": "production",
             "shouldPublish": true
         },
         {
-            "packageName": "espack-html-plugin",
+            "packageName": "@espack/html-plugin",
             "projectFolder": "plugins/html-plugin",
             "reviewCategory": "production",
             "shouldPublish": true

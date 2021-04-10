@@ -1,8 +1,8 @@
 {
-    "extends": "espack-ts-config/src/node-config.json",
+    "extends": "@espack/ts-config/src/node-config.json",
     "compilerOptions": {
         "baseUrl": "."
     },
-    "include": ["src", "espack.config.ts"],
+    "include": ["src", "espack.config.ts", "../html-plugin/src/resource.utils.ts"],
     "exclude": ["node_modules", "*.spec.ts"]
 }

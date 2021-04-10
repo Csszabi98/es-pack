@@ -12,6 +12,19 @@
    */
   "commands": [
     {
+      "name": "build:dev",
+      "commandKind": "bulk",
+      "summary": "Used to generate a monorepo wide development build.",
+      "enableParallelism": true,
+      "incremental": true
+    },
+    {
+      "name": "build:dev:watch",
+      "commandKind": "bulk",
+      "summary": "Used during development to build any new changes inside the monorepo.",
+      "enableParallelism": true
+    },
+    {
       "name": "lint",
       "commandKind": "bulk",
       "summary": "Used by the pre-commit Git hook. This command invokes Eslint to check source for lint issues.",

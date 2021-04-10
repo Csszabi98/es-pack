@@ -1,5 +1,5 @@
 {
-    "name": "espack-html-plugin",
+    "name": "@espack/html-plugin",
     "author": "Szabolcs Csizmadia",
     "version": "0.0.1",
     "private": true,
@@ -7,23 +7,27 @@
     "types": "dist/index.d.ts",
     "scripts": {
         "clean": "rimraf ./dist",
-        "build": "pnpm clean && tsc -p ./tsconfig-npm.json && ts-node ./src/espack.ts --profile production",
-        "build:dev": "pnpm clean && ts-node ./src/espack.ts --profile development",
-        "build:dev:watch": "pnpm clean && ts-node ./src/espack.ts --profile development --watch",
-        "lint": "eslint src/** && tsc --noEmit",
+        "build": "pnpm clean && pnpm build:types && pnpx espack --profile production",
+        "build:dev": "pnpm clean && pnpm build:types && pnpx espack --profile development",
+        "build:dev:watch": "pnpm clean && pnpm build:types && pnpx espack --profile development --watch",
+        "build:types": "tsc -p ./tsconfig-npm.json",
+        "lint": "eslint src/** --max-warnings=0 && tsc --noEmit",
         "lint:tsc": "tsc --noEmit",
         "lint:fix": "eslint src/** --fix"
     },
     "peerDependencies": {
+        "@espack/espack": "*"
+    },
+    "dependencies": {
         "html-minifier": "4.0.0"
     },
     "devDependencies": {
-        "espack": "*",
-        "espack-ts-config": "*",
+        "@espack/espack": "*",
+        "esbuild": "0.8.54",
+        "@espack/ts-config": "*",
         "@rushstack/eslint-config": "2.3.3",
         "@types/html-minifier": "4.0.0",
         "@types/node": "14.14.37",
-        "esbuild": "0.8.54",
         "eslint": "7.21.0",
         "rimraf": "3.0.2",
         "ts-node": "9.1.1",

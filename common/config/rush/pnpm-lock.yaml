@@ -1,16 +1,15 @@
 dependencies:
+  '@rush-temp/copy-plugin': file:projects/copy-plugin.tgz
   '@rush-temp/esbuild-sass-plugin': file:projects/esbuild-sass-plugin.tgz
   '@rush-temp/espack': file:projects/espack.tgz
-  '@rush-temp/espack-copy-plugin': file:projects/espack-copy-plugin.tgz
-  '@rush-temp/espack-html-plugin': file:projects/espack-html-plugin.tgz
-  '@rush-temp/espack-ts-config': file:projects/espack-ts-config.tgz
+  '@rush-temp/html-plugin': file:projects/html-plugin.tgz
+  '@rush-temp/ts-config': file:projects/ts-config.tgz
   '@rushstack/eslint-config': 2.3.3_eslint@7.21.0+typescript@4.2.3
   '@types/deep-equal': 1.0.1
   '@types/html-minifier': 4.0.0
   '@types/node': 14.14.37
   '@types/node-sass': 4.11.1
   deep-equal: 2.0.5
-  esbuild: 0.8.54
   eslint: 7.21.0
   html-minifier: 4.0.0
   joi: 17.4.0
@@ -392,7 +391,7 @@ packages:
   /anymatch/3.1.2:
     dependencies:
       normalize-path: 3.0.0
-      picomatch: 2.2.2
+      picomatch: 2.2.3
     dev: false
     engines:
       node: '>= 8'
@@ -716,6 +715,12 @@ packages:
     requiresBuild: true
     resolution:
       integrity: sha512-DJH38OiTgXJxFb/EhHrCrY8eGmtdkTtWymHpN9IYN9AF+4jykT0dQArr7wzFejpVbaB0TMIq2+vfNRWr3LXpvw==
+  /esbuild/0.8.57:
+    dev: false
+    hasBin: true
+    requiresBuild: true
+    resolution:
+      integrity: sha512-j02SFrUwFTRUqiY0Kjplwjm1psuzO1d6AjaXKuOR9hrY0HuPsT6sV42B6myW34h1q4CRy+Y3g4RU/cGJeI/nNA==
   /escape-string-regexp/1.0.5:
     dev: false
     engines:
@@ -1456,12 +1461,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-GSmOT2EbHrINBf9SR7CDELwlJ8AENk3Qn7OikK4nFYAu3Ote2+JYNVvkpAEQm3/TLNEJFD/xZJjzyxg3KBWOzw==
-  /picomatch/2.2.2:
+  /picomatch/2.2.3:
     dev: false
     engines:
       node: '>=8.6'
     resolution:
-      integrity: sha512-q0M/9eZHzmr0AulXyPwNfZjtwZ/RBZlbN3K3CErVrk50T2ASYI7Bye0EvekFY3IP1Nt2DHu0re+V2ZHIpMkuWg==
+      integrity: sha512-KpELjfwcCDUb9PeigTs2mBJzXUPzAuP2oPcA989He8Rte0+YUAjw1JVedDhuTKPkHjSYzMN3npC9luThGYEKdg==
   /prelude-ls/1.2.1:
     dev: false
     engines:
@@ -1494,7 +1499,7 @@ packages:
       integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
   /readdirp/3.5.0:
     dependencies:
-      picomatch: 2.2.2
+      picomatch: 2.2.3
     dev: false
     engines:
       node: '>=8.10.0'
@@ -1860,9 +1865,25 @@ packages:
       node: '>=6'
     resolution:
       integrity: sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==
+  file:projects/copy-plugin.tgz:
+    dependencies:
+      '@rushstack/eslint-config': 2.3.3_eslint@7.21.0+typescript@4.2.3
+      '@types/node': 14.14.37
+      esbuild: 0.8.54
+      eslint: 7.21.0
+      rimraf: 3.0.2
+      ts-node: 9.1.1_typescript@4.2.3
+      typescript: 4.2.3
+    dev: false
+    name: '@rush-temp/copy-plugin'
+    resolution:
+      integrity: sha512-Yh6RaKRftFuEIvbfGYfI94H420Gwc0c53KFGX65pOqWWRGv4GcoB5wNlWP3sk58q6WI5jjwcW/DeS+UlaFeF1A==
+      tarball: file:projects/copy-plugin.tgz
+    version: 0.0.0
   file:projects/esbuild-sass-plugin.tgz:
     dependencies:
       '@rushstack/eslint-config': 2.3.3_eslint@7.21.0+typescript@4.2.3
+      '@types/node': 14.14.37
       '@types/node-sass': 4.11.1
       esbuild: 0.8.54
       eslint: 7.21.0
@@ -1872,54 +1893,16 @@ packages:
     dev: false
     name: '@rush-temp/esbuild-sass-plugin'
     resolution:
-      integrity: sha512-apTHLyzFMHnSCQvmmaTtofMSgA/DinXE98ISHwUMmkhWG4rJ1rNs9DLx/Z5wxs22NqKkFOmDTrLumAlUiQFi/w==
+      integrity: sha512-qacmbAqAXXmyvXkM4vWGDa/2BNRbiUADwEeM466FFQvrezVMtEE7md+YKrLugmehdbJDXanH2Q/grtBcvbavXw==
       tarball: file:projects/esbuild-sass-plugin.tgz
-    version: 0.0.0
-  file:projects/espack-copy-plugin.tgz:
-    dependencies:
-      '@rushstack/eslint-config': 2.3.3_eslint@7.21.0+typescript@4.2.3
-      esbuild: 0.8.54
-      eslint: 7.21.0
-      rimraf: 3.0.2
-      ts-node: 9.1.1_typescript@4.2.3
-      typescript: 4.2.3
-    dev: false
-    name: '@rush-temp/espack-copy-plugin'
-    resolution:
-      integrity: sha512-9iNcLEzCy7qnu6ALGei+2e4rJ50PXtB/te31Yia6Fnt8aksT84RfWlJHM1uvu9y7SNZ7DFBUFieUT3UTDygkPw==
-      tarball: file:projects/espack-copy-plugin.tgz
-    version: 0.0.0
-  file:projects/espack-html-plugin.tgz:
-    dependencies:
-      '@rushstack/eslint-config': 2.3.3_eslint@7.21.0+typescript@4.2.3
-      '@types/html-minifier': 4.0.0
-      esbuild: 0.8.54
-      eslint: 7.21.0
-      html-minifier: 4.0.0
-      rimraf: 3.0.2
-      ts-node: 9.1.1_typescript@4.2.3
-      typescript: 4.2.3
-    dev: false
-    name: '@rush-temp/espack-html-plugin'
-    resolution:
-      integrity: sha512-zaoYoh2NGc0j9g/zZ5o4zw/NF2zHGE/Z72JmNoAnSsXwdHyjApDyf1rO8v9FJAWIBFPTohi7KA7hB7u/qJh9GQ==
-      tarball: file:projects/espack-html-plugin.tgz
-    version: 0.0.0
-  file:projects/espack-ts-config.tgz:
-    dev: false
-    name: '@rush-temp/espack-ts-config'
-    resolution:
-      integrity: sha512-TZtbfsx+oa+/Z9UfNZ2pJ/v1doP/c8uY41BOov1Jotv/7n3B0O6z2Ru/g1Zd8riAlx7iKVEIoe/BbhHyiWiJ+A==
-      tarball: file:projects/espack-ts-config.tgz
     version: 0.0.0
   file:projects/espack.tgz:
     dependencies:
       '@rushstack/eslint-config': 2.3.3_eslint@7.21.0+typescript@4.2.3
       '@types/deep-equal': 1.0.1
       '@types/node': 14.14.37
-      '@types/node-sass': 4.11.1
       deep-equal: 2.0.5
-      esbuild: 0.8.54
+      esbuild: 0.8.57
       eslint: 7.21.0
       joi: 17.4.0
       rimraf: 3.0.2
@@ -1928,23 +1911,45 @@ packages:
     dev: false
     name: '@rush-temp/espack'
     resolution:
-      integrity: sha512-zBK1X3pcJ4SvE1yNzh3Gp05NufL2dbcoUAOEtSjQ8EZIcUpDwz48ElxcDSZ0q2mdFNBXL0L1tEevpajZ3FYZSw==
+      integrity: sha512-ThmfrefNpKKN5vUsxcJbzEY7Us+5ahU05DTHNatq3ixdqDYnzDloxTdiEZOAWT6mKVwntvdc6Jod0H42QKYdEQ==
       tarball: file:projects/espack.tgz
     version: 0.0.0
-registry: ''
+  file:projects/html-plugin.tgz:
+    dependencies:
+      '@rushstack/eslint-config': 2.3.3_eslint@7.21.0+typescript@4.2.3
+      '@types/html-minifier': 4.0.0
+      '@types/node': 14.14.37
+      esbuild: 0.8.54
+      eslint: 7.21.0
+      html-minifier: 4.0.0
+      rimraf: 3.0.2
+      ts-node: 9.1.1_typescript@4.2.3
+      typescript: 4.2.3
+    dev: false
+    name: '@rush-temp/html-plugin'
+    resolution:
+      integrity: sha512-OlHVEOJNsQ5B2i6z19pHlO5IoTlsWHe42/nrZjxYPh0fNlQx9qEzpRhQUnky0V2y0rBYIpkM5+MVG88VQ0wJ2A==
+      tarball: file:projects/html-plugin.tgz
+    version: 0.0.0
+  file:projects/ts-config.tgz:
+    dev: false
+    name: '@rush-temp/ts-config'
+    resolution:
+      integrity: sha512-mAS96EGDP3Rgo9agW6IKqAZLF8fBls1+gtAR4oypl0781oASOJE27CTKmeT3hO0E1CS1OULYthBymeO0DHFlEw==
+      tarball: file:projects/ts-config.tgz
+    version: 0.0.0
 specifiers:
+  '@rush-temp/copy-plugin': file:./projects/copy-plugin.tgz
   '@rush-temp/esbuild-sass-plugin': file:./projects/esbuild-sass-plugin.tgz
   '@rush-temp/espack': file:./projects/espack.tgz
-  '@rush-temp/espack-copy-plugin': file:./projects/espack-copy-plugin.tgz
-  '@rush-temp/espack-html-plugin': file:./projects/espack-html-plugin.tgz
-  '@rush-temp/espack-ts-config': file:./projects/espack-ts-config.tgz
+  '@rush-temp/html-plugin': file:./projects/html-plugin.tgz
+  '@rush-temp/ts-config': file:./projects/ts-config.tgz
   '@rushstack/eslint-config': 2.3.3
   '@types/deep-equal': 1.0.1
   '@types/html-minifier': 4.0.0
-  '@types/node': ~14.14.37
+  '@types/node': 14.14.37
   '@types/node-sass': 4.11.1
   deep-equal: 2.0.5
-  esbuild: 0.8.54
   eslint: 7.21.0
   html-minifier: 4.0.0
   joi: 17.4.0

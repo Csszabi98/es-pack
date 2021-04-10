@@ -1,5 +1,5 @@
 {
-    "name": "espack",
+    "name": "@espack/espack",
     "author": "Szabolcs Csizmadia",
     "version": "0.0.1",
     "private": true,
@@ -10,20 +10,23 @@
     },
     "scripts": {
         "clean": "rimraf ./dist",
-        "build": "pnpm clean && tsc -p ./tsconfig-npm.json && ts-node ./src/espack.ts --profile production",
-        "build:dev": "pnpm clean && ts-node ./src/espack.ts --profile development",
-        "build:dev:watch": "pnpm clean && ts-node ./src/espack.ts --profile development --watch",
-        "lint": "eslint src/** && tsc --noEmit",
+        "build": "pnpm clean && pnpm build:types && ts-node ./src/espack.ts --profile production",
+        "build:dev": "pnpm clean && pnpm build:types && ts-node ./src/espack.ts --profile development",
+        "build:dev:watch": "pnpm clean && pnpm build:types && ts-node ./src/espack.ts --profile development --watch",
+        "build:types": "tsc -p ./tsconfig-npm.json",
+        "lint": "eslint src/** --max-warnings=0 && tsc --noEmit",
         "lint:tsc": "tsc --noEmit",
         "lint:fix": "eslint src/** --fix"
     },
+    "peerDependencies": {
+        "esbuild": "^0.8.54"
+    },
     "dependencies": {
         "deep-equal": "2.0.5",
-        "esbuild": "0.8.54",
         "joi": "17.4.0"
     },
     "devDependencies": {
-        "espack-ts-config": "*",
+        "@espack/ts-config": "*",
         "@rushstack/eslint-config": "2.3.3",
         "@types/deep-equal": "1.0.1",
         "eslint": "7.21.0",

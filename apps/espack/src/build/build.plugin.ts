@@ -7,7 +7,8 @@ export enum BuildLifecycles {
     BEFORE_BUILD = 'beforeBuild',
     BUILD = 'onBuild',
     AFTER_BUILD = 'afterBuild',
-    WATCH = 'onWatch',
+    REBUILD = 'onRebuild',
+    WATCH = 'registerCustomWatcher',
     CLEANUP = 'onCleanup'
 }
 
@@ -42,6 +43,11 @@ export class EspackPlugin<T = unknown> implements BuildLifecycleHooks {
         console.log(`Using plugin ${this.name}`);
     }
 
+    // TODO: find a better way to access this.
+    protected static getBuildsDir(context: IBuildReadyPluginContext | IBuiltPluginContext<unknown>): string {
+        return context.buildReadyScripts[0].espackBuildProfile.buildsDir;
+    }
+
     private _notImplementedErrorFactory(lifecycle: BuildLifecycles): Error {
         return new Error(`${this.errorPrefix} ${lifecycle} is not implemented!`);
     }
@@ -74,8 +80,12 @@ export class EspackPlugin<T = unknown> implements BuildLifecycleHooks {
         throw this._notImplementedErrorFactory(BuildLifecycles.AFTER_BUILD);
     }
 
-    public onWatch(context: IBuiltPluginContext<T>): ICleanup {
+    public registerCustomWatcher(context: IBuiltPluginContext<T>): ICleanup {
         throw this._notImplementedErrorFactory(BuildLifecycles.WATCH);
+    }
+
+    public onRebuild(context: IBuiltPluginContext<T>): void {
+        throw this._notImplementedErrorFactory(BuildLifecycles.REBUILD);
     }
 
     public onCleanup(context: IBuiltPluginContext<T>): void {

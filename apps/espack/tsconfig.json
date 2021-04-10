@@ -1,5 +1,5 @@
 {
-    "extends": "espack-ts-config/src/node-config.json",
+    "extends": "@espack/ts-config/src/node-config.json",
     "compilerOptions": {
         "baseUrl": "."
     },

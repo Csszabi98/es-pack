@@ -25,7 +25,7 @@ export enum ImportFormat {
     ESM = 'esm'
 }
 
-// TODO: Sanizize input for exlcuded values
+// TODO: Sanitize input for excluded values
 type OptionalEntryAssetTransformations = Omit<esbuild.BuildOptions, 'watch' | 'entryPoints' | 'write' | 'outfile' | 'stdin'>;
 
 type RequiredEntryAssetTransformations = {
@@ -92,6 +92,7 @@ export interface ICommonBuild {
     builds: CommonEntryAsset[];
 }
 export interface IBuildResult {
+    buildId: string;
     build: ICommonBuild;
     buildResult: esbuild.BuildResult;
 }
@@ -103,7 +104,6 @@ export interface IBuilds {
 }
 
 export type BuildProfile = Omit<IEntryAssetTransformations, 'excludePeerDependencies' | 'buildsDir'> & {
-    watch: boolean;
     outdir: string;
 };
 

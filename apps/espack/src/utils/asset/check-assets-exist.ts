@@ -10,7 +10,7 @@ export const checkAssetsExistSync = (
     errorMessage = defaultErrorMessage,
     nonExistentAssetsAnnouncementMessage = defaultNonExistentAssetsAnnouncementMessage
 ): void => {
-    const nonExistentAssets = assets?.filter(asset => !fs.existsSync(asset));
+    const nonExistentAssets: string[] | undefined = assets?.filter(asset => !fs.existsSync(asset));
     if (nonExistentAssets?.length) {
         console.error(errorMessage);
         console.error(nonExistentAssetsAnnouncementMessage);

@@ -1,17 +1,14 @@
-import { IBuilds, ImportFormat, Platforms } from 'espack';
+import { createBuildProfiles, IBuilds, ImportFormat, Platforms } from '@espack/espack';
 
 const builds: IBuilds = {
-    defaultBuildProfiles: {
-        development: {
+    defaultBuildProfiles: createBuildProfiles(
+        {
             platform: Platforms.NODE,
-            format: ImportFormat.COMMON_JS
+            format: ImportFormat.COMMON_JS,
+            external: ['html-minifier']
         },
-        production: {
-            minify: false,
-            platform: Platforms.NODE,
-            format: ImportFormat.COMMON_JS
-        }
-    },
+        { production: { minify: false } }
+    ),
     builds: [
         {
             scripts: [

@@ -11,7 +11,7 @@ export const sassPlugin = (): Plugin => ({
         }));
         build.onLoad({ filter: /.*/, namespace: 'sass' }, args => {
             // renderSync is significantly faster than render
-            const compiled = sass.renderSync({ file: args.path });
+            const compiled: sass.Result = sass.renderSync({ file: args.path });
             return {
                 contents: compiled.css.toString(),
                 loader: 'css'

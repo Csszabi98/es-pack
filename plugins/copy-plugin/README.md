@@ -1,1 +1,1 @@
-# espack-copy-plugin
+# @espack/copy-plugin

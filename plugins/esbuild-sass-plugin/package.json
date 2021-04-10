@@ -1,5 +1,5 @@
 {
-    "name": "esbuild-sass-plugin",
+    "name": "@espack/esbuild-sass-plugin",
     "author": "Szabolcs Csizmadia",
     "version": "0.0.1",
     "private": true,
@@ -7,26 +7,27 @@
     "types": "dist/index.d.ts",
     "scripts": {
         "clean": "rimraf ./dist",
-        "build": "pnpm clean && tsc -p ./tsconfig-npm.json && pnpx espack --profile production",
-        "build:dev": "pnpm clean && pnpx espack --profile development",
-        "build:dev:watch": "pnpm clean && pnpx espack --profile development --watch",
-        "lint": "eslint src/** && tsc --noEmit",
+        "build": "pnpm clean && pnpm build:types && pnpx espack --profile production",
+        "build:dev": "pnpm clean && pnpm build:types && pnpx espack --profile development",
+        "build:dev:watch": "pnpm clean && pnpm build:types && pnpx espack --profile development --watch",
+        "build:types": "tsc -p ./tsconfig-npm.json",
+        "lint": "eslint src/** --max-warnings=0 && tsc --noEmit",
         "lint:tsc": "tsc --noEmit",
         "lint:fix": "eslint src/** --fix"
     },
     "peerDependencies": {
-        "esbuild": "0.8.54"
+        "esbuild": "^0.8.54"
     },
     "dependencies": {
         "sass": "1.32.8"
     },
     "devDependencies": {
-        "espack": "*",
+        "@espack/espack": "*",
         "esbuild": "0.8.54",
         "@types/node": "14.14.37",
         "@types/node-sass": "4.11.1",
         "sass": "1.32.8",
-        "espack-ts-config": "*",
+        "@espack/ts-config": "*",
         "@rushstack/eslint-config": "2.3.3",
         "eslint": "7.21.0",
         "rimraf": "3.0.2",

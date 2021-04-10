@@ -1,48 +1,32 @@
-import { IBuilds, IEntryAssetTransformations, ImportFormat, Platforms } from './src/build/build.model';
+import { createBuildProfiles } from 'src';
+import { DefaultBuildProfiles, IBuilds, ImportFormat, Platforms } from './src/build/build.model';
 
-// TODO: Add a factory function to make it easier to define common options for multiple profiles
-
-const commonBuildProfileOptions: Partial<IEntryAssetTransformations> = {
-    platform: Platforms.NODE,
-    format: ImportFormat.COMMON_JS,
-    external: ['deep-equal', 'esbuild', 'joi']
-};
-
-const commonEspackEntryBuildProfilesOptions: Partial<IEntryAssetTransformations> = {
-    banner: '#!/usr/bin/env node'
-};
-
-const commonUtilsEntryBuildProfileOptions: Partial<IEntryAssetTransformations> = {
-    outdir: 'asset'
-};
+// TODO: make builds dir specifiable only once!
 
 const builds: IBuilds = {
-    defaultBuildProfiles: {
-        development: commonBuildProfileOptions,
-        production: {
-            ...commonBuildProfileOptions,
-            minify: false
+    defaultBuildProfiles: createBuildProfiles(
+        {
+            platform: Platforms.NODE,
+            format: ImportFormat.COMMON_JS,
+            external: ['deep-equal', 'esbuild', 'joi']
+        },
+        {
+            [DefaultBuildProfiles.PROD]: {
+                minify: false
+            }
         }
-    },
+    ),
     builds: [
         {
             scripts: [
                 {
                     src: './src/espack.ts',
-                    buildProfiles: {
-                        development: commonEspackEntryBuildProfilesOptions,
-                        production: commonEspackEntryBuildProfilesOptions
-                    }
+                    buildProfiles: createBuildProfiles({
+                        banner: '#!/usr/bin/env node'
+                    })
                 },
                 {
                     src: './src/index.ts'
-                },
-                {
-                    src: './src/utils/index.ts',
-                    buildProfiles: {
-                        development: commonUtilsEntryBuildProfileOptions,
-                        production: commonUtilsEntryBuildProfileOptions
-                    }
                 }
             ]
         }
