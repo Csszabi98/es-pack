@@ -34,5 +34,8 @@ function readPackage(packageJson, context) {
   //  packageJson.dependencies['log4js'] = '0.6.38';
   // }
 
+  if (packageJson.name === 'esbuild-node-externals') {
+  }
+
   return packageJson;
 }

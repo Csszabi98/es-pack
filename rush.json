@@ -16,7 +16,7 @@
      * path segment in the "$schema" field for all your Rush config files.  This will ensure
      * correct error-underlining and tab-completion for editors such as VS Code.
      */
-    "rushVersion": "5.42.3",
+    "rushVersion": "5.43.0",
 
     /**
      * The next field selects which package manager should be installed and determines its version.
@@ -308,6 +308,7 @@
          * The list of shell commands to run before the Rush installation starts
          */
         "preRushInstall": [
+            "node common/scripts/update-fix.js"
             // "common/scripts/pre-rush-install.js"
         ],
 
@@ -447,6 +448,12 @@
             "projectFolder": "apps/espack",
             "reviewCategory": "production",
             "shouldPublish": true
+        },
+        {
+            "packageName": "@espack/espack-website",
+            "projectFolder": "apps/espack-website",
+            "reviewCategory": "production",
+            "shouldPublish": false
         },
         // libraries
         {

@@ -2,7 +2,6 @@
     "name": "@espack/html-plugin",
     "author": "Szabolcs Csizmadia",
     "version": "0.0.1",
-    "private": true,
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "scripts": {
@@ -19,11 +18,11 @@
         "@espack/espack": "*"
     },
     "dependencies": {
-        "html-minifier": "4.0.0"
+        "@minify-html/js": "0.4.10"
     },
     "devDependencies": {
         "@espack/espack": "*",
-        "esbuild": "0.8.54",
+        "esbuild": "0.11.11",
         "@espack/ts-config": "*",
         "@rushstack/eslint-config": "2.3.3",
         "@types/html-minifier": "4.0.0",

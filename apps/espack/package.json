@@ -2,7 +2,6 @@
     "name": "@espack/espack",
     "author": "Szabolcs Csizmadia",
     "version": "0.0.1",
-    "private": true,
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "bin": {
@@ -13,17 +12,18 @@
         "build": "pnpm clean && pnpm build:types && ts-node ./src/espack.ts --profile production",
         "build:dev": "pnpm clean && pnpm build:types && ts-node ./src/espack.ts --profile development",
         "build:dev:watch": "pnpm clean && pnpm build:types && ts-node ./src/espack.ts --profile development --watch",
-        "build:types": "tsc -p ./tsconfig-npm.json",
+        "build:types": "tsc -p ./tsconfig-npm.json --emitDeclarationOnly",
         "lint": "eslint src/** --max-warnings=0 && tsc --noEmit",
         "lint:tsc": "tsc --noEmit",
         "lint:fix": "eslint src/** --fix"
     },
-    "peerDependencies": {
-        "esbuild": "^0.8.54"
-    },
     "dependencies": {
+        "esbuild": "^0.11.0",
         "deep-equal": "2.0.5",
-        "joi": "17.4.0"
+        "joi": "17.4.0",
+        "tslib": "2.2.0",
+        "vm2": "3.9.3",
+        "deep-copy": "~1.4.2"
     },
     "devDependencies": {
         "@espack/ts-config": "*",

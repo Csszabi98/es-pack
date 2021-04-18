@@ -2,7 +2,6 @@
     "name": "@espack/esbuild-sass-plugin",
     "author": "Szabolcs Csizmadia",
     "version": "0.0.1",
-    "private": true,
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "scripts": {
@@ -16,14 +15,14 @@
         "lint:fix": "eslint src/** --fix"
     },
     "peerDependencies": {
-        "esbuild": "^0.8.54"
+        "esbuild": "^0.11.0"
     },
     "dependencies": {
         "sass": "1.32.8"
     },
     "devDependencies": {
         "@espack/espack": "*",
-        "esbuild": "0.8.54",
+        "esbuild": "0.11.11",
         "@types/node": "14.14.37",
         "@types/node-sass": "4.11.1",
         "sass": "1.32.8",

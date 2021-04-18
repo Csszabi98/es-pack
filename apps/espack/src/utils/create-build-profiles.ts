@@ -1,5 +1,5 @@
-import { BuildProfiles, DefaultBuildProfiles, IEntryAssetTransformations } from 'src/build/build.model';
-import v8 from 'v8';
+import { BuildProfiles, DefaultBuildProfiles, IEntryAssetTransformations } from '../build/build.model';
+import deepCopy from 'deep-copy';
 
 type CreateBuildProfiles = (
     commonOptions: Partial<IEntryAssetTransformations>,
@@ -17,13 +17,13 @@ export const createBuildProfiles: CreateBuildProfiles = (
     profileOverrides,
     disableDefaultProfileExtension = false
 ) => {
-    const options: Partial<IEntryAssetTransformations> = v8.deserialize(v8.serialize(commonOptions));
+    const options: Partial<IEntryAssetTransformations> = deepCopy(commonOptions);
 
-    let profiles: BuildProfiles = disableDefaultProfileExtension ? {} : v8.deserialize(v8.serialize(defaultProfiles));
+    let profiles: BuildProfiles = disableDefaultProfileExtension ? {} : deepCopy(defaultProfiles);
     if (profileOverrides) {
         profiles = {
             ...profiles,
-            ...v8.deserialize(v8.serialize(profileOverrides))
+            ...profileOverrides
         };
     }
 

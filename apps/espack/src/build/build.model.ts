@@ -45,15 +45,9 @@ type OmmitedEntryAssetTransformations =
     | 'inject'
     | 'pure';
 
-export interface IEspackOptions {
-    excludePeerDependencies: boolean;
-    buildsDir: string;
-}
-
 export interface IEntryAssetTransformations
     extends Omit<RequiredEntryAssetTransformations, OmmitedEntryAssetTransformations>,
-        Pick<OptionalEntryAssetTransformations, OmmitedEntryAssetTransformations>,
-        IEspackOptions {}
+        Pick<OptionalEntryAssetTransformations, OmmitedEntryAssetTransformations> {}
 
 export type BuildProfiles = Record<string, Partial<IEntryAssetTransformations> | undefined>;
 
@@ -88,7 +82,6 @@ export interface IEntryAsset {
 export type CommonEntryAsset = Omit<IEntryAsset, 'buildProfiles'>;
 export interface ICommonBuild {
     buildProfile: BuildProfile;
-    espackBuildProfile: IEspackOptions;
     builds: CommonEntryAsset[];
 }
 export interface IBuildResult {
@@ -98,22 +91,21 @@ export interface IBuildResult {
 }
 
 export interface IBuilds {
+    buildsDir?: string;
     defaultBuildProfiles?: BuildProfiles;
     defaultPlugins?: EspackPlugin[];
     builds: IBuild[];
 }
 
-export type BuildProfile = Omit<IEntryAssetTransformations, 'excludePeerDependencies' | 'buildsDir'> & {
+export type BuildProfile = IEntryAssetTransformations & {
     outdir: string;
 };
 
 export interface IProfiles {
-    espackBuildProfile: IEspackOptions;
     buildProfile: BuildProfile;
 }
 
 export interface IIncompleteProfiles {
-    espackBuildProfile: Partial<IEspackOptions>;
     buildProfile: Partial<BuildProfile>;
 }
 

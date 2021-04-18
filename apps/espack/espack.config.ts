@@ -1,14 +1,12 @@
-import { createBuildProfiles } from 'src';
-import { DefaultBuildProfiles, IBuilds, ImportFormat, Platforms } from './src/build/build.model';
-
-// TODO: make builds dir specifiable only once!
+import { DefaultBuildProfiles, IBuilds, ImportFormat, Platforms, createBuildProfiles } from './src';
+import { dependencies } from './package.json';
 
 const builds: IBuilds = {
     defaultBuildProfiles: createBuildProfiles(
         {
             platform: Platforms.NODE,
             format: ImportFormat.COMMON_JS,
-            external: ['deep-equal', 'esbuild', 'joi']
+            external: Object.keys(dependencies)
         },
         {
             [DefaultBuildProfiles.PROD]: {
@@ -22,7 +20,9 @@ const builds: IBuilds = {
                 {
                     src: './src/espack.ts',
                     buildProfiles: createBuildProfiles({
-                        banner: '#!/usr/bin/env node'
+                        banner: {
+                            js: '#!/usr/bin/env node'
+                        }
                     })
                 },
                 {

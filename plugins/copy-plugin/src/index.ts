@@ -4,7 +4,6 @@ import {
     BuildLifecycles,
     checkAssetsExist,
     EspackPlugin,
-    getAssetFileName,
     IBasePluginContext,
     IBuildReadyPluginContext,
     IBuiltPluginContext,
@@ -12,6 +11,7 @@ import {
 } from '@espack/espack';
 
 interface IEspackCopyPluginOptions {
+    basedir?: string;
     assets: string[];
     outdir?: string;
 }
@@ -31,8 +31,13 @@ export class EspackCopyPlugin extends EspackPlugin<void> {
         super('@espack/copy-plugin', enabledLifecycles);
         this._options = {
             outdir: 'assets',
+            basedir: '.',
             ...options
         };
+    }
+
+    private _mapBasedirToAsset(asset: string): string {
+        return path.join(this._options.basedir, asset);
     }
 
     private static _watcherFactory(
@@ -41,11 +46,11 @@ export class EspackCopyPlugin extends EspackPlugin<void> {
         resource: string,
         onChange: (fileName: string) => void
     ): FSWatcher {
-        const buildsDir: string = EspackPlugin.getBuildsDir(context);
+        const { buildsDir } = context;
         const watcher: FSWatcher = fs.watch(resource, { encoding: 'utf-8' }, (event, fileName) => {
             try {
-                fs.unlinkSync(path.join(buildsDir, outdir, getAssetFileName(resource)));
-                fs.copyFileSync(fileName, path.join(buildsDir, outdir, getAssetFileName(fileName)));
+                fs.unlinkSync(path.join(buildsDir, outdir, path.basename(resource)));
+                fs.copyFileSync(fileName, path.join(buildsDir, outdir, path.basename(fileName)));
             } catch (e) {
                 console.error(e);
             } finally {
@@ -57,19 +62,23 @@ export class EspackCopyPlugin extends EspackPlugin<void> {
     }
 
     public onResourceCheck(context: IBasePluginContext): Promise<void> {
-        return checkAssetsExist([...this._options.assets]);
+        return checkAssetsExist([...this._options.assets.map(this._mapBasedirToAsset.bind(this))]);
     }
 
     public async onBuild(context: IBuildReadyPluginContext): Promise<void> {
-        const buildsDir: string = EspackPlugin.getBuildsDir(context);
+        const assetsDir: string = path.join(context.buildsDir, this._options.outdir);
+        if (!fs.existsSync(assetsDir)) {
+            fs.mkdirSync(assetsDir);
+        }
+
         const copyJobs: Promise<void>[] = this._options.assets.map(asset =>
-            fs.promises.copyFile(asset, path.join(buildsDir, this._options.outdir, getAssetFileName(asset)))
+            fs.promises.copyFile(path.join(this._options.basedir, asset), path.join(assetsDir, path.basename(asset)))
         );
         await Promise.all(copyJobs);
     }
 
     public registerCustomWatcher(context: IBuiltPluginContext<void>): ICleanup {
-        const watchedResources: string[] = [...this._options.assets];
+        const watchedResources: string[] = [...this._options.assets.map(this._mapBasedirToAsset.bind(this))];
 
         const watchers: FSWatcher[] = [];
 

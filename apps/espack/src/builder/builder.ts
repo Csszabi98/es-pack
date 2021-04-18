@@ -1,27 +1,42 @@
 import {
-    IBasePluginContext,
     BuildLifecycles,
+    EspackPlugin,
+    IBasePluginContext,
     IBuildReadyPluginContext,
-    IBuiltPluginContext,
-    EspackPlugin
+    IBuiltPluginContext
 } from '../build/build.plugin';
 import { getPluginsForLifecycle } from '../utils/get-plugins-for-lifecycle';
-import { ICleanup, IBuild, BuildProfiles, IDeterministicEntryAsset, IBuildResult } from '../build/build.model';
+import { BuildProfiles, IBuild, IBuildResult, ICleanup, IDeterministicEntryAsset } from '../build/build.model';
 import { createBuildReadyScripts, executeBuilds, Watcher } from './builder.helpers';
 import { checkScripts } from './builder.utils';
 import { BuildFailure, BuildResult } from 'esbuild';
+import { DEFAULT_BUILDS_DIR } from '../build/build.constants';
+import fs from 'fs';
+import path from 'path';
 
-export const builder = async (
-    defaultBuildProfiles: BuildProfiles | undefined,
-    defaultPlugins: EspackPlugin[] | undefined,
-    { scripts, buildProfiles, plugins }: IBuild,
-    watch: boolean,
-    buildProfile: string | undefined,
-    singleBuildMode: boolean
-): Promise<ICleanup> => {
+interface IBuilder {
+    defaultBuildProfiles?: BuildProfiles;
+    defaultPlugins?: EspackPlugin[];
+    buildsDir?: string;
+    build: IBuild;
+    watch: boolean;
+    buildProfile?: string;
+    singleBuildMode: boolean;
+}
+
+export const builder = async ({
+    watch,
+    buildsDir = DEFAULT_BUILDS_DIR,
+    buildProfile,
+    singleBuildMode,
+    defaultBuildProfiles,
+    defaultPlugins,
+    build: { scripts, buildProfiles, plugins }
+}: IBuilder): Promise<ICleanup> => {
     const allPlugins: EspackPlugin[] = [...(defaultPlugins || []), ...(plugins || [])];
 
     const basePluginContext: IBasePluginContext = {
+        buildsDir: buildsDir,
         scripts,
         defaultBuildProfiles
     };
@@ -53,14 +68,15 @@ export const builder = async (
     afterResourceCheckPlugins.forEach(plugin => plugin.afterResourceCheck(basePluginContext));
 
     // Before build
-    const buildReadyScripts: IDeterministicEntryAsset[] = createBuildReadyScripts(
+    const buildReadyScripts: IDeterministicEntryAsset[] = createBuildReadyScripts({
+        buildsDir,
         scripts,
         buildProfile,
         defaultBuildProfiles,
         buildProfiles,
         watch,
         singleBuildMode
-    );
+    });
     const buildReadyPluginContext: IBuildReadyPluginContext = {
         ...basePluginContext,
         buildReadyScripts
@@ -72,10 +88,10 @@ export const builder = async (
     let buildResults: IBuildResult[] = [];
     const builtPluginContexts: IBuiltPluginContext<unknown>[] = [];
 
+    const afterBuildPlugins: EspackPlugin[] = getPluginsForLifecycle(allPlugins, BuildLifecycles.AFTER_BUILD);
     // TODO: Extract this logic
     let onWatch: Watcher | undefined;
     if (watch) {
-        const onRebuildPlugins: EspackPlugin[] = getPluginsForLifecycle(allPlugins, BuildLifecycles.REBUILD);
         onWatch = (buildId: string, error: BuildFailure | undefined, result: BuildResult | undefined) => {
             if (result) {
                 const previousBuildResultIndex: number = buildResults.findIndex(
@@ -86,13 +102,17 @@ export const builder = async (
                     buildResult: result
                 });
 
-                onRebuildPlugins.forEach((plugin, index) => plugin.onRebuild(builtPluginContexts[index]));
+                afterBuildPlugins.forEach((plugin, index) => plugin.afterBuild(builtPluginContexts[index]));
             }
 
             if (error) {
                 console.error(error.message);
             }
         };
+    }
+
+    if (!fs.existsSync(buildsDir)) {
+        fs.mkdirSync(buildsDir);
     }
 
     // Build, inject info from build
@@ -107,16 +127,28 @@ export const builder = async (
     const pluginBuildResults: unknown[] = results[1];
 
     builtPluginContexts.push(
-        ...pluginBuildResults.map(pluginBuildResult => ({
-            ...buildReadyPluginContext,
-            buildResults,
-            pluginBuildResult
-        }))
+        ...pluginBuildResults
+            .filter((__, index) => onBuildPlugins[index].hookEnabled(BuildLifecycles.AFTER_BUILD))
+            .map(pluginBuildResult => ({
+                ...buildReadyPluginContext,
+                buildResults,
+                pluginBuildResult
+            }))
     );
 
     // After build
-    const afterBuildPlugins: EspackPlugin[] = getPluginsForLifecycle(allPlugins, BuildLifecycles.AFTER_BUILD);
     afterBuildPlugins.forEach((plugin, index) => plugin.afterBuild(builtPluginContexts[index]));
+
+    const outputPromises: (Promise<void>[] | undefined)[] = buildResults.map(({ buildResult }) =>
+        buildResult.outputFiles?.map(async outFile => {
+            const dir: string = path.dirname(outFile.path);
+            if (!fs.existsSync(dir)) {
+                await fs.promises.mkdir(dir, { recursive: true });
+            }
+            return fs.promises.writeFile(outFile.path, outFile.contents);
+        })
+    );
+    await Promise.all(outputPromises);
 
     let pluginWatchCleanups: ICleanup[] | undefined;
     if (watch) {

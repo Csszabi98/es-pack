@@ -20,14 +20,15 @@ const defaultEntryAssetTransformations: IEntryAssetTransformations = {
     plugins: [],
     preserveSymlinks: false,
     absWorkingDir: process.cwd(),
-    avoidTDZ: false,
     charset: 'utf8',
     color: true,
     define: {
         NODE_ENV: 'development'
     },
-    errorLimit: 0,
-    excludePeerDependencies: false,
+    entryNames: '[dir]/[name]',
+    sourceRoot: '',
+    logLimit: 20,
+    conditions: [],
     external: [],
     globalName: 'app',
     incremental: false,
@@ -46,10 +47,9 @@ const defaultEntryAssetTransformations: IEntryAssetTransformations = {
     minifyIdentifiers: false,
     minifySyntax: false,
     minifyWhitespace: false,
-    buildsDir: 'dist',
     resolveExtensions: ['.tsx', '.ts', '.jsx', '.js', '.css', '.json'],
     sourcesContent: false,
-    target: ['chrome58', 'firefox57', 'safari11', 'edge16', 'node12.9.0'],
+    target: ['chrome58', 'firefox57', 'safari11', 'edge60', 'node12.9.0'],
     treeShaking: true,
     tsconfig: 'tsconfig.json',
     assetNames: 'assets/[name]-[hash]',
@@ -72,3 +72,5 @@ export const DEFAULT_ENTRY_ASSET_TRANSFORMATIONS: DefaultEntryAssetTransformatio
         }
     }
 } as const;
+
+export const DEFAULT_BUILDS_DIR: string = 'dist';

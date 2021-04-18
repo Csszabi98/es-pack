@@ -1,27 +1,28 @@
 import fs from 'fs';
-import Vm from 'vm';
-import { IBuilds, ICleanup } from './build/build.model';
+import { DefaultBuildProfiles, IBuilds, ICleanup } from './build/build.model';
 import { builder } from './builder/builder';
 import { getArgument } from './utils/get-argument';
 import { buildsSchema } from './validation/build.validator';
 import { FileExtensions, isFile } from './utils';
-import { buildConfig } from './utils/build-config';
 import Joi from 'joi';
+import { buildConfig } from './utils/build-config';
 
 const timeLabel: string = 'Built under';
 console.log('Starting build...');
 console.time(timeLabel);
 
 export const espack = async (): Promise<ICleanup[] | undefined> => {
-    const profile: string = getArgument('profile');
+    const profile: string = getArgument('profile') || DefaultBuildProfiles.PROD;
+    process.env.NODE_ENV = profile;
+
     const watch: boolean = process.argv.includes('--watch');
     const config: string = getArgument('config');
 
+    const configPaths: string[] = ['espack.config.ts', 'espack.config.js'];
     if (config && !isFile(config, FileExtensions.JAVASCRIPT, FileExtensions.TYPESCRIPT)) {
         throw new Error(`Config file must be a ${FileExtensions.TYPESCRIPT} or ${FileExtensions.JAVASCRIPT} file!`);
     }
 
-    const configPaths: string[] = ['espack.config.ts', 'espack.config.js'];
     if (config) {
         configPaths.unshift(config);
     }
@@ -34,24 +35,7 @@ export const espack = async (): Promise<ICleanup[] | undefined> => {
         );
     }
 
-    const configString: string = buildConfig(configPath);
-
-    interface IConfigExports {
-        default?: IBuilds;
-    }
-    const configExports: IConfigExports = {};
-
-    try {
-        Vm.runInNewContext(configString, {
-            exports: configExports,
-            require
-        });
-    } catch (e) {
-        console.error(`Could not read espack.config file: ${e}`);
-        throw e;
-    }
-
-    const espackConfig: IBuilds | undefined = configExports.default;
+    const espackConfig: IBuilds | undefined = await buildConfig(configPath);
     if (!espackConfig) {
         throw new Error(`Missing default export from config ${configPath}!`);
     }
@@ -65,14 +49,13 @@ export const espack = async (): Promise<ICleanup[] | undefined> => {
 
     return Promise.all(
         espackConfig.builds.map(build =>
-            builder(
-                espackConfig.defaultBuildProfiles,
-                espackConfig.defaultPlugins,
+            builder({
+                ...espackConfig,
                 build,
                 watch,
-                profile,
-                espackConfig.builds.length === 1
-            )
+                buildProfile: profile,
+                singleBuildMode: espackConfig.builds.length === 1
+            })
         )
     );
 };

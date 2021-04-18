@@ -21,20 +21,15 @@ const mapEnvironmentVariables = (environmentVariables: Record<string, string>): 
         (acc, [key, value]) => ({
             // TODO: Warning | Error for duplicate keys
             ...acc,
-            [`process.env.${key}`]: `"${value}"`
+            [key]: `"${value}"`
         }),
         {}
     );
 
-const getGlobalBuildProfile = (buildProfileName: DefaultBuildProfiles): IProfiles => {
-    const { buildsDir, excludePeerDependencies, ...buildProfile } = DEFAULT_ENTRY_ASSET_TRANSFORMATIONS[buildProfileName];
+const getGlobalBuildProfile = (buildProfileName: DefaultBuildProfiles, buildsDir: string): IProfiles => {
     return {
-        espackBuildProfile: {
-            excludePeerDependencies,
-            buildsDir
-        },
         buildProfile: {
-            ...buildProfile,
+            ...DEFAULT_ENTRY_ASSET_TRANSFORMATIONS[buildProfileName],
             outdir: buildsDir
         }
     };
@@ -47,25 +42,18 @@ const extractPartialBuildProfile = (
     if (!buildProfiles) {
         return;
     }
-    const commonBuildProfile: Partial<IEntryAssetTransformations> | undefined = buildProfiles[buildProfileName];
-    if (!commonBuildProfile) {
+    const buildProfile: Partial<IEntryAssetTransformations> | undefined = buildProfiles[buildProfileName];
+    if (!buildProfile) {
         return;
     }
 
-    const { excludePeerDependencies, ...buildProfile } = commonBuildProfile;
-    return {
-        // Separate espack and esbuild options
-        espackBuildProfile: {
-            excludePeerDependencies
-        },
-        buildProfile
-    };
+    return { buildProfile };
 };
 
 interface ICreateBuildableScriptProps {
     script: IEntryAsset;
+    buildsDir: string;
     watch: boolean;
-    peerDependencies: string[];
     singleBuildMode: boolean;
     currentBuildIndex: number;
     buildProfile?: string;
@@ -75,7 +63,7 @@ interface ICreateBuildableScriptProps {
 
 export const createBuildableScript = ({
     script,
-    peerDependencies,
+    buildsDir,
     singleBuildMode,
     currentBuildIndex,
     buildProfile = DefaultBuildProfiles.PROD,
@@ -85,7 +73,7 @@ export const createBuildableScript = ({
     const defaultBuildProfile: DefaultBuildProfiles =
         StringToDefaultBuildProfiles[buildProfile] || DefaultBuildProfiles.PROD;
     const { src, buildProfiles: scriptBuildProfiles } = script;
-    const globalOptions: IProfiles = getGlobalBuildProfile(defaultBuildProfile);
+    const globalOptions: IProfiles = getGlobalBuildProfile(defaultBuildProfile, buildsDir);
     const defaultOptions: IIncompleteProfiles | undefined = extractPartialBuildProfile(defaultBuildProfiles, buildProfile);
     const buildOptions: IIncompleteProfiles | undefined = extractPartialBuildProfile(buildProfiles, buildProfile);
     const scriptOptions: IIncompleteProfiles | undefined = extractPartialBuildProfile(scriptBuildProfiles, buildProfile);
@@ -93,12 +81,6 @@ export const createBuildableScript = ({
     if (defaultOptions || buildOptions || scriptOptions) {
         const result: IDeterministicEntryAsset = {
             src,
-            espackBuildProfile: {
-                ...globalOptions.espackBuildProfile,
-                ...defaultOptions?.espackBuildProfile,
-                ...buildOptions?.espackBuildProfile,
-                ...scriptOptions?.espackBuildProfile
-            },
             buildProfile: {
                 ...globalOptions.buildProfile,
                 ...defaultOptions?.buildProfile,
@@ -106,22 +88,10 @@ export const createBuildableScript = ({
                 ...scriptOptions?.buildProfile
             }
         };
-        const external: string[] = result.espackBuildProfile.excludePeerDependencies
-            ? [...result.buildProfile.external, ...peerDependencies]
-            : result.buildProfile.external;
-        result.buildProfile.external = external;
-
-        if (!external.length && result.espackBuildProfile.excludePeerDependencies) {
-            console.warn('There are no peer dependencies to exlude!');
-        } else {
-            console.log('Excluding the following dependencies:');
-            external.forEach(console.log);
-        }
 
         result.buildProfile.define = mapEnvironmentVariables(result.buildProfile.define);
 
         const { outdir } = result.buildProfile;
-        const { buildsDir } = result.espackBuildProfile;
         if (!singleBuildMode && outdir === buildsDir) {
             result.buildProfile.outdir = path.join(buildsDir, `build_${currentBuildIndex}`);
         } else if (outdir !== buildsDir) {

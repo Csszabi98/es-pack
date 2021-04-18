@@ -6,6 +6,6 @@
             "sass": ["node_modules/@types/node-sass"]
         }
     },
-    "include": ["src", "espack.config.ts"],
+    "include": ["src", "espack.config.ts", "plugin-config.ts", "espack-plugin.config.ts"],
     "exclude": ["node_modules", "*.spec.ts"]
 }

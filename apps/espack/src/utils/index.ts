@@ -7,5 +7,4 @@
     (which would defeat the purpose of this repo).
  */
 export * from './asset/check-assets-exist';
-export * from './asset/get-asset-filename';
 export * from './file/is-file';
