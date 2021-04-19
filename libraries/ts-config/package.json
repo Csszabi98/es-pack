@@ -6,7 +6,7 @@
     "scripts": {
         "build": "",
         "build:dev": "",
-        "build:dev:watch": "",
+        "build:watch": "",
         "lint": "",
         "lint:fix": ""
     },

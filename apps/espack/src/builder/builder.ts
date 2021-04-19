@@ -150,12 +150,23 @@ export const builder = async ({
     );
     await Promise.all(outputPromises);
 
+    const watchPluginContexts: IBuiltPluginContext<unknown>[] = [];
+    watchPluginContexts.push(
+        ...pluginBuildResults
+            .filter((__, index) => onBuildPlugins[index].hookEnabled(BuildLifecycles.WATCH))
+            .map(pluginBuildResult => ({
+                ...buildReadyPluginContext,
+                buildResults,
+                pluginBuildResult
+            }))
+    );
+
     let pluginWatchCleanups: ICleanup[] | undefined;
     if (watch) {
         // On watch
         const onWatchPlugins: EspackPlugin[] = getPluginsForLifecycle(allPlugins, BuildLifecycles.WATCH);
         pluginWatchCleanups = onWatchPlugins.map((plugin, index) =>
-            plugin.registerCustomWatcher(builtPluginContexts[index])
+            plugin.registerCustomWatcher(watchPluginContexts[index])
         );
     }
 

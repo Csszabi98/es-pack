@@ -7,7 +7,9 @@
         "clean": "rimraf ./dist",
         "build": "pnpm clean && pnpx espack --profile production",
         "build:dev": "pnpm clean && pnpx espack --profile development",
-        "build:dev:watch": "pnpm clean && pnpx espack --profile development --watch",
+        "build:watch": "pnpm build:dev",
+        "build:watch:local": "pnpx espack --profile development --watch",
+        "serve": "http-server ./dist --cors -r ./dist/assets/robots.txt --proxy http://localhost:8080?",
         "lint": "eslint src/** --max-warnings=0 && tsc --noEmit",
         "lint:tsc": "tsc --noEmit",
         "lint:fix": "eslint src/** --fix"
@@ -30,7 +32,9 @@
         "typescript": "4.2.3",
         "@types/react": "17.0.3",
         "@types/react-dom": "17.0.3",
-        "@types/node": "14.14.37"
+        "@types/node": "14.14.37",
+        "http-server": "0.12.3",
+        "@fal-works/esbuild-plugin-global-externals": "~2.1.1"
     },
     "engines": {
         "node": ">=12.9.0"

@@ -1,6 +1,8 @@
 import { createBuildProfiles, DefaultBuildProfiles, IBuilds, ImportFormat, Platforms } from '@espack/espack';
 import { EspackCopyPlugin } from '@espack/copy-plugin';
 import { EspackHtmlPlugin, IHtmlInjection } from '@espack/html-plugin';
+import { globalExternals } from '@fal-works/esbuild-plugin-global-externals';
+import React from 'react';
 
 const NODE_ENV: string = 'process.env.NODE_ENV';
 const isProdBuild: boolean = process.env.NODE_ENV === DefaultBuildProfiles.PROD;
@@ -20,9 +22,9 @@ const reactScriptsMap: IReactScriptsMap = {
     [DefaultBuildProfiles.DEV]:
         '<script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.development.js" ' +
         'integrity="sha512-Vf2xGDzpqUOEIKO+X2rgTLWPY+65++WPwCHkX2nFMu9IcstumPsf/uKKRd5prX3wOu8Q0GBylRpsDB26R6ExOg==" ' +
-        'crossorigin="anonymous"></script>' +
-        '<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/cjs/react-dom.development.min.js" ' +
-        'integrity="sha512-Wy3hcU/q1COKtaXcrG+JgUdTBucqiMEd+ViiaYTUluTHLAOF88R0LSJnE56rTwlAqS6/lqXxGZH0cHNXXzMEiw==" ' +
+        'crossorigin="anonymous"></script>\n    ' +
+        '<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.development.min.js" ' +
+        'integrity="sha512-aNBFq6ue8EmNDwVD/l0mWFy3iVZLIxtQaD7fEYBn3HluJer36T1AhJK0THj6MKKfhZrexxWsKX1T16TxLZo6uQ==" ' +
         'crossorigin="anonymous"></script>'
 };
 
@@ -34,9 +36,26 @@ const builds: IBuilds = {
     defaultBuildProfiles: createBuildProfiles(
         {
             platform: Platforms.BROWSER,
-            format: ImportFormat.ESM,
-            inject: ['./injectables/react-shim.mjs'],
-            external: ['react', 'react-dom']
+            format: ImportFormat.IIFE,
+            inject: ['./shims/react-shim.mjs'],
+            external: ['react', 'react-dom'],
+            jsxFactory: 'createElement',
+            jsxFragment: 'Fragment',
+            entryNames: '[dir]/[name].[hash]',
+            plugins: [
+                globalExternals({
+                    react: {
+                        varName: 'React',
+                        defaultExport: false,
+                        namedExports: Object.keys(React)
+                    },
+                    'react-dom': {
+                        varName: 'ReactDOM',
+                        defaultExport: false,
+                        namedExports: ['render']
+                    }
+                })
+            ]
         },
         {
             [DefaultBuildProfiles.DEV]: {

@@ -36,7 +36,8 @@ export const buildConfig = async (configPath: string): Promise<IBuilds | undefin
                 builtin: ['*'],
                 external: true
             },
-            env: process.env
+            env: process.env,
+            sourceExtensions: ['js', 'ts', 'tsx', 'jsx', 'cjs', 'mjs']
         });
 
         return (vm.run(configString, configPath) || {}).default;

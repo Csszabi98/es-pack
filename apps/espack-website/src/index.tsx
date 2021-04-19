@@ -1,8 +1,8 @@
 import { StrictMode } from 'react';
-import ReactDOM from 'react-dom';
+import { render } from 'react-dom';
 import { App } from './app/app';
 
-ReactDOM.render(
+render(
     <StrictMode>
         <App />
     </StrictMode>,

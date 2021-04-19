@@ -1,9 +1,10 @@
 import fs, { FSWatcher } from 'fs';
 import path from 'path';
-import minifyHtml from '@minify-html/js';
+import { minify, Options } from 'html-minifier';
 import {
     BuildLifecycles,
     checkAssetsExist,
+    DefaultBuildProfiles,
     EspackPlugin,
     IBasePluginContext,
     IBuildReadyPluginContext,
@@ -12,11 +13,7 @@ import {
 } from '@espack/espack';
 import { generateDefaultHtmlContent } from './utils/generate-default-html-content';
 import { injectScripts } from './utils/inject-scripts';
-
-interface IMinifyCfg {
-    minifyJs?: boolean;
-    minifyCss?: boolean;
-}
+import { injectHtml } from './utils/inject-html';
 
 export enum InjectionPoint {
     AFTER_HEAD_START = '<head>',
@@ -42,6 +39,9 @@ export interface IHtmlInjection {
 
 interface IEspackHtmlPluginCommonOptions {
     outputFile: string;
+    injectionSeparator: string;
+    injectionPrefix: string;
+    define: Record<string, string>;
 }
 interface IEspackHtmlPluginCommonOptionalOptions {
     inputFile?: string;
@@ -49,7 +49,8 @@ interface IEspackHtmlPluginCommonOptionalOptions {
     injectStyle?: string[];
     injectHtml?: IHtmlInjection;
     outdir?: string;
-    minify?: boolean | IMinifyCfg;
+    minify?: boolean | Options;
+    hashSeparator?: string;
 }
 
 export interface IEspackHtmlPluginOptions
@@ -69,8 +70,14 @@ export class EspackHtmlPlugin extends EspackPlugin<string> {
             BuildLifecycles.WATCH
         ];
         super('@espack/html-plugin', enabledLifecycles);
+        const isProd: boolean = process.env.NODE_ENV !== DefaultBuildProfiles.DEV;
         this._options = {
             outputFile: 'index.html',
+            injectionSeparator: isProd ? '' : '\n',
+            injectionPrefix: isProd ? '' : '    ', // Use 4 whitespaces
+            define: {
+                PUBLIC_URL: 'assets' // Default outdir of copy plugin
+            },
             ...options
         };
     }
@@ -81,22 +88,24 @@ export class EspackHtmlPlugin extends EspackPlugin<string> {
         }
 
         let result: string = fs.readFileSync(filename).toString();
+        result = injectHtml(result, this._options);
 
-        const minifyOptions: boolean | IMinifyCfg | undefined = this._options.minify;
+        const define: Record<string, string> = this._options.define;
+        Object.keys(define).forEach(key => {
+            result = result.replace(new RegExp(`%${key}%`, 'g'), define[key]);
+        });
+
+        const minifyOptions: boolean | Options | undefined = this._options.minify;
         if (minifyOptions) {
-            result = minifyHtml
-                .minify(
-                    result,
-                    minifyHtml.createConfiguration(
-                        typeof minifyOptions === 'boolean'
-                            ? {
-                                  minifyJs: false,
-                                  minifyCss: false
-                              }
-                            : minifyOptions
-                    )
-                )
-                .toString();
+            result = minify(
+                result,
+                typeof minifyOptions === 'boolean'
+                    ? {
+                          removeComments: true,
+                          collapseWhitespace: true
+                      }
+                    : minifyOptions
+            );
         }
 
         return result;
@@ -125,14 +134,22 @@ export class EspackHtmlPlugin extends EspackPlugin<string> {
         fs.writeFileSync(this._getOutputPath(context), html);
     }
 
-    private static _watcherFactory(outputPath: string, resource: string, onChange: (fileName: string) => void): FSWatcher {
-        const watcher: FSWatcher = fs.watch(resource, { encoding: 'utf-8' }, (event, fileName) => {
+    private static _watcherFactory(
+        outputPath: string,
+        resource: string,
+        onChange: (fileName: string) => Promise<void>
+    ): FSWatcher {
+        const watcher: FSWatcher = fs.watch(resource, { encoding: 'utf-8' }, async (event, fileName) => {
+            await onChange(fileName);
+            if (event === 'change') {
+                return;
+            }
+
             try {
                 fs.unlinkSync(outputPath);
             } catch (e) {
                 console.error(e);
             } finally {
-                onChange(fileName);
                 watcher.close();
             }
         });
@@ -148,8 +165,9 @@ export class EspackHtmlPlugin extends EspackPlugin<string> {
 
             type CreateWatcher = () => FSWatcher;
             const createWatcher: CreateWatcher = () =>
-                EspackHtmlPlugin._watcherFactory(this._getOutputPath(context), watchedResource, fileName => {
+                EspackHtmlPlugin._watcherFactory(this._getOutputPath(context), watchedResource, async fileName => {
                     this._options.inputFile = fileName;
+                    await this.onBuild(context);
                     this.afterBuild(context);
                     watcher = createWatcher();
                 });

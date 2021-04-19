@@ -19,10 +19,12 @@
       "incremental": true
     },
     {
-      "name": "build:dev:watch",
+      "name": "build:watch",
       "commandKind": "bulk",
       "summary": "Used during development to build any new changes inside the monorepo.",
-      "enableParallelism": true
+      "enableParallelism": true,
+      "incremental": true,
+      "watchForChanges": true
     },
     {
       "name": "lint",

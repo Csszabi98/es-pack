@@ -30,7 +30,7 @@ const defaultEntryAssetTransformations: IEntryAssetTransformations = {
     logLimit: 20,
     conditions: [],
     external: [],
-    globalName: 'app',
+    globalName: '',
     incremental: false,
     jsxFactory: 'React.createElement',
     jsxFragment: 'React.Fragment',
@@ -62,7 +62,7 @@ export const DEFAULT_ENTRY_ASSET_TRANSFORMATIONS: DefaultEntryAssetTransformatio
     },
     [DefaultBuildProfiles.PROD]: {
         ...defaultEntryAssetTransformations,
-        minify: false,
+        minify: true,
         minifyIdentifiers: true,
         minifySyntax: true,
         minifyWhitespace: true,
