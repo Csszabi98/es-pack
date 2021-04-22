@@ -1,8 +1,9 @@
-import { build as esbuilder, BuildFailure, BuildResult } from 'esbuild';
+import { build as esbuilder, BuildFailure, BuildResult, OutputFile } from 'esbuild';
 import deepEqual from 'deep-equal';
 import fs from 'fs';
 import { IBuildResult, ICommonBuild, IDeterministicEntryAsset, IEntryAsset, BuildProfiles } from '../build/build.model';
 import { createBuildableScript as createBuildReadyScript } from './builder.utils';
+import path from 'path';
 
 export type Watcher = (buildId: string, error: BuildFailure | undefined, result: BuildResult | undefined) => void;
 
@@ -57,6 +58,7 @@ export const executeBuilds = async (
                               }
                           }
                         : false,
+                    incremental: !!onWatch,
                     write: false
                 })
             };
@@ -104,3 +106,19 @@ export const createBuildReadyScripts = ({
 
     return buildReadyScripts;
 };
+
+export const unlinkOld = (staleFiles: OutputFile[]): void =>
+    staleFiles.forEach(outFile => {
+        if (fs.existsSync(outFile.path)) {
+            fs.unlinkSync(outFile.path);
+        }
+    });
+
+export const writeChanges = ({ buildResult }: IBuildResult): void =>
+    buildResult.outputFiles?.forEach(outFile => {
+        const dir: string = path.dirname(outFile.path);
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir, { recursive: true });
+        }
+        fs.writeFileSync(outFile.path, outFile.contents);
+    });

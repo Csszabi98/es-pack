@@ -41,7 +41,7 @@ const builds: IBuilds = {
             external: ['react', 'react-dom'],
             jsxFactory: 'createElement',
             jsxFragment: 'Fragment',
-            entryNames: '[dir]/[name].[hash]',
+            entryNames: `[dir]/[name]${isProdBuild ? '.[hash]' : ''}`,
             plugins: [
                 globalExternals({
                     react: {

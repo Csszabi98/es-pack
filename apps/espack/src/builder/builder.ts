@@ -7,12 +7,11 @@ import {
 } from '../build/build.plugin';
 import { getPluginsForLifecycle } from '../utils/get-plugins-for-lifecycle';
 import { BuildProfiles, IBuild, IBuildResult, ICleanup, IDeterministicEntryAsset } from '../build/build.model';
-import { createBuildReadyScripts, executeBuilds, Watcher } from './builder.helpers';
+import { createBuildReadyScripts, executeBuilds, unlinkOld, Watcher, writeChanges } from './builder.helpers';
 import { checkScripts } from './builder.utils';
-import { BuildFailure, BuildResult } from 'esbuild';
+import { BuildFailure, BuildResult, OutputFile } from 'esbuild';
 import { DEFAULT_BUILDS_DIR } from '../build/build.constants';
 import fs from 'fs';
-import path from 'path';
 
 interface IBuilder {
     defaultBuildProfiles?: BuildProfiles;
@@ -92,17 +91,32 @@ export const builder = async ({
     // TODO: Extract this logic
     let onWatch: Watcher | undefined;
     if (watch) {
-        onWatch = (buildId: string, error: BuildFailure | undefined, result: BuildResult | undefined) => {
+        onWatch = async (buildId: string, error: BuildFailure | undefined, result: BuildResult | undefined) => {
             if (result) {
                 const previousBuildResultIndex: number = buildResults.findIndex(
                     buildResult => buildResult.buildId === buildId
                 );
-                buildResults.splice(previousBuildResultIndex, 1, {
-                    ...buildResults[previousBuildResultIndex],
+                const previousBuildResult: IBuildResult = buildResults[previousBuildResultIndex];
+                const newBuildResult: IBuildResult = {
+                    ...previousBuildResult,
                     buildResult: result
-                });
+                };
+
+                buildResults.splice(previousBuildResultIndex, 1, newBuildResult);
 
                 afterBuildPlugins.forEach((plugin, index) => plugin.afterBuild(builtPluginContexts[index]));
+
+                console.log('[watch] build writing changes');
+                writeChanges(newBuildResult);
+                console.log('[watch] build changes written');
+
+                const staleFiles: OutputFile[] | undefined = previousBuildResult.buildResult.outputFiles?.filter(
+                    oldOutFile =>
+                        !newBuildResult.buildResult.outputFiles?.some(newOutFile => newOutFile.path === oldOutFile.path)
+                );
+                if (staleFiles?.length) {
+                    unlinkOld(staleFiles);
+                }
             }
 
             if (error) {
@@ -139,16 +153,7 @@ export const builder = async ({
     // After build
     afterBuildPlugins.forEach((plugin, index) => plugin.afterBuild(builtPluginContexts[index]));
 
-    const outputPromises: (Promise<void>[] | undefined)[] = buildResults.map(({ buildResult }) =>
-        buildResult.outputFiles?.map(async outFile => {
-            const dir: string = path.dirname(outFile.path);
-            if (!fs.existsSync(dir)) {
-                await fs.promises.mkdir(dir, { recursive: true });
-            }
-            return fs.promises.writeFile(outFile.path, outFile.contents);
-        })
-    );
-    await Promise.all(outputPromises);
+    buildResults.forEach(writeChanges);
 
     const watchPluginContexts: IBuiltPluginContext<unknown>[] = [];
     watchPluginContexts.push(

@@ -41,3 +41,8 @@ typescript/javascript configuration files in the future.
 
 The product will naturally look for a build.json in the root of the project, and builds
 the target scripts.
+
+## Webstorm
+
+When using webstorm the "Backup files before saving" (previously "Safe Write") can interfere
+with the watch mode, so it is recommended to disable this option.
