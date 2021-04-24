@@ -39,6 +39,13 @@
       "enableParallelism": true
     },
     {
+      "name": "commitlint",
+      "commandKind": "global",
+      "summary": "Used by the pre-commit Git hook. This command invokes commitlint to validate the commit message.",
+      "autoinstallerName": "rush-commitlint",
+      "shellCommand": "commitlint --edit --cwd ./common/autoinstallers/rush-commitlint --verbose"
+    },
+    {
       "name": "prettier",
       "commandKind": "global",
       "summary": "Used by the pre-commit Git hook. This command invokes Prettier to reformat staged changes.",
