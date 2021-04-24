@@ -40,25 +40,17 @@ export class EspackCopyPlugin extends EspackPlugin<void> {
         return path.join(this._options.basedir, asset);
     }
 
-    private static _watcherFactory(
-        context: IBuildReadyPluginContext | IBuiltPluginContext<void>,
-        outdir: string,
-        resource: string,
-        onChange: (fileName: string) => void
-    ): FSWatcher {
-        const { buildsDir } = context;
-        const watcher: FSWatcher = fs.watch(resource, { encoding: 'utf-8' }, (event, fileName) => {
-            try {
-                fs.unlinkSync(path.join(buildsDir, outdir, path.basename(resource)));
-                fs.copyFileSync(fileName, path.join(buildsDir, outdir, path.basename(fileName)));
-            } catch (e) {
-                console.error(e);
-            } finally {
-                onChange(fileName);
-                watcher.close();
+    private static _watcherFactory(resource: string, onChange: (fileName: string) => void): FSWatcher {
+        return fs.watch(resource, { encoding: 'utf-8' }, (event, fileName) => {
+            if (event === 'rename') {
+                console.error(
+                    `Asset ${fileName} renamed! Please sync up the changes with the config and restart the watcher...`
+                );
+                process.exit(1);
+                return;
             }
+            onChange(fileName);
         });
-        return watcher;
     }
 
     public onResourceCheck(context: IBasePluginContext): Promise<void> {
@@ -80,15 +72,15 @@ export class EspackCopyPlugin extends EspackPlugin<void> {
     public registerCustomWatcher(context: IBuiltPluginContext<void>): ICleanup {
         const watchedResources: string[] = [...this._options.assets.map(this._mapBasedirToAsset.bind(this))];
 
-        const watchers: FSWatcher[] = [];
-
-        const createWatcher = (resource: string, index: number): FSWatcher => {
-            return EspackCopyPlugin._watcherFactory(context, this._options.outdir, resource, fileName => {
-                watchers.splice(index, 1, createWatcher(fileName, index));
-                watchedResources.splice(index, 1, fileName);
+        const createWatcher = (resource: string, index: number): FSWatcher =>
+            EspackCopyPlugin._watcherFactory(resource, fileName => {
+                const label: string = `[watch] ${this.name} build finished under`;
+                console.time(label);
+                console.log(`[watch] ${this.name} build started...`);
+                fs.copyFileSync(resource, path.join(context.buildsDir, this._options.outdir, path.basename(fileName)));
+                console.timeEnd(label);
             });
-        };
-        watchedResources.forEach(createWatcher);
+        const watchers: FSWatcher[] = watchedResources.map(createWatcher);
 
         const close = (): void => {
             watchers.forEach(watcher => watcher.close());

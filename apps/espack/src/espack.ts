@@ -7,11 +7,16 @@ import { FileExtensions, isFile } from './utils';
 import Joi from 'joi';
 import { buildConfig } from './utils/build-config';
 
-const timeLabel: string = 'Built under';
-console.log('Starting build...');
-console.time(timeLabel);
+interface IEspackResult {
+    cleanup: ICleanup[];
+    watch: boolean;
+}
 
-export const espack = async (): Promise<ICleanup[] | undefined> => {
+export const espack = async (): Promise<IEspackResult> => {
+    const timeLabel: string = 'Built under';
+    console.log('Starting build...');
+    console.time(timeLabel);
+
     const profile: string = getArgument('profile') || DefaultBuildProfiles.PROD;
     process.env.NODE_ENV = profile;
 
@@ -47,7 +52,7 @@ export const espack = async (): Promise<ICleanup[] | undefined> => {
         throw new Error('Could not validate config file!');
     }
 
-    return Promise.all(
+    const cleanup: ICleanup[] = await Promise.all(
         espackConfig.builds.map(build =>
             builder({
                 ...espackConfig,
@@ -58,14 +63,19 @@ export const espack = async (): Promise<ICleanup[] | undefined> => {
             })
         )
     );
+    console.timeEnd(timeLabel);
+
+    return {
+        cleanup,
+        watch
+    };
 };
 
 espack()
     .then(result => {
-        if (result) {
-            result.forEach(cleanup => cleanup.stop);
+        if (!result.watch) {
+            result.cleanup.forEach(cleanup => cleanup.stop());
         }
-        console.timeEnd(timeLabel);
     })
     .catch(e => {
         console.error(e);

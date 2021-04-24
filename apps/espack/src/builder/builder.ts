@@ -93,6 +93,10 @@ export const builder = async ({
     if (watch) {
         onWatch = async (buildId: string, error: BuildFailure | undefined, result: BuildResult | undefined) => {
             if (result) {
+                console.log('[watch] espack after works started...');
+                const label: string = '[watch] espack after works finished under';
+                console.time(label);
+
                 const previousBuildResultIndex: number = buildResults.findIndex(
                     buildResult => buildResult.buildId === buildId
                 );
@@ -104,18 +108,23 @@ export const builder = async ({
 
                 buildResults.splice(previousBuildResultIndex, 1, newBuildResult);
 
+                console.log('[watch] executing plugins...');
                 afterBuildPlugins.forEach((plugin, index) => plugin.afterBuild(builtPluginContexts[index]));
+                console.log('[watch] plugins executed...');
 
                 console.log('[watch] build writing changes');
                 writeChanges(newBuildResult);
                 console.log('[watch] build changes written');
+                console.timeEnd(label);
 
                 const staleFiles: OutputFile[] | undefined = previousBuildResult.buildResult.outputFiles?.filter(
                     oldOutFile =>
                         !newBuildResult.buildResult.outputFiles?.some(newOutFile => newOutFile.path === oldOutFile.path)
                 );
                 if (staleFiles?.length) {
+                    console.log('[watch] cleaning stale files...');
                     unlinkOld(staleFiles);
+                    console.log('[watch] stale files cleaned');
                 }
             }
 
@@ -153,7 +162,9 @@ export const builder = async ({
     // After build
     afterBuildPlugins.forEach((plugin, index) => plugin.afterBuild(builtPluginContexts[index]));
 
+    console.log('Writing changes...');
     buildResults.forEach(writeChanges);
+    console.log('Changes written...');
 
     const watchPluginContexts: IBuiltPluginContext<unknown>[] = [];
     watchPluginContexts.push(
@@ -168,11 +179,13 @@ export const builder = async ({
 
     let pluginWatchCleanups: ICleanup[] | undefined;
     if (watch) {
+        console.log('Registering watchers...');
         // On watch
         const onWatchPlugins: EspackPlugin[] = getPluginsForLifecycle(allPlugins, BuildLifecycles.WATCH);
         pluginWatchCleanups = onWatchPlugins.map((plugin, index) =>
             plugin.registerCustomWatcher(watchPluginContexts[index])
         );
+        console.log('Watchers registered...');
     }
 
     return {
@@ -180,7 +193,7 @@ export const builder = async ({
             // Cleanup
             buildResults.forEach(build => build.buildResult.stop && build.buildResult.stop());
 
-            const onCleanupPlugins: EspackPlugin[] = getPluginsForLifecycle(allPlugins, BuildLifecycles.AFTER_BUILD);
+            const onCleanupPlugins: EspackPlugin[] = getPluginsForLifecycle(allPlugins, BuildLifecycles.CLEANUP);
             onCleanupPlugins.forEach((plugin, index) => plugin.onCleanup(builtPluginContexts[index]));
 
             if (pluginWatchCleanups) {

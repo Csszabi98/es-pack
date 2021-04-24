@@ -134,26 +134,17 @@ export class EspackHtmlPlugin extends EspackPlugin<string> {
         fs.writeFileSync(this._getOutputPath(context), html);
     }
 
-    private static _watcherFactory(
-        outputPath: string,
-        resource: string,
-        onChange: (fileName: string) => Promise<void>
-    ): FSWatcher {
-        const watcher: FSWatcher = fs.watch(resource, { encoding: 'utf-8' }, async (event, fileName) => {
-            await onChange(fileName);
-            if (event === 'change') {
+    private static _watcherFactory(resource: string, onChange: (fileName: string) => Promise<void>): FSWatcher {
+        return fs.watch(resource, { encoding: 'utf-8' }, async (event, fileName) => {
+            if (event === 'rename') {
+                console.error(
+                    `Html entry point ${fileName} renamed! Please sync up the changes with the config and restart the watcher...`
+                );
+                process.exit(1);
                 return;
             }
-
-            try {
-                fs.unlinkSync(outputPath);
-            } catch (e) {
-                console.error(e);
-            } finally {
-                watcher.close();
-            }
+            await onChange(fileName);
         });
-        return watcher;
     }
 
     public registerCustomWatcher(context: IBuiltPluginContext<string>): ICleanup {
@@ -161,18 +152,17 @@ export class EspackHtmlPlugin extends EspackPlugin<string> {
 
         let close: () => void = () => {};
         if (watchedResource) {
-            let watcher: FSWatcher;
-
-            type CreateWatcher = () => FSWatcher;
-            const createWatcher: CreateWatcher = () =>
-                EspackHtmlPlugin._watcherFactory(this._getOutputPath(context), watchedResource, async fileName => {
-                    this._options.inputFile = fileName;
-                    await this.onBuild(context);
-                    this.afterBuild(context);
-                    watcher = createWatcher();
+            const watcher: FSWatcher = EspackHtmlPlugin._watcherFactory(watchedResource, async fileName => {
+                const label: string = `[watch] ${this.name} build finished under`;
+                console.time(label);
+                console.log(`[watch] ${this.name} build started...`);
+                const result: string = await this.onBuild(context);
+                this.afterBuild({
+                    ...context,
+                    pluginBuildResult: result
                 });
-
-            watcher = createWatcher();
+                console.timeEnd(label);
+            });
 
             close = () => {
                 watcher.close();
