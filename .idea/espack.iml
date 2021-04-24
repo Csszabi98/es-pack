@@ -5,6 +5,12 @@
       <excludeFolder url="file://$MODULE_DIR$/temp" />
       <excludeFolder url="file://$MODULE_DIR$/.tmp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludePattern pattern="dist" />
+      <excludePattern pattern="temp" />
+      <excludePattern pattern=".rush" />
+      <excludePattern pattern=".pnpm" />
+      <excludePattern pattern="joi" />
+      <excludePattern pattern="sass" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

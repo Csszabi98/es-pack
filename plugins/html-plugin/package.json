@@ -16,15 +16,15 @@
         "lint:fix": "eslint src/** --fix"
     },
     "peerDependencies": {
-        "@espack/espack": "*"
+        "@espack/espack": "workspace:*"
     },
     "dependencies": {
         "html-minifier": "4.0.0"
     },
     "devDependencies": {
-        "@espack/espack": "*",
+        "@espack/espack": "workspace:*",
         "esbuild": "0.11.11",
-        "@espack/ts-config": "*",
+        "@espack/ts-config": "workspace:*",
         "@rushstack/eslint-config": "2.3.3",
         "@types/html-minifier": "4.0.0",
         "@types/node": "14.14.37",

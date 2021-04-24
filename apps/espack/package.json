@@ -27,7 +27,7 @@
         "deep-copy": "~1.4.2"
     },
     "devDependencies": {
-        "@espack/ts-config": "*",
+        "@espack/ts-config": "workspace:*",
         "@rushstack/eslint-config": "2.3.3",
         "@types/deep-equal": "1.0.1",
         "eslint": "7.21.0",
