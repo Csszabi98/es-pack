@@ -8,7 +8,8 @@
         "build:dev": "",
         "build:watch": "",
         "lint": "",
-        "lint:fix": ""
+        "lint:fix": "",
+        "test": ""
     },
     "license": "MIT"
 }

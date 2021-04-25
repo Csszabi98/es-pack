@@ -462,6 +462,12 @@
             "reviewCategory": "tools",
             "shouldPublish": false
         },
+        {
+            "packageName": "@espack/jest-config",
+            "projectFolder": "libraries/jest-config",
+            "reviewCategory": "tools",
+            "shouldPublish": false
+        },
         // plugins
         {
             "packageName": "@espack/esbuild-sass-plugin",
