@@ -25,7 +25,6 @@ export enum ImportFormat {
     ESM = 'esm'
 }
 
-// TODO: Sanitize input for excluded values
 type OptionalEntryAssetTransformations = Omit<esbuild.BuildOptions, 'watch' | 'entryPoints' | 'write' | 'outfile' | 'stdin'>;
 
 type RequiredEntryAssetTransformations = {
@@ -93,7 +92,6 @@ export interface IBuildResult {
 export interface IBuilds {
     buildsDir?: string;
     defaultBuildProfiles?: BuildProfiles;
-    defaultPlugins?: EspackPlugin[];
     builds: IBuild[];
 }
 

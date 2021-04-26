@@ -76,29 +76,29 @@ const builds: IBuilds = {
                 {
                     src: './src/index.tsx'
                 }
+            ],
+            plugins: [
+                new EspackCopyPlugin({
+                    basedir: './public',
+                    assets: [
+                        'android-chrome-192x192.png',
+                        'android-chrome-512x512.png',
+                        'apple-touch-icon.png',
+                        'favicon.ico',
+                        'favicon-16x16.png',
+                        'favicon-32x32.png',
+                        'manifest.json',
+                        'robots.txt'
+                    ]
+                }),
+                new EspackHtmlPlugin({
+                    inputFile: './public/index.html',
+                    outputFile: './dist/index.html',
+                    minify: isProdBuild,
+                    injectHtml
+                })
             ]
         }
-    ],
-    defaultPlugins: [
-        new EspackCopyPlugin({
-            basedir: './public',
-            assets: [
-                'android-chrome-192x192.png',
-                'android-chrome-512x512.png',
-                'apple-touch-icon.png',
-                'favicon.ico',
-                'favicon-16x16.png',
-                'favicon-32x32.png',
-                'manifest.json',
-                'robots.txt'
-            ]
-        }),
-        new EspackHtmlPlugin({
-            inputFile: './public/index.html',
-            outputFile: './dist/index.html',
-            minify: isProdBuild,
-            injectHtml
-        })
     ]
 };
 

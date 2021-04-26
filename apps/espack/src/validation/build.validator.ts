@@ -101,6 +101,5 @@ const buildSchema: Joi.ObjectSchema<IBuild> = Joi.object<IBuild>({
 export const buildsSchema: Joi.ObjectSchema<IBuilds> = Joi.object<IBuilds>({
     buildsDir: Joi.string(),
     defaultBuildProfiles: entryAssetTransformationRecordSchema,
-    defaultPlugins: espackPluginArraySchema,
     builds: Joi.array().items(buildSchema).required()
 }).unknown(false);
