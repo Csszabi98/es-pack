@@ -42,7 +42,8 @@ type OmmitedEntryAssetTransformations =
     | 'publicPath'
     | 'chunkNames'
     | 'inject'
-    | 'pure';
+    | 'pure'
+    | 'tsconfig';
 
 export interface IEntryAssetTransformations
     extends Omit<RequiredEntryAssetTransformations, OmmitedEntryAssetTransformations>,

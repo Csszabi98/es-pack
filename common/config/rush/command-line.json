@@ -30,7 +30,8 @@
       "name": "lint",
       "commandKind": "bulk",
       "summary": "Used by the pre-commit Git hook. This command invokes Eslint to check source for lint issues.",
-      "enableParallelism": true
+      "enableParallelism": true,
+      "ignoreMissingScript": true
     },
     {
       "name": "lint:fix",

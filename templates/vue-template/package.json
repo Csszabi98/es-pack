@@ -1,0 +1,33 @@
+{
+    "name": "@espack/vue-template",
+    "author": "Szabolcs Csizmadia",
+    "version": "0.0.1",
+    "private": true,
+    "scripts": {
+        "clean": "rimraf ./dist",
+        "build": "pnpm clean &&  pnpx espack --profile production",
+        "build:dev": "pnpm clean &&  pnpx espack --profile development",
+        "build:watch": "pnpm build:dev",
+        "build:watch:local": "pnpx espack --profile development --watch",
+        "serve": "nodemon ./server/server.js",
+        "develop": "run-p build:watch:local serve"
+    },
+    "dependencies": {
+        "vue": "2.6.12"
+    },
+    "devDependencies": {
+        "esbuild": "0.11.11",
+        "esbuild-vue": "0.3.0",
+        "@espack/espack": "workspace:*",
+        "@espack/copy-plugin": "workspace:*",
+        "@espack/html-plugin": "workspace:*",
+        "rimraf": "3.0.2",
+        "npm-run-all": "4.1.5",
+        "express": "4.17.1",
+        "nodemon": "2.0.7"
+    },
+    "engines": {
+        "node": ">=12.9.0"
+    },
+    "license": "MIT"
+}

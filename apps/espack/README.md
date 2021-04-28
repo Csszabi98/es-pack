@@ -131,6 +131,57 @@ esbuild, and also an option to override the default build profile options for ev
                 }
             }
             ```
+## Example espack configs
+- javascript: 
+```javascript
+import { createBuildProfiles, ImportFormat, Platforms } from '@espack/espack';
+
+export default {
+    defaultBuildProfiles: createBuildProfiles(
+        {
+            platform: Platforms.NODE,
+            format: ImportFormat.COMMON_JS
+        },
+        { production: { minify: false } }
+    ),
+    builds: [
+        {
+            scripts: [
+                {
+                    src: './src/index.ts'
+                }
+            ]
+        }
+    ]
+};
+```
+- typescript:
+```typescript
+import { createBuildProfiles, IBuilds, ImportFormat, Platforms } from '@espack/espack';
+
+const builds: IBuilds = {
+    defaultBuildProfiles: createBuildProfiles(
+        {
+            platform: Platforms.NODE,
+            format: ImportFormat.COMMON_JS
+        },
+        { production: { minify: false } }
+    ),
+    builds: [
+        {
+            scripts: [
+                {
+                    src: './src/index.ts'
+                }
+            ]
+        }
+    ]
+};
+
+export default builds;
+```
+- for espack configs on common templates like web development see [templates](../../templates/README.md)  
+
 
 ## How to define espack plugins?
 
@@ -232,7 +283,24 @@ super class's constructor after the name.
     here.
     Context available in this lifecycle: buildsDir, scripts, defaultBuildProfiles, buildReadyScripts, buildResults,
     pluginBuildResult
-- TODO: Example plugin (report plugin)
+- Example plugin to console.log every output file's path:
+```javascript
+class EspackReportPlugin extends EspackPlugin {
+    constructor() {
+        const enabledLifecycles = [ BuildLifecycles.AFTER_BUILD ];
+        super('@espack/report-plugin', enabledLifecycles);
+    }
+
+    afterBuild(context) {
+        const { buildResults } = context;
+        buildResults.forEach(
+            ({ buildResult }) =>
+                buildResult.outputFiles && console.log(buildResult.outputFiles.map(outputFile => outputFile.path))
+        );
+    }
+}
+
+```
 
 ## Webstorm
 

@@ -51,7 +51,6 @@ const defaultEntryAssetTransformations: IEntryAssetTransformations = {
     sourcesContent: false,
     target: ['chrome58', 'firefox57', 'safari11', 'edge60', 'node12.9.0'],
     treeShaking: true,
-    tsconfig: 'tsconfig.json',
     assetNames: 'assets/[name]-[hash]',
     platform: Platforms.NEUTRAL
 };

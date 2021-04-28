@@ -486,6 +486,19 @@
             "projectFolder": "plugins/html-plugin",
             "reviewCategory": "production",
             "shouldPublish": true
+        },
+        // templates
+        {
+            "packageName": "@espack/react-template",
+            "projectFolder": "templates/react-template",
+            "reviewCategory": "tools",
+            "shouldPublish": false
+        },
+        {
+            "packageName": "@espack/vue-template",
+            "projectFolder": "templates/vue-template",
+            "reviewCategory": "tools",
+            "shouldPublish": false
         }
     ]
 }

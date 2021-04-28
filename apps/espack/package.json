@@ -20,8 +20,10 @@
         "test": "jest --coverage --watch --collectCoverageOnlyFrom",
         "test:ci": "jest --all --coverage"
     },
+    "peerDependencies": {
+        "esbuild": "^0.11.0"
+    },
     "dependencies": {
-        "esbuild": "^0.11.0",
         "deep-equal": "2.0.5",
         "joi": "17.4.0",
         "tslib": "2.2.0",

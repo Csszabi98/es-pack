@@ -34,7 +34,8 @@ function readPackage(packageJson, context) {
   //  packageJson.dependencies['log4js'] = '0.6.38';
   // }
 
-  if (packageJson.name === 'esbuild-node-externals') {
+  if (packageJson.name === 'esbuild-vue') {
+      packageJson.dependencies['postcss'] = '8.2.13';
   }
 
   return packageJson;
