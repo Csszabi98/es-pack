@@ -180,7 +180,7 @@ const builds: IBuilds = {
 
 export default builds;
 ```
-- for espack configs on common templates like web development see [templates](../../templates/README.md)  
+- for espack configs on common templates like web development see [templates](../../templates)  
 
 
 ## How to define espack plugins?
