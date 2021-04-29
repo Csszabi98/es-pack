@@ -1,21 +1,62 @@
-# espack: A nice api around esbuild
+![alt text](./assets/espack.png)
 
-# DISCLAIMER:
-This package is under development, it will try to evolve with esbuild itself as 
-it is also under work. As the additional features this package provides are written
-in javascript, this package will not be as fast as executing esbuild by itself, but
-it provides a ton of features, and since every js related process is done via esbuild
-the performance hits should be irrelevant in the long run.
+# espack
+##A build tool running on [esbuild](https://github.com/evanw/esbuild)
+
+Espack on its own is just a nice wrapper api around esbuild, with an easy single file configuration for
+any number of builds.
+
+However once you start using espack plugins it shows its true power!
+
+With pre-written plugins such as [EspackHtmlPlugin](../../plugins/html-plugin) and 
+[EspackCopyPlugin](../../plugins/copy-plugin) it's super easy to throw together a 
+production ready web development setup in no time! (see [templates](../../templates))
+
+## Installation
+
+### pnpm
+`pnpm add -D esbuild @espack/espack`
+### yarn
+`yarn add -D esbuild @espack/espack`
+### npm
+`npm install --save-dev esbuild @espack/espack`
 
 ## Main features:
-- expose all of esbuild's features while building on some of them
-- easy configuration via a single config file for any number of builds
-- typescript configuration file support
+- easy configuration with a single typescript or javascript file
+- execute any number of builds simultaneously
 - written in 100% typescript
 - easy to hook into plugin api
+- exposing all of esbuild's features while building on them
 
 ## Future goals:
 - Raising the test coverage
+- Creating documentation website
+- Writing more plugins
+
+## Running espack:
+You can use either npx or pnpx (or anything capable of running bin scripts) to run the pre included espack
+binary.
+```
+npx espack
+```
+
+## CLI options:
+- **profile**: The current build profile. There are two pre included build profiles: development/production. 
+Defaults to production.
+```shell
+pnpx espack --profile production
+```
+- **config**: The path to the config to use. Defaults to espack.config.ts/espack.config.js if not present.
+The priority order is as follows for config resolution: custom config > espack.config.ts > espack.config.js
+```shell
+pnpx espack --config ./configs/espack-node.config.ts
+```
+- **watch**: Triggers watch mode for builds. If this flag is provided espack will not terminate on its own after
+the builds have completed. It will stay active and watch for code changes (plugins also implement their own watch).
+```shell
+pnpx espack --watch
+```
+- The above defined CLI options can all be used together in any order.
 
 ## Configuration options:
 - **buildsDir**: Output base directory of espack (defaults to dist)
@@ -299,7 +340,6 @@ class EspackReportPlugin extends EspackPlugin {
         );
     }
 }
-
 ```
 
 ## Webstorm
