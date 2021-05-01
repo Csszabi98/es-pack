@@ -14,6 +14,8 @@ import {
 import { generateDefaultHtmlContent } from './utils/generate-default-html-content';
 import { injectScripts } from './utils/inject-scripts';
 import { injectHtml } from './utils/inject-html';
+import { htmlPluginOptionsSchema } from './validation/validator';
+import Joi from 'joi';
 
 export enum InjectionPoint {
     AFTER_HEAD_START = '<head>',
@@ -69,6 +71,13 @@ export class EspackHtmlPlugin extends EspackPlugin<string> {
             BuildLifecycles.WATCH
         ];
         super('@espack/html-plugin', enabledLifecycles);
+
+        const validation: Joi.ValidationResult = htmlPluginOptionsSchema.validate(options);
+        if (validation.error) {
+            console.error(validation.error);
+            throw new Error('Invalid constructor options!');
+        }
+
         const isProd: boolean = process.env.NODE_ENV !== DefaultBuildProfiles.DEV;
         this._options = {
             outputFile: 'index.html',

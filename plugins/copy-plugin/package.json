@@ -18,6 +18,9 @@
     "peerDependencies": {
         "@espack/espack": "workspace:*"
     },
+    "dependencies": {
+        "joi": "17.4.0"
+    },
     "devDependencies": {
         "esbuild": "0.11.11",
         "@espack/espack": "workspace:*",

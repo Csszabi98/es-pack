@@ -9,8 +9,10 @@ import {
     IBuiltPluginContext,
     ICleanup
 } from '@espack/espack';
+import Joi from 'joi';
+import { copyPluginOptionsSchema } from './validation/validator';
 
-interface IEspackCopyPluginOptions {
+export interface IEspackCopyPluginOptions {
     basedir?: string;
     assets: string[];
     outdir?: string;
@@ -29,6 +31,13 @@ export class EspackCopyPlugin extends EspackPlugin<void> {
             BuildLifecycles.WATCH
         ];
         super('@espack/copy-plugin', enabledLifecycles);
+
+        const validation: Joi.ValidationResult = copyPluginOptionsSchema.validate(options);
+        if (validation.error) {
+            console.error(validation.error);
+            throw new Error('Invalid constructor options!');
+        }
+
         this._options = {
             outdir: 'assets',
             basedir: '.',

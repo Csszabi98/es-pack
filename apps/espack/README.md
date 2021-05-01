@@ -32,6 +32,11 @@ production ready web development setup in no time! (see [templates](../../templa
 - Raising the test coverage
 - Creating documentation website
 - Writing more plugins
+- Warn about possible overwrite of output files when it might happen. 
+    - Explanation:
+        - Currently, you need to make sure yourself that your output scripts are not overwriting each other.
+        As this is a really rare case and easy to diagnose, but can be complicated to implement, it has been
+        delayed to future releases.
 
 ## Running espack:
 You can use either npx or pnpx (or anything capable of running bin scripts) to run the pre included espack

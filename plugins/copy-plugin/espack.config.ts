@@ -1,12 +1,18 @@
-import { createBuildProfiles, IBuilds, ImportFormat, Platforms } from '@espack/espack';
+import { createBuildProfiles, IBuilds, ImportFormat, Platforms, DefaultBuildProfiles } from '@espack/espack';
+import { peerDependencies, dependencies } from './package.json';
 
 const builds: IBuilds = {
     defaultBuildProfiles: createBuildProfiles(
         {
             platform: Platforms.NODE,
-            format: ImportFormat.COMMON_JS
+            format: ImportFormat.COMMON_JS,
+            external: [...Object.keys(peerDependencies), ...Object.keys(dependencies)]
         },
-        { production: { minify: false } }
+        {
+            [DefaultBuildProfiles.PROD]: {
+                minify: false
+            }
+        }
     ),
     builds: [
         {
