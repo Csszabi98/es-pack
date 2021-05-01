@@ -29,26 +29,26 @@
         "esbuild": "^0.11.0"
     },
     "dependencies": {
+        "deep-copy": "1.4.2",
         "deep-equal": "2.0.5",
         "joi": "17.4.0",
         "tslib": "2.2.0",
-        "vm2": "3.9.3",
-        "deep-copy": "1.4.2"
+        "vm2": "3.9.3"
     },
     "devDependencies": {
         "@es-pack/jest-config": "workspace:*",
         "@es-pack/ts-config": "workspace:*",
         "@rushstack/eslint-config": "2.3.3",
         "@types/deep-equal": "1.0.1",
-        "eslint": "7.21.0",
-        "rimraf": "3.0.2",
-        "ts-node": "9.1.1",
-        "typescript": "4.2.3",
-        "@types/node": "14.14.37",
         "@types/jest": "26.0.22",
+        "@types/node": "14.14.37",
         "esbuild": "0.11.11",
         "esbuild-jest": "0.5.0",
-        "jest": "26.6.3"
+        "eslint": "7.21.0",
+        "jest": "26.6.3",
+        "rimraf": "3.0.2",
+        "ts-node": "9.1.1",
+        "typescript": "4.2.3"
     },
     "engines": {
         "node": ">=12.9.0"

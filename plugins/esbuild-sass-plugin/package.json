@@ -28,14 +28,14 @@
     },
     "devDependencies": {
         "@es-pack/espack": "workspace:*",
-        "esbuild": "0.11.11",
-        "@types/node": "14.14.37",
-        "@types/node-sass": "4.11.1",
-        "sass": "1.32.8",
         "@es-pack/ts-config": "workspace:*",
         "@rushstack/eslint-config": "2.3.3",
+        "@types/node": "14.14.37",
+        "@types/node-sass": "4.11.1",
+        "esbuild": "0.11.11",
         "eslint": "7.21.0",
         "rimraf": "3.0.2",
+        "sass": "1.32.8",
         "typescript": "4.2.3"
     },
     "engines": {
