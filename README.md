@@ -1,4 +1,11 @@
-![espack](./apps/espack/assets/espack.png)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/38193720/116794320-7b15ab00-aacc-11eb-8b4f-71aafd37b5eb.png" 
+    alt="espack: A build tool running on esbuild">
+  <br>
+  <a href="https://github.com/Csszabi98/es-pack/tree/main/apps/espack">espack</a> |
+  <a href="https://github.com/Csszabi98/es-pack/tree/main/plugins">plugins</a> |
+  <a href="https://github.com/Csszabi98/es-pack/tree/main/templates">templates</a>
+</p>
 
 # @es-pack monorepository
 
