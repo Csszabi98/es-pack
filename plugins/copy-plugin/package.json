@@ -1,5 +1,5 @@
 {
-    "name": "@espack/copy-plugin",
+    "name": "@es-pack/copy-plugin",
     "author": "Szabolcs Csizmadia",
     "version": "1.0.0",
     "main": "./dist/cjs/index.js",
@@ -21,14 +21,14 @@
         "lint:fix": "eslint src/** --fix"
     },
     "peerDependencies": {
-        "@espack/espack": "workspace:*"
+        "@es-pack/espack": "workspace:*"
     },
     "dependencies": {
         "joi": "17.4.0"
     },
     "devDependencies": {
-        "@espack/espack": "workspace:*",
-        "@espack/ts-config": "workspace:*",
+        "@es-pack/espack": "workspace:*",
+        "@es-pack/ts-config": "workspace:*",
         "@rushstack/eslint-config": "2.3.3",
         "@types/node": "14.14.37",
         "esbuild": "0.11.11",

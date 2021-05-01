@@ -1,5 +1,5 @@
 {
-    "name": "@espack/html-plugin",
+    "name": "@es-pack/html-plugin",
     "author": "Szabolcs Csizmadia",
     "version": "1.0.0",
     "main": "./dist/cjs/index.js",
@@ -21,16 +21,16 @@
         "lint:fix": "eslint src/** --fix"
     },
     "peerDependencies": {
-        "@espack/espack": "workspace:*"
+        "@es-pack/espack": "workspace:*"
     },
     "dependencies": {
         "html-minifier": "4.0.0",
         "joi": "17.4.0"
     },
     "devDependencies": {
-        "@espack/espack": "workspace:*",
+        "@es-pack/espack": "workspace:*",
         "esbuild": "0.11.11",
-        "@espack/ts-config": "workspace:*",
+        "@es-pack/ts-config": "workspace:*",
         "@rushstack/eslint-config": "2.3.3",
         "@types/html-minifier": "4.0.0",
         "@types/node": "14.14.37",

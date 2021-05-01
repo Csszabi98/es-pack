@@ -1,5 +1,5 @@
 {
-    "extends": "@espack/ts-config/src/frontend-config.json",
+    "extends": "@es-pack/ts-config/src/frontend-config.json",
     "compilerOptions": {
         "baseUrl": "."
     },

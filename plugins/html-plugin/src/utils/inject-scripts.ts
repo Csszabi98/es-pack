@@ -1,4 +1,4 @@
-import { FileExtensions, IBuildResult, ImportFormat, Platforms } from '@espack/espack';
+import { FileExtensions, IBuildResult, ImportFormat, Platforms } from '@es-pack/espack';
 import { OutputFile } from 'esbuild';
 import path from 'path';
 import { IEspackPluginState } from '../html-plugin';

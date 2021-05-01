@@ -8,7 +8,7 @@ import {
     IBuildReadyPluginContext,
     IBuiltPluginContext,
     ICleanup
-} from '@espack/espack';
+} from '@es-pack/espack';
 import Joi from 'joi';
 import { copyPluginOptionsSchema } from './validation/validator';
 
@@ -30,7 +30,7 @@ export class EspackCopyPlugin extends EspackPlugin<void> {
             BuildLifecycles.BUILD,
             BuildLifecycles.WATCH
         ];
-        super('@espack/copy-plugin', enabledLifecycles);
+        super('@es-pack/copy-plugin', enabledLifecycles);
 
         const validation: Joi.ValidationResult = copyPluginOptionsSchema.validate(options);
         if (validation.error) {

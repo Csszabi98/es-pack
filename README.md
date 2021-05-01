@@ -1,6 +1,6 @@
 ![espack](./apps/espack/assets/espack.png)
 
-# @espack monorepository
+# @es-pack monorepository
 
 This is the monorepository for espack a build tool running on esbuild.
 

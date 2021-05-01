@@ -1,3 +1,3 @@
-import nodeConfig from '@espack/jest-config/src/node-config';
+import nodeConfig from '@es-pack/jest-config/src/node-config';
 
 export default nodeConfig;

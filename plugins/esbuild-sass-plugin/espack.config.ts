@@ -1,4 +1,4 @@
-import { createBuildProfiles, IBuilds, ImportFormat, Platforms } from '@espack/espack';
+import { createBuildProfiles, IBuilds, ImportFormat, Platforms } from '@es-pack/espack';
 import { peerDependencies } from './package.json';
 
 const builds: IBuilds = {

@@ -15,11 +15,11 @@ production ready web development setup in no time! (see [templates](../../templa
 ## Installation
 
 ### pnpm
-`pnpm add -D esbuild @espack/espack`
+`pnpm add -D esbuild @es-pack/espack`
 ### yarn
-`yarn add -D esbuild @espack/espack`
+`yarn add -D esbuild @es-pack/espack`
 ### npm
-`npm install -D esbuild @espack/espack`
+`npm install -D esbuild @es-pack/espack`
 
 ## Main features:
 - easy configuration with a single typescript or javascript file
@@ -99,7 +99,7 @@ esbuild, and also an option to override the default build profile options for ev
         - Examples:
             - Overriding default options:
             ```javascript
-            import { DefaultBuildProfiles, ImportFormat, Platforms, createBuildProfiles } from '@espack/espack';
+            import { DefaultBuildProfiles, ImportFormat, Platforms, createBuildProfiles } from '@es-pack/espack';
             import { dependencies } from './package.json';
           
             const buildProfiles = createBuildProfiles(
@@ -117,7 +117,7 @@ esbuild, and also an option to override the default build profile options for ev
             ```
             - Define your own profiles:
             ```javascript
-            import { ImportFormat, Platforms, createBuildProfiles } from '@espack/espack';
+            import { ImportFormat, Platforms, createBuildProfiles } from '@es-pack/espack';
           
             const buildProfiles = createBuildProfiles(
                 {
@@ -180,7 +180,7 @@ esbuild, and also an option to override the default build profile options for ev
 ## Example espack configs
 - javascript: 
 ```javascript
-import { createBuildProfiles, ImportFormat, Platforms } from '@espack/espack';
+import { createBuildProfiles, ImportFormat, Platforms } from '@es-pack/espack';
 
 export default {
     defaultBuildProfiles: createBuildProfiles(
@@ -203,7 +203,7 @@ export default {
 ```
 - typescript:
 ```typescript
-import { createBuildProfiles, IBuilds, ImportFormat, Platforms } from '@espack/espack';
+import { createBuildProfiles, IBuilds, ImportFormat, Platforms } from '@es-pack/espack';
 
 const builds: IBuilds = {
     defaultBuildProfiles: createBuildProfiles(
@@ -228,7 +228,7 @@ export default builds;
 ```
 - Using cjs:
 ```javascript
-const { createBuildProfiles, IBuilds, ImportFormat, Platforms } = require('@espack/espack');
+const { createBuildProfiles, IBuilds, ImportFormat, Platforms } = require('@es-pack/espack');
 
 exports.default = {
     defaultBuildProfiles: createBuildProfiles(
@@ -357,7 +357,7 @@ super class's constructor after the name.
 class EspackReportPlugin extends EspackPlugin {
     constructor() {
         const enabledLifecycles = [ BuildLifecycles.AFTER_BUILD ];
-        super('@espack/report-plugin', enabledLifecycles);
+        super('@es-pack/report-plugin', enabledLifecycles);
     }
 
     afterBuild(context) {

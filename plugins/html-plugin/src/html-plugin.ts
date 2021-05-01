@@ -10,7 +10,7 @@ import {
     IBuildReadyPluginContext,
     IBuiltPluginContext,
     ICleanup
-} from '@espack/espack';
+} from '@es-pack/espack';
 import { generateDefaultHtmlContent } from './utils/generate-default-html-content';
 import { injectScripts } from './utils/inject-scripts';
 import { injectHtml } from './utils/inject-html';
@@ -70,7 +70,7 @@ export class EspackHtmlPlugin extends EspackPlugin<string> {
             BuildLifecycles.AFTER_BUILD,
             BuildLifecycles.WATCH
         ];
-        super('@espack/html-plugin', enabledLifecycles);
+        super('@es-pack/html-plugin', enabledLifecycles);
 
         const validation: Joi.ValidationResult = htmlPluginOptionsSchema.validate(options);
         if (validation.error) {

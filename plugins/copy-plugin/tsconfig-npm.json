@@ -1,5 +1,5 @@
 {
-    "extends": "@espack/ts-config/src/node-npm-config.json",
+    "extends": "@es-pack/ts-config/src/node-npm-config.json",
     "compilerOptions": {
         "baseUrl": ".",
         "declarationDir": "dist/types"

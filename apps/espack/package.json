@@ -1,5 +1,5 @@
 {
-    "name": "@espack/espack",
+    "name": "@es-pack/espack",
     "author": "Szabolcs Csizmadia",
     "version": "1.0.0",
     "main": "./dist/cjs/index.js",
@@ -36,8 +36,8 @@
         "deep-copy": "1.4.2"
     },
     "devDependencies": {
-        "@espack/jest-config": "workspace:*",
-        "@espack/ts-config": "workspace:*",
+        "@es-pack/jest-config": "workspace:*",
+        "@es-pack/ts-config": "workspace:*",
         "@rushstack/eslint-config": "2.3.3",
         "@types/deep-equal": "1.0.1",
         "eslint": "7.21.0",

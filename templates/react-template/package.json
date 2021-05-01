@@ -1,5 +1,5 @@
 {
-    "name": "@espack/react-template",
+    "name": "@es-pack/react-template",
     "author": "Szabolcs Csizmadia",
     "version": "0.0.1",
     "private": true,
@@ -18,9 +18,9 @@
     },
     "devDependencies": {
         "esbuild": "0.11.11",
-        "@espack/espack": "workspace:*",
-        "@espack/copy-plugin": "workspace:*",
-        "@espack/html-plugin": "workspace:*",
+        "@es-pack/espack": "workspace:*",
+        "@es-pack/copy-plugin": "workspace:*",
+        "@es-pack/html-plugin": "workspace:*",
         "rimraf": "3.0.2",
         "npm-run-all": "4.1.5",
         "express": "4.17.1",

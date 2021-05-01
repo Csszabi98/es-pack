@@ -1,16 +1,16 @@
 ![espack](./assets/espack.png)
 
-# @espack/copy-plugin
+# @es-pack/copy-plugin
 ### A plugin for espack to copy files
 
 ## Installation
 
 ### pnpm
-`pnpm add -D esbuild @espack/espack @espack/copy-plugin`
+`pnpm add -D esbuild @es-pack/espack @es-pack/copy-plugin`
 ### yarn
-`yarn add -D esbuild @espack/espack @espack/copy-plugin`
+`yarn add -D esbuild @es-pack/espack @es-pack/copy-plugin`
 ### npm
-`npm install -D esbuild @espack/espack @espack/copy-plugin`
+`npm install -D esbuild @es-pack/espack @es-pack/copy-plugin`
 
 ## How to use it?
 This plugin can be used under the plugins section of espack builds, like the following:

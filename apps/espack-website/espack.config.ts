@@ -1,6 +1,6 @@
-import { createBuildProfiles, DefaultBuildProfiles, IBuilds, ImportFormat, Platforms } from '@espack/espack';
-import { EspackCopyPlugin } from '@espack/copy-plugin';
-import { EspackHtmlPlugin, IHtmlInjection } from '@espack/html-plugin';
+import { createBuildProfiles, DefaultBuildProfiles, IBuilds, ImportFormat, Platforms } from '@es-pack/espack';
+import { EspackCopyPlugin } from '@es-pack/copy-plugin';
+import { EspackHtmlPlugin, IHtmlInjection } from '@es-pack/html-plugin';
 import { globalExternals } from '@fal-works/esbuild-plugin-global-externals';
 import React from 'react';
 

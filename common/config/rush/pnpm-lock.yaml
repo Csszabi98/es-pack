@@ -9,8 +9,8 @@ importers:
       tslib: 2.2.0
       vm2: 3.9.3
     devDependencies:
-      '@espack/jest-config': link:../../libraries/jest-config
-      '@espack/ts-config': link:../../libraries/ts-config
+      '@es-pack/jest-config': link:../../libraries/jest-config
+      '@es-pack/ts-config': link:../../libraries/ts-config
       '@rushstack/eslint-config': 2.3.3_eslint@7.21.0+typescript@4.2.3
       '@types/deep-equal': 1.0.1
       '@types/jest': 26.0.22
@@ -23,8 +23,8 @@ importers:
       ts-node: 9.1.1_typescript@4.2.3
       typescript: 4.2.3
     specifiers:
-      '@espack/jest-config': workspace:*
-      '@espack/ts-config': workspace:*
+      '@es-pack/jest-config': workspace:*
+      '@es-pack/ts-config': workspace:*
       '@rushstack/eslint-config': 2.3.3
       '@types/deep-equal': 1.0.1
       '@types/jest': 26.0.22
@@ -46,11 +46,11 @@ importers:
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
     devDependencies:
-      '@espack/copy-plugin': link:../../plugins/copy-plugin
-      '@espack/esbuild-sass-plugin': link:../../plugins/esbuild-sass-plugin
-      '@espack/espack': link:../espack
-      '@espack/html-plugin': link:../../plugins/html-plugin
-      '@espack/ts-config': link:../../libraries/ts-config
+      '@es-pack/copy-plugin': link:../../plugins/copy-plugin
+      '@es-pack/esbuild-sass-plugin': link:../../plugins/esbuild-sass-plugin
+      '@es-pack/espack': link:../espack
+      '@es-pack/html-plugin': link:../../plugins/html-plugin
+      '@es-pack/ts-config': link:../../libraries/ts-config
       '@fal-works/esbuild-plugin-global-externals': 2.1.1
       '@rushstack/eslint-config': 2.3.3_eslint@7.21.0+typescript@4.2.3
       '@types/node': 14.14.37
@@ -63,11 +63,11 @@ importers:
       ts-node: 9.1.1_typescript@4.2.3
       typescript: 4.2.3
     specifiers:
-      '@espack/copy-plugin': workspace:*
-      '@espack/esbuild-sass-plugin': workspace:*
-      '@espack/espack': workspace:*
-      '@espack/html-plugin': workspace:*
-      '@espack/ts-config': workspace:*
+      '@es-pack/copy-plugin': workspace:*
+      '@es-pack/esbuild-sass-plugin': workspace:*
+      '@es-pack/espack': workspace:*
+      '@es-pack/html-plugin': workspace:*
+      '@es-pack/ts-config': workspace:*
       '@fal-works/esbuild-plugin-global-externals': ~2.1.1
       '@rushstack/eslint-config': 2.3.3
       '@types/node': 14.14.37
@@ -83,7 +83,7 @@ importers:
       typescript: 4.2.3
   ../../libraries/jest-config:
     devDependencies:
-      '@espack/ts-config': link:../ts-config
+      '@es-pack/ts-config': link:../ts-config
       '@jest/types': 26.6.2
       '@rushstack/eslint-config': 2.3.3_eslint@7.21.0+typescript@4.2.3
       '@types/jest': 26.0.22
@@ -93,7 +93,7 @@ importers:
       jest: 26.6.3
       typescript: 4.2.3
     specifiers:
-      '@espack/ts-config': workspace:*
+      '@es-pack/ts-config': workspace:*
       '@jest/types': 26.6.2
       '@rushstack/eslint-config': 2.3.3
       '@types/jest': 26.0.22
@@ -106,8 +106,8 @@ importers:
     specifiers: {}
   ../../plugins/copy-plugin:
     devDependencies:
-      '@espack/espack': link:../../apps/espack
-      '@espack/ts-config': link:../../libraries/ts-config
+      '@es-pack/espack': link:../../apps/espack
+      '@es-pack/ts-config': link:../../libraries/ts-config
       '@rushstack/eslint-config': 2.3.3_eslint@7.21.0+typescript@4.2.3
       '@types/node': 14.14.37
       esbuild: 0.11.11
@@ -117,8 +117,8 @@ importers:
       ts-node: 9.1.1_typescript@4.2.3
       typescript: 4.2.3
     specifiers:
-      '@espack/espack': workspace:*
-      '@espack/ts-config': workspace:*
+      '@es-pack/espack': workspace:*
+      '@es-pack/ts-config': workspace:*
       '@rushstack/eslint-config': 2.3.3
       '@types/node': 14.14.37
       esbuild: 0.11.11
@@ -131,8 +131,8 @@ importers:
     dependencies:
       sass: 1.32.8
     devDependencies:
-      '@espack/espack': link:../../apps/espack
-      '@espack/ts-config': link:../../libraries/ts-config
+      '@es-pack/espack': link:../../apps/espack
+      '@es-pack/ts-config': link:../../libraries/ts-config
       '@rushstack/eslint-config': 2.3.3_eslint@7.21.0+typescript@4.2.3
       '@types/node': 14.14.37
       '@types/node-sass': 4.11.1
@@ -141,8 +141,8 @@ importers:
       rimraf: 3.0.2
       typescript: 4.2.3
     specifiers:
-      '@espack/espack': workspace:*
-      '@espack/ts-config': workspace:*
+      '@es-pack/espack': workspace:*
+      '@es-pack/ts-config': workspace:*
       '@rushstack/eslint-config': 2.3.3
       '@types/node': 14.14.37
       '@types/node-sass': 4.11.1
@@ -155,8 +155,8 @@ importers:
     dependencies:
       html-minifier: 4.0.0
     devDependencies:
-      '@espack/espack': link:../../apps/espack
-      '@espack/ts-config': link:../../libraries/ts-config
+      '@es-pack/espack': link:../../apps/espack
+      '@es-pack/ts-config': link:../../libraries/ts-config
       '@rushstack/eslint-config': 2.3.3_eslint@7.21.0+typescript@4.2.3
       '@types/html-minifier': 4.0.0
       '@types/node': 14.14.37
@@ -167,8 +167,8 @@ importers:
       ts-node: 9.1.1_typescript@4.2.3
       typescript: 4.2.3
     specifiers:
-      '@espack/espack': workspace:*
-      '@espack/ts-config': workspace:*
+      '@es-pack/espack': workspace:*
+      '@es-pack/ts-config': workspace:*
       '@rushstack/eslint-config': 2.3.3
       '@types/html-minifier': 4.0.0
       '@types/node': 14.14.37
@@ -184,9 +184,9 @@ importers:
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
     devDependencies:
-      '@espack/copy-plugin': link:../../plugins/copy-plugin
-      '@espack/espack': link:../../apps/espack
-      '@espack/html-plugin': link:../../plugins/html-plugin
+      '@es-pack/copy-plugin': link:../../plugins/copy-plugin
+      '@es-pack/espack': link:../../apps/espack
+      '@es-pack/html-plugin': link:../../plugins/html-plugin
       esbuild: 0.11.11
       esbuild-vue: 0.3.0
       express: 4.17.1
@@ -194,9 +194,9 @@ importers:
       npm-run-all: 4.1.5
       rimraf: 3.0.2
     specifiers:
-      '@espack/copy-plugin': workspace:*
-      '@espack/espack': workspace:*
-      '@espack/html-plugin': workspace:*
+      '@es-pack/copy-plugin': workspace:*
+      '@es-pack/espack': workspace:*
+      '@es-pack/html-plugin': workspace:*
       esbuild: 0.11.11
       esbuild-vue: ~0.3.0
       express: 4.17.1
@@ -209,9 +209,9 @@ importers:
     dependencies:
       vue: 2.6.12
     devDependencies:
-      '@espack/copy-plugin': link:../../plugins/copy-plugin
-      '@espack/espack': link:../../apps/espack
-      '@espack/html-plugin': link:../../plugins/html-plugin
+      '@es-pack/copy-plugin': link:../../plugins/copy-plugin
+      '@es-pack/espack': link:../../apps/espack
+      '@es-pack/html-plugin': link:../../plugins/html-plugin
       esbuild: 0.11.11
       esbuild-vue: 0.3.0
       express: 4.17.1
@@ -219,9 +219,9 @@ importers:
       npm-run-all: 4.1.5
       rimraf: 3.0.2
     specifiers:
-      '@espack/copy-plugin': workspace:*
-      '@espack/espack': workspace:*
-      '@espack/html-plugin': workspace:*
+      '@es-pack/copy-plugin': workspace:*
+      '@es-pack/espack': workspace:*
+      '@es-pack/html-plugin': workspace:*
       esbuild: 0.11.11
       esbuild-vue: 0.3.0
       express: 4.17.1

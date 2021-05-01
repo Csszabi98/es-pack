@@ -1,39 +1,39 @@
 ![espack](./assets/espack.png)
 
-# @espack/esbuild-sass-plugin
+# @es-pack/esbuild-sass-plugin
 ### A sass plugin for esbuild written in typescript.
 
 ## Installation with esbuild
 
 ### pnpm
-`pnpm add -D esbuild @espack/html-plugin`
+`pnpm add -D esbuild @es-pack/html-plugin`
 ### yarn
-`yarn add -D esbuild @espack/html-plugin`
+`yarn add -D esbuild @es-pack/html-plugin`
 ### npm
-`npm install -D esbuild @espack/html-plugin`
+`npm install -D esbuild @es-pack/html-plugin`
 
 ## Installation with espack
 
 ### pnpm
-`pnpm add -D esbuild @espack/espack @espack/html-plugin`
+`pnpm add -D esbuild @es-pack/espack @es-pack/html-plugin`
 ### yarn
-`yarn add -D esbuild @espack/espack @espack/html-plugin`
+`yarn add -D esbuild @es-pack/espack @es-pack/html-plugin`
 ### npm
-`npm install -D esbuild @espack/espack @espack/html-plugin`
+`npm install -D esbuild @es-pack/espack @es-pack/html-plugin`
 
 ## How to use it?
 
 - With esbuild, add it to the plugins array like the following: 
 ```javascript
-import { sassPlugin } from '@espack/esbuild-sass-plugin';
+import { sassPlugin } from '@es-pack/esbuild-sass-plugin';
 
 const plugins = [sassPluin()];
 // ...
 ```
 - With espack add it the build options plugins array like the following:
 ```javascript
-import { createBuildProfiles } from '@espack/espack';
-import { sassPlugin } from '@espack/esbuild-sass-plugin';
+import { createBuildProfiles } from '@es-pack/espack';
+import { sassPlugin } from '@es-pack/esbuild-sass-plugin';
 
 export default {
     defaultBuildProfiles: createBuildProfiles(

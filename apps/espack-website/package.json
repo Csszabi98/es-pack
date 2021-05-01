@@ -1,5 +1,5 @@
 {
-    "name": "@espack/espack-website",
+    "name": "@es-pack/espack-website",
     "author": "Szabolcs Csizmadia",
     "version": "0.0.1",
     "private": true,
@@ -20,11 +20,11 @@
     },
     "devDependencies": {
         "esbuild": "0.11.11",
-        "@espack/espack": "workspace:*",
-        "@espack/esbuild-sass-plugin": "workspace:*",
-        "@espack/copy-plugin": "workspace:*",
-        "@espack/html-plugin": "workspace:*",
-        "@espack/ts-config": "workspace:*",
+        "@es-pack/espack": "workspace:*",
+        "@es-pack/esbuild-sass-plugin": "workspace:*",
+        "@es-pack/copy-plugin": "workspace:*",
+        "@es-pack/html-plugin": "workspace:*",
+        "@es-pack/ts-config": "workspace:*",
         "@rushstack/eslint-config": "2.3.3",
         "eslint": "7.21.0",
         "rimraf": "3.0.2",

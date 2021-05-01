@@ -444,58 +444,58 @@
         //
         // apps
         {
-            "packageName": "@espack/espack",
+            "packageName": "@es-pack/espack",
             "projectFolder": "apps/espack",
             "reviewCategory": "production",
             "shouldPublish": true
         },
         {
-            "packageName": "@espack/espack-website",
+            "packageName": "@es-pack/espack-website",
             "projectFolder": "apps/espack-website",
             "reviewCategory": "production",
             "shouldPublish": false
         },
         // libraries
         {
-            "packageName": "@espack/ts-config",
+            "packageName": "@es-pack/ts-config",
             "projectFolder": "libraries/ts-config",
             "reviewCategory": "tools",
             "shouldPublish": false
         },
         {
-            "packageName": "@espack/jest-config",
+            "packageName": "@es-pack/jest-config",
             "projectFolder": "libraries/jest-config",
             "reviewCategory": "tools",
             "shouldPublish": false
         },
         // plugins
         {
-            "packageName": "@espack/esbuild-sass-plugin",
+            "packageName": "@es-pack/esbuild-sass-plugin",
             "projectFolder": "plugins/esbuild-sass-plugin",
             "reviewCategory": "production",
             "shouldPublish": true
         },
         {
-            "packageName": "@espack/copy-plugin",
+            "packageName": "@es-pack/copy-plugin",
             "projectFolder": "plugins/copy-plugin",
             "reviewCategory": "production",
             "shouldPublish": true
         },
         {
-            "packageName": "@espack/html-plugin",
+            "packageName": "@es-pack/html-plugin",
             "projectFolder": "plugins/html-plugin",
             "reviewCategory": "production",
             "shouldPublish": true
         },
         // templates
         {
-            "packageName": "@espack/react-template",
+            "packageName": "@es-pack/react-template",
             "projectFolder": "templates/react-template",
             "reviewCategory": "tools",
             "shouldPublish": false
         },
         {
-            "packageName": "@espack/vue-template",
+            "packageName": "@es-pack/vue-template",
             "projectFolder": "templates/vue-template",
             "reviewCategory": "tools",
             "shouldPublish": false

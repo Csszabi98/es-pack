@@ -5,7 +5,7 @@
 ```json
 {
   "devDependencies": {
-    "@espack/jest-config": "workspace:*",
+    "@es-pack/jest-config": "workspace:*",
     "@types/jest": "26.0.22",
     "esbuild": "0.11.11",
     "esbuild-jest": "0.5.0",
@@ -19,7 +19,7 @@
 ```
 2. Create a jest.config.ts file with the following content:
 ```typescript
-import { nodeConfig } from '@espack/jest-config/src/node-config';
+import { nodeConfig } from '@es-pack/jest-config/src/node-config';
 
 export default nodeConfig;
 ```

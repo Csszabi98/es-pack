@@ -1,7 +1,7 @@
 import vuePlugin from 'esbuild-vue';
-import { createBuildProfiles, DefaultBuildProfiles, ImportFormat, Platforms } from '@espack/espack';
-import { EspackCopyPlugin } from '@espack/copy-plugin';
-import { EspackHtmlPlugin } from '@espack/html-plugin';
+import { createBuildProfiles, DefaultBuildProfiles, ImportFormat, Platforms } from '@es-pack/espack';
+import { EspackCopyPlugin } from '@es-pack/copy-plugin';
+import { EspackHtmlPlugin } from '@es-pack/html-plugin';
 
 const NODE_ENV = 'process.env.NODE_ENV';
 const isProdBuild = process.env.NODE_ENV === DefaultBuildProfiles.PROD;

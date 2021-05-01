@@ -1,12 +1,12 @@
 {
-    "name": "@espack/jest-config",
+    "name": "@es-pack/jest-config",
     "author": "Szabolcs Csizmadia",
     "version": "1.0.0",
     "private": true,
     "main:": "dist/index.js",
     "types": "dist/index.d.ts",
     "devDependencies": {
-        "@espack/ts-config": "workspace:*",
+        "@es-pack/ts-config": "workspace:*",
         "@jest/types": "26.6.2",
         "@rushstack/eslint-config": "2.3.3",
         "@types/jest": "26.0.22",

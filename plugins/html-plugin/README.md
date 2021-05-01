@@ -1,16 +1,16 @@
 ![espack](./assets/espack.png)
 
-# @espack/html-plugin
+# @es-pack/html-plugin
 ### A plugin to inject stylesheets and scripts into a html file
 
 ## Installation
 
 ### pnpm
-`pnpm add -D esbuild @espack/espack @espack/html-plugin`
+`pnpm add -D esbuild @es-pack/espack @es-pack/html-plugin`
 ### yarn
-`yarn add -D esbuild @espack/espack @espack/html-plugin`
+`yarn add -D esbuild @es-pack/espack @es-pack/html-plugin`
 ### npm
-`npm install -D esbuild @espack/espack @espack/html-plugin`
+`npm install -D esbuild @es-pack/espack @es-pack/html-plugin`
 
 ## How to use it?
 This plugin can be used under the plugins section of espack builds, like the following:
@@ -52,7 +52,7 @@ proper indentation in the resulting html. Defaults to empty string in production
 - **define**: A record object defining variables to be made available inside the result html file, achieving a certain level of
 templating. These variables can be accessed inside the html input file by putting them between % characters like so:
 %PUBLIC_URL%. Every occurrence will be replaced.
-    - PUBLIC_URL is defined by default with a default value referencing the @espack/copy-plugin's default output path: 'assets',
+    - PUBLIC_URL is defined by default with a default value referencing the @es-pack/copy-plugin's default output path: 'assets',
       inside the buildDir of espack.
     - Example:
     ```json5
