@@ -48,7 +48,6 @@ interface IEspackHtmlPluginCommonOptionalOptions {
     inject?: string[];
     injectStyle?: string[];
     injectHtml?: IHtmlInjection;
-    outdir?: string;
     minify?: boolean | Options;
     hashSeparator?: string;
 }
@@ -112,7 +111,7 @@ export class EspackHtmlPlugin extends EspackPlugin<string> {
     }
 
     private _getOutputPath(context: IBuildReadyPluginContext | IBuiltPluginContext<string>): string {
-        return path.join(context.buildsDir, this._options.outdir || '', path.basename(this._options.outputFile));
+        return path.join(context.buildsDir, this._options.outputFile);
     }
 
     public async onResourceCheck(context: IBasePluginContext): Promise<void> {

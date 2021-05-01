@@ -93,7 +93,6 @@ const builds: IBuilds = {
                 }),
                 new EspackHtmlPlugin({
                     inputFile: './public/index.html',
-                    outputFile: './dist/index.html',
                     minify: isProdBuild,
                     injectHtml
                 })

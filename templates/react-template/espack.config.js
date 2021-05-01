@@ -51,7 +51,7 @@ export default {
                 }),
                 new EspackHtmlPlugin({
                     inputFile: './public/index.html',
-                    outputFile: './dist/index.html',
+                    outputFile: 'index.html',
                     minify: isProdBuild
                 })
             ]

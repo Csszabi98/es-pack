@@ -19,7 +19,7 @@ production ready web development setup in no time! (see [templates](../../templa
 ### yarn
 `yarn add -D esbuild @espack/espack`
 ### npm
-`npm install --save-dev esbuild @espack/espack`
+`npm install -D esbuild @espack/espack`
 
 ## Main features:
 - easy configuration with a single typescript or javascript file
