@@ -5,7 +5,6 @@ const builds: IBuilds = {
     defaultBuildProfiles: createBuildProfiles(
         {
             platform: Platforms.NODE,
-            format: ImportFormat.COMMON_JS,
             external: [...Object.keys(peerDependencies), ...Object.keys(dependencies)]
         },
         {
@@ -18,7 +17,18 @@ const builds: IBuilds = {
         {
             scripts: [
                 {
-                    src: './src/index.ts'
+                    src: './src/index.ts',
+                    buildProfiles: createBuildProfiles({
+                        outdir: 'cjs',
+                        format: ImportFormat.COMMON_JS
+                    })
+                },
+                {
+                    src: './src/index.ts',
+                    buildProfiles: createBuildProfiles({
+                        outdir: 'esm',
+                        format: ImportFormat.ESM
+                    })
                 }
             ]
         }

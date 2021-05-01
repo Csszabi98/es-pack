@@ -1,9 +1,14 @@
 {
     "name": "@espack/copy-plugin",
     "author": "Szabolcs Csizmadia",
-    "version": "0.0.1",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
+    "version": "1.0.0",
+    "main": "./dist/cjs/index.js",
+    "module": "./dist/esm/index.js",
+    "exports": {
+        "require": "./dist/cjs/index.js",
+        "import": "./dist/esm/index.js"
+    },
+    "types": "./dist/types/index.d.ts",
     "scripts": {
         "clean": "rimraf ./dist",
         "build": "pnpm clean && pnpm build:types && pnpx espack --profile production",

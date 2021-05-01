@@ -41,7 +41,7 @@ production ready web development setup in no time! (see [templates](../../templa
 ## Running espack:
 You can use either npx or pnpx (or anything capable of running bin scripts) to run the pre included espack
 binary.
-```
+```shell
 npx espack
 ```
 
@@ -225,6 +225,29 @@ const builds: IBuilds = {
 };
 
 export default builds;
+```
+- Using cjs:
+```javascript
+const { createBuildProfiles, IBuilds, ImportFormat, Platforms } = require('@espack/espack');
+
+exports.default = {
+    defaultBuildProfiles: createBuildProfiles(
+        {
+            platform: Platforms.NODE,
+            format: ImportFormat.COMMON_JS
+        },
+        { production: { minify: false } }
+    ),
+    builds: [
+        {
+            scripts: [
+                {
+                    src: './src/index.ts'
+                }
+            ]
+        }
+    ]
+};
 ```
 - for espack configs on common templates like web development see [templates](../../templates)  
 

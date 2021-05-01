@@ -2,7 +2,7 @@
     "extends": "@espack/ts-config/src/node-npm-config.json",
     "compilerOptions": {
         "baseUrl": ".",
-        "declarationDir": "dist"
+        "declarationDir": "dist/types"
     },
     "include": ["./src/index.ts"],
     "exclude": ["**/*.spec.ts"]

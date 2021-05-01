@@ -34,13 +34,6 @@ export const executeBuilds = async (
         ];
     }, []);
 
-    const createOutdirPromises: Promise<void>[] = commonBuilds.map(async ({ buildProfile: { outdir } }) => {
-        if (!fs.existsSync(outdir)) {
-            await fs.promises.mkdir(outdir);
-        }
-    });
-    await Promise.all(createOutdirPromises);
-
     return Promise.all(
         commonBuilds.map(async (build, index) => {
             // TODO: Replace with proper buildIds

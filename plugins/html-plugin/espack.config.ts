@@ -18,7 +18,18 @@ const builds: IBuilds = {
         {
             scripts: [
                 {
-                    src: './src/index.ts'
+                    src: './src/index.ts',
+                    buildProfiles: createBuildProfiles({
+                        format: ImportFormat.COMMON_JS,
+                        outdir: 'cjs'
+                    })
+                },
+                {
+                    src: './src/index.ts',
+                    buildProfiles: createBuildProfiles({
+                        format: ImportFormat.ESM,
+                        outdir: 'esm'
+                    })
                 }
             ]
         }

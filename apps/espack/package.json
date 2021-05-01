@@ -1,11 +1,16 @@
 {
     "name": "@espack/espack",
     "author": "Szabolcs Csizmadia",
-    "version": "0.0.1",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
+    "version": "1.0.0",
+    "main": "./dist/cjs/index.js",
+    "module": "./dist/esm/index.js",
+    "exports": {
+        "require": "./dist/cjs/index.js",
+        "import": "./dist/esm/index.js"
+    },
+    "types": "./dist/types/index.d.ts",
     "bin": {
-        "espack": "dist/espack.js"
+        "espack": "./dist/espack.js"
     },
     "scripts": {
         "clean": "rimraf ./dist",
