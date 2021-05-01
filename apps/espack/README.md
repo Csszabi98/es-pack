@@ -1,16 +1,21 @@
-![alt text](./assets/espack.png)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/38193720/116794320-7b15ab00-aacc-11eb-8b4f-71aafd37b5eb.png" 
+    alt="espack: A build tool running on esbuild">
+  <br>
+  <a href="https://github.com/Csszabi98/es-pack/tree/main/plugins">Plugins</a>
+</p>
 
 # espack
-##A build tool running on [esbuild](https://github.com/evanw/esbuild)
+## A build tool running on [esbuild](https://github.com/evanw/esbuild)
 
 Espack on its own is just a nice wrapper api around esbuild, with an easy single file configuration for
 any number of builds.
 
 However once you start using espack plugins it shows its true power!
 
-With pre-written plugins such as [EspackHtmlPlugin](../../plugins/html-plugin) and 
-[EspackCopyPlugin](../../plugins/copy-plugin) it's super easy to throw together a 
-production ready web development setup in no time! (see [templates](../../templates))
+With pre-written plugins such as [EspackHtmlPlugin](https://github.com/Csszabi98/es-pack/tree/main/plugins/html-plugin) and 
+[EspackCopyPlugin](https://github.com/Csszabi98/es-pack/tree/main/plugins/html-plugin/copy-plugin) it's super easy to throw together a 
+production ready web development setup in no time! (see [templates](https://github.com/Csszabi98/es-pack/tree/main/templates))
 
 ## Installation
 
@@ -249,7 +254,7 @@ exports.default = {
     ]
 };
 ```
-- for espack configs on common templates like web development see [templates](../../templates)  
+- for espack configs on common templates like web development see [templates](https://github.com/Csszabi98/es-pack/tree/main/templates)  
 
 
 ## How to define espack plugins?
