@@ -1,0 +1,10 @@
+{
+    "extends": "@espack/ts-config/src/node-config.json",
+    "compilerOptions": {
+        "baseUrl": ".",
+        "rootDir": "./src",
+        "outDir": "./dist"
+    },
+    "include": ["src"],
+    "exclude": ["**/*.spec.ts"]
+}

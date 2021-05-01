@@ -1,0 +1,15 @@
+{
+    "name": "@espack/ts-config",
+    "author": "Szabolcs Csizmadia",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "build": "",
+        "build:dev": "",
+        "build:watch": "",
+        "lint": "",
+        "lint:fix": "",
+        "test": ""
+    },
+    "license": "MIT"
+}

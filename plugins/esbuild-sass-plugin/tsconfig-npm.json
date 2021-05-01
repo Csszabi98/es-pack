@@ -1,0 +1,11 @@
+{
+    "extends": "@espack/ts-config/src/node-npm-config.json",
+    "compilerOptions": {
+        "baseUrl": ".",
+        "declarationDir": "dist/types",
+        "paths": {
+            "sass": ["node_modules/@types/node-sass"]
+        }
+    },
+    "include": ["./src/index.ts"]
+}

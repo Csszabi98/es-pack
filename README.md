@@ -1,43 +1,55 @@
-# espack: A nice api around esbuild
+![espack](./apps/espack/assets/espack.png)
 
-# DISCLAIMER:
-This package is under development, it will try to evolve with esbuild itself as 
-it is also under work. As the additional features this package provides are written
-in javascript, this package will not be as fast as executing esbuild by itself, but
-it provides a ton of features, and since every js related process is done via esbuild
-the performance hits should be irrelevant in the long run.
+# @espack monorepository
 
-## Main features:
-- Client build (react) with bundling and script/style injection into html
-- Standard build for any other script
-- Easily configurable
-- Sass support
+This is the monorepository for espack a build tool running on esbuild.
 
-## Future goals:
-- 0 setup just provide the entry point(s)
-- Well tested
-- Typescript configuration (remove json config)
-- custom esbuild plugin collection for common usecases (in this repo with rush)
-- configurable plugins
-- expose everything that esbuild provides
-- build hashes
-- make sass optional (pluginify)
-- add configuration guide
-- build an SPA documentation site for this package using the package itself as a build tool
+## Technology stack
 
-## This project will not aim to do the following
-- Transpile to ES5 unless esbuild will directly support it in the future
+- esbuild for bundling 
+- typescript
+- nodejs
+- rush for repository management
 
-## Peer dependencies:
+## Development requirements
+- Have at least node 12 installed
+- Install [rush](https://rushjs.io/)
 
-As currently there is no way to bundle the html-minifier and sass dependencies these have
-to be provided as peer dependencies to the product.
+## How to do things?
+- After checking out the repo run the following command to initialize the repository:
+```shell
+rush update
+```
+- Run the following command to build the underlying projects: 
+```shell
+rush build
+```
+- Or run the following command to od a development build:
+```shell
+rush build:dev
+```
+- Watch mode:
+```shell
+rush build:watch
+```
+- To lint the project run:
+```shell
+rush lint
+```
+- To fix the lint issues run:
+```shell
+rush lint:fix
+```
 
-## How does it work?
+## Additional info
 
-Take a look at the build.json file and src/build.constants.ts for the json schema.
-Further explanation will not be written here, as json configuration will be replaced with
-typescript/javascript configuration files in the future.
+- prettier runs before each commit to the repository and fixes files to meet the configuration standards
+- a commit format of [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/#specification) is used, and
+commitlint runs before every commit to enforce these rules
 
-The product will naturally look for a build.json in the root of the project, and builds
-the target scripts.
+## Contributing
+
+Feel free to contribute to the repository by any means, but do it in a documented format, via github issues.
+
+## Contact
+If you have any questions contact the repository owner via email: **csizmadia98@gmail.com**
