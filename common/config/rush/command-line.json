@@ -37,7 +37,8 @@
       "name": "lint:fix",
       "commandKind": "bulk",
       "summary": "Used by developers to fix eslint issues quickly.",
-      "enableParallelism": true
+      "enableParallelism": true,
+      "ignoreMissingScript": true
     },
     {
       "name": "commitlint",
