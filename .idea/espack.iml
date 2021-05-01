@@ -11,6 +11,7 @@
       <excludePattern pattern=".pnpm" />
       <excludePattern pattern="joi" />
       <excludePattern pattern="sass" />
+      <excludePattern pattern="node_modules" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
