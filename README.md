@@ -52,6 +52,4 @@ commitlint runs before every commit to enforce these rules
 Feel free to contribute to the repository by any means, but do it in a documented format, via github issues.
 
 ## Contact
-If you have any questions contact the repository owner via 
-<a href="mailto:csizmadia98@gmail.com?"><img src="https://img.shields.io/badge/gmail-%23DD0031.svg?&style=for-the-badge&logo=gmail&logoColor=white"/></a>
-
+If you have any questions contact the repository owner via email: **csizmadia98@gmail.com**
