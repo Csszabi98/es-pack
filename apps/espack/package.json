@@ -1,7 +1,7 @@
 {
     "name": "@es-pack/espack",
     "author": "Szabolcs Csizmadia",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "main": "./dist/cjs/index.js",
     "module": "./dist/esm/index.js",
     "exports": {

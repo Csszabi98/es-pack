@@ -1,0 +1,17 @@
+{
+  "name": "@es-pack/espack",
+  "entries": [
+    {
+      "version": "1.0.2",
+      "tag": "@es-pack/espack_v1.0.2",
+      "date": "Sat, 15 May 2021 13:58:17 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Add .npmignore, to only publish necessary files to npm"
+          }
+        ]
+      }
+    }
+  ]
+}
