@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "@es-pack/esbuild-sass-plugin",
+      "comment": "Add .npmignore, to only publish necessary files to npm",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@es-pack/esbuild-sass-plugin",
+  "email": "csizmadia98@gmail.com"
+}
