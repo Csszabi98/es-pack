@@ -1,4 +1,7 @@
-import { BuildLifecycles, EspackPlugin } from '../build/build.plugin';
+import { BuildLifecycles, DeterministicEspackPlugin, IEspackPlugin } from '../build/build.plugin';
 
-export const getPluginsForLifecycle = (plugins: EspackPlugin[], lifecycle: BuildLifecycles): EspackPlugin[] =>
-    plugins.filter(plugin => plugin.hookEnabled(lifecycle));
+export const getPluginsForLifecycle = <T extends BuildLifecycles>(
+    plugins: IEspackPlugin[],
+    lifecycle: T
+): DeterministicEspackPlugin<T>[] =>
+    (plugins.filter(plugin => plugin[lifecycle]) as unknown) as DeterministicEspackPlugin<T>[];

@@ -1,6 +1,6 @@
 import Joi from 'joi';
 import { Plugin } from 'esbuild';
-import { BuildLifecycles, EspackPlugin } from '../build/build.plugin';
+import { BuildLifecycles, IEspackPlugin } from '../build/build.plugin';
 import { IBuilds, IEntryAsset, IEntryAssetTransformations, ImportFormat, Platforms, IBuild } from '../build/build.model';
 
 const JoiStringArray: Joi.ArraySchema = Joi.array().items(Joi.string());
@@ -28,8 +28,8 @@ const esbuildPluginSchema: Joi.ObjectSchema<Plugin> = Joi.object<Plugin>({
     setup: Joi.function().arity(1)
 });
 
-const espackPluginInstanceSchema: Joi.ObjectSchema<EspackPlugin> = Joi.object({
-    getName: Joi.function().arity(0).required(),
+const espackPluginInstanceSchema: Joi.ObjectSchema<IEspackPlugin> = Joi.object({
+    name: Joi.string().required(),
     ...Object.keys(BuildLifecycles).map(lifecycle => ({
         [lifecycle]: Joi.function().arity(1).required()
     }))

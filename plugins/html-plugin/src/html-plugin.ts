@@ -2,11 +2,9 @@ import fs, { FSWatcher } from 'fs';
 import path from 'path';
 import { minify, Options } from 'html-minifier';
 import {
-    BuildLifecycles,
     checkAssetsExist,
     DefaultBuildProfiles,
-    EspackPlugin,
-    IBasePluginContext,
+    IEspackPlugin,
     IBuildReadyPluginContext,
     IBuiltPluginContext,
     ICleanup
@@ -59,51 +57,54 @@ export interface IEspackHtmlPluginOptions
         Partial<IEspackHtmlPluginCommonOptions> {}
 export interface IEspackPluginState extends IEspackHtmlPluginCommonOptionalOptions, IEspackHtmlPluginCommonOptions {}
 
-//TODO: Separate into smaller parts
-export class EspackHtmlPlugin extends EspackPlugin<string> {
-    private readonly _options: IEspackPluginState;
+const pluginName: string = '@es-pack/html-plugin';
 
-    public constructor(options: IEspackHtmlPluginOptions) {
-        const enabledLifecycles: BuildLifecycles[] = [
-            BuildLifecycles.RESOURCE_CHECK,
-            BuildLifecycles.BUILD,
-            BuildLifecycles.AFTER_BUILD,
-            BuildLifecycles.WATCH
-        ];
-        super('@es-pack/html-plugin', enabledLifecycles);
-
-        const validation: Joi.ValidationResult = htmlPluginOptionsSchema.validate(options);
-        if (validation.error) {
-            console.error(validation.error);
-            throw new Error('Invalid constructor options!');
+const watcherFactory = (resource: string, onChange: (fileName: string) => Promise<void>): FSWatcher => {
+    return fs.watch(resource, { encoding: 'utf-8' }, async (event, fileName) => {
+        if (event === 'rename') {
+            console.error(
+                `Html entry point ${fileName} renamed! Please sync up the changes with the config and restart the watcher...`
+            );
+            process.exit(1);
+            return;
         }
+        await onChange(fileName);
+    });
+};
 
-        const isProd: boolean = process.env.NODE_ENV !== DefaultBuildProfiles.DEV;
-        this._options = {
-            outputFile: 'index.html',
-            injectionSeparator: isProd ? '' : '\n',
-            injectionPrefix: isProd ? '' : '    ', // Use 4 whitespaces
-            define: {
-                PUBLIC_URL: 'assets' // Default outdir of copy plugin
-            },
-            ...options
-        };
+//TODO: Separate into smaller parts
+export const espackHtmlPluginFactory = (options: IEspackHtmlPluginOptions): IEspackPlugin<string> => {
+    const validation: Joi.ValidationResult = htmlPluginOptionsSchema.validate(options);
+    if (validation.error) {
+        console.error(validation.error);
+        throw new Error('Invalid constructor options!');
     }
 
-    private async _buildHtml(filename?: string): Promise<string> {
+    const isProd: boolean = process.env.NODE_ENV !== DefaultBuildProfiles.DEV;
+    const deterministicOptions: IEspackPluginState = {
+        outputFile: 'index.html',
+        injectionSeparator: isProd ? '' : '\n',
+        injectionPrefix: isProd ? '' : '    ', // Use 4 whitespaces
+        define: {
+            PUBLIC_URL: 'assets' // Default outdir of copy plugin
+        },
+        ...options
+    };
+
+    const buildHtml = async (filename?: string): Promise<string> => {
         if (!filename) {
             return generateDefaultHtmlContent();
         }
 
         let result: string = fs.readFileSync(filename).toString();
-        result = injectHtml(result, this._options);
+        result = injectHtml(result, deterministicOptions);
 
-        const define: Record<string, string> = this._options.define;
+        const define: Record<string, string> = deterministicOptions.define;
         Object.keys(define).forEach(key => {
             result = result.replace(new RegExp(`%${key}%`, 'g'), define[key]);
         });
 
-        const minifyOptions: boolean | Options | undefined = this._options.minify;
+        const minifyOptions: boolean | Options | undefined = deterministicOptions.minify;
         if (minifyOptions) {
             result = minify(
                 result,
@@ -117,55 +118,42 @@ export class EspackHtmlPlugin extends EspackPlugin<string> {
         }
 
         return result;
-    }
+    };
 
-    private _getOutputPath(context: IBuildReadyPluginContext | IBuiltPluginContext<string>): string {
-        return path.join(context.buildsDir, this._options.outputFile);
-    }
+    const getOutputPath = (context: IBuildReadyPluginContext | IBuiltPluginContext<string>): string => {
+        return path.join(context.buildsDir, deterministicOptions.outputFile);
+    };
 
-    public async onResourceCheck(context: IBasePluginContext): Promise<void> {
-        const filename: string | undefined = this._options.inputFile;
+    const onResourceCheck = async (): Promise<void> => {
+        const filename: string | undefined = deterministicOptions.inputFile;
         if (filename) {
             return checkAssetsExist([filename]);
         }
-    }
+    };
 
-    public async onBuild(context: IBuildReadyPluginContext): Promise<string> {
-        return this._buildHtml(this._options.inputFile);
-    }
+    const onBuild = async (): Promise<string> => {
+        return buildHtml(deterministicOptions.inputFile);
+    };
 
-    public afterBuild(context: IBuiltPluginContext<string>): void {
+    const afterBuild = (context: IBuiltPluginContext<string>): void => {
         const { buildResults, pluginBuildResult } = context;
 
-        const html: string = injectScripts(context.buildsDir, this._options, buildResults, pluginBuildResult);
+        const html: string = injectScripts(context.buildsDir, deterministicOptions, buildResults, pluginBuildResult);
 
-        fs.writeFileSync(this._getOutputPath(context), html);
-    }
+        fs.writeFileSync(getOutputPath(context), html);
+    };
 
-    private static _watcherFactory(resource: string, onChange: (fileName: string) => Promise<void>): FSWatcher {
-        return fs.watch(resource, { encoding: 'utf-8' }, async (event, fileName) => {
-            if (event === 'rename') {
-                console.error(
-                    `Html entry point ${fileName} renamed! Please sync up the changes with the config and restart the watcher...`
-                );
-                process.exit(1);
-                return;
-            }
-            await onChange(fileName);
-        });
-    }
-
-    public registerCustomWatcher(context: IBuiltPluginContext<string>): ICleanup {
-        const watchedResource: string | undefined = this._options.inputFile;
+    const registerCustomWatcher = (context: IBuiltPluginContext<string>): ICleanup => {
+        const watchedResource: string | undefined = deterministicOptions.inputFile;
 
         let close: () => void = () => {};
         if (watchedResource) {
-            const watcher: FSWatcher = EspackHtmlPlugin._watcherFactory(watchedResource, async fileName => {
-                const label: string = `[watch] ${this.name} build finished under`;
+            const watcher: FSWatcher = watcherFactory(watchedResource, async () => {
+                const label: string = `[watch] ${pluginName} build finished under`;
                 console.time(label);
-                console.log(`[watch] ${this.name} build started...`);
-                const result: string = await this.onBuild(context);
-                this.afterBuild({
+                console.log(`[watch] ${pluginName} build started...`);
+                const result: string = await onBuild();
+                afterBuild({
                     ...context,
                     pluginBuildResult: result
                 });
@@ -178,5 +166,13 @@ export class EspackHtmlPlugin extends EspackPlugin<string> {
         }
 
         return { stop: close };
-    }
-}
+    };
+
+    return {
+        name: pluginName,
+        onResourceCheck,
+        onBuild,
+        afterBuild,
+        registerCustomWatcher
+    };
+};

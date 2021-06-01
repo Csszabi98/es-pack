@@ -5,4 +5,4 @@ import {
 
 export type IEspackHtmlPluginOptions = IEspackHtmlPluginOptionsType;
 export type IHtmlInjection = IHtmlInjectionType;
-export { EspackHtmlPlugin } from './html-plugin';
+export { espackHtmlPluginFactory } from './html-plugin';
