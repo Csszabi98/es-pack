@@ -1,3 +1,5 @@
+### A plugin to inject stylesheets and scripts into a html file
+
 <p align="center">
   <img src="https://user-images.githubusercontent.com/38193720/116794320-7b15ab00-aacc-11eb-8b4f-71aafd37b5eb.png" 
     alt="espack: A build tool running on esbuild">
@@ -6,7 +8,6 @@
 </p>
 
 # @es-pack/html-plugin
-### A plugin to inject stylesheets and scripts into a html file
 
 ## Installation
 
@@ -25,7 +26,7 @@ export default {
     builds: [
         {
             plugins: [
-                new EspackHtmlPlugin({
+                espackHtmlPluginFactory({
                     inputFile: './public/index.html',
                     outputFile: './dist/index.html',
                     minify: process.env.NODE_ENV === 'production',

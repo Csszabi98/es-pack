@@ -1,9 +1,8 @@
 import fs, { FSWatcher } from 'fs';
 import path from 'path';
 import {
-    BuildLifecycles,
     checkAssetsExist,
-    EspackPlugin,
+    IEspackPlugin,
     IBasePluginContext,
     IBuildReadyPluginContext,
     IBuiltPluginContext,
@@ -21,72 +20,67 @@ export interface IEspackCopyPluginOptions {
 type EspackDeterministicCopyPluginOptions = {
     [Key in keyof IEspackCopyPluginOptions]-?: Readonly<IEspackCopyPluginOptions[Key]>;
 };
-export class EspackCopyPlugin extends EspackPlugin<void> {
-    private readonly _options: EspackDeterministicCopyPluginOptions;
 
-    public constructor(options: IEspackCopyPluginOptions) {
-        const enabledLifecycles: BuildLifecycles[] = [
-            BuildLifecycles.RESOURCE_CHECK,
-            BuildLifecycles.BUILD,
-            BuildLifecycles.WATCH
-        ];
-        super('@es-pack/copy-plugin', enabledLifecycles);
+const pluginName: string = '@es-pack/copy-plugin';
 
-        const validation: Joi.ValidationResult = copyPluginOptionsSchema.validate(options);
-        if (validation.error) {
-            console.error(validation.error);
-            throw new Error('Invalid constructor options!');
+const watcherFactory = (resource: string, onChange: (fileName: string) => void): FSWatcher => {
+    return fs.watch(resource, { encoding: 'utf-8' }, (event, fileName) => {
+        if (event === 'rename') {
+            console.error(
+                `Asset ${fileName} renamed! Please sync up the changes with the config and restart the watcher...`
+            );
+            process.exit(1);
+            return;
         }
+        onChange(fileName);
+    });
+};
 
-        this._options = {
-            outdir: 'assets',
-            basedir: '.',
-            ...options
-        };
+export const espackCopyPluginFactory = (options: IEspackCopyPluginOptions): IEspackPlugin<void> => {
+    const validation: Joi.ValidationResult = copyPluginOptionsSchema.validate(options);
+    if (validation.error) {
+        console.error(validation.error);
+        throw new Error('Invalid constructor options!');
     }
 
-    private _mapBasedirToAsset(asset: string): string {
-        return path.join(this._options.basedir, asset);
-    }
+    const deterministicOptions: EspackDeterministicCopyPluginOptions = {
+        outdir: 'assets',
+        basedir: '.',
+        ...options
+    };
 
-    private static _watcherFactory(resource: string, onChange: (fileName: string) => void): FSWatcher {
-        return fs.watch(resource, { encoding: 'utf-8' }, (event, fileName) => {
-            if (event === 'rename') {
-                console.error(
-                    `Asset ${fileName} renamed! Please sync up the changes with the config and restart the watcher...`
-                );
-                process.exit(1);
-                return;
-            }
-            onChange(fileName);
-        });
-    }
+    const mapBasedirToAsset = (asset: string): string => {
+        return path.join(deterministicOptions.basedir, asset);
+    };
 
-    public onResourceCheck(context: IBasePluginContext): Promise<void> {
-        return checkAssetsExist([...this._options.assets.map(this._mapBasedirToAsset.bind(this))]);
-    }
+    const onResourceCheck = (context: IBasePluginContext): Promise<void> => {
+        return checkAssetsExist([...deterministicOptions.assets.map(mapBasedirToAsset)]);
+    };
 
-    public async onBuild(context: IBuildReadyPluginContext): Promise<void> {
-        const assetsDir: string = path.join(context.buildsDir, this._options.outdir);
+    const onBuild = async (context: IBuildReadyPluginContext): Promise<void> => {
+        const assetsDir: string = path.join(context.buildsDir, deterministicOptions.outdir);
         if (!fs.existsSync(assetsDir)) {
             fs.mkdirSync(assetsDir);
         }
 
-        const copyJobs: Promise<void>[] = this._options.assets.map(asset =>
-            fs.promises.copyFile(path.join(this._options.basedir, asset), path.join(assetsDir, path.basename(asset)))
+        const copyJobs: Promise<void>[] = deterministicOptions.assets.map(asset =>
+            fs.promises.copyFile(path.join(deterministicOptions.basedir, asset), path.join(assetsDir, path.basename(asset)))
         );
         await Promise.all(copyJobs);
-    }
+    };
 
-    public registerCustomWatcher(context: IBuiltPluginContext<void>): ICleanup {
-        const watchedResources: string[] = [...this._options.assets.map(this._mapBasedirToAsset.bind(this))];
+    const registerCustomWatcher = (context: IBuiltPluginContext<void>): ICleanup => {
+        const watchedResources: string[] = [...deterministicOptions.assets.map(mapBasedirToAsset)];
 
-        const createWatcher = (resource: string, index: number): FSWatcher =>
-            EspackCopyPlugin._watcherFactory(resource, fileName => {
-                const label: string = `[watch] ${this.name} build finished under`;
+        const createWatcher = (resource: string): FSWatcher =>
+            watcherFactory(resource, fileName => {
+                const label: string = `[watch] ${pluginName} build finished under`;
                 console.time(label);
-                console.log(`[watch] ${this.name} build started...`);
-                fs.copyFileSync(resource, path.join(context.buildsDir, this._options.outdir, path.basename(fileName)));
+                console.log(`[watch] ${pluginName} build started...`);
+                fs.copyFileSync(
+                    resource,
+                    path.join(context.buildsDir, deterministicOptions.outdir, path.basename(fileName))
+                );
                 console.timeEnd(label);
             });
         const watchers: FSWatcher[] = watchedResources.map(createWatcher);
@@ -96,5 +90,12 @@ export class EspackCopyPlugin extends EspackPlugin<void> {
         };
 
         return { stop: close };
-    }
-}
+    };
+
+    return {
+        name: pluginName,
+        onResourceCheck,
+        onBuild,
+        registerCustomWatcher
+    };
+};

@@ -8,7 +8,7 @@
         "build": "pnpm clean &&  pnpx espack --profile production",
         "build:dev": "pnpm clean &&  pnpx espack --profile development",
         "build:watch": "pnpm build:dev",
-        "build:watch:local": "rushx espack --profile development --watch",
+        "build:watch:local": "pnpx espack --profile development --watch",
         "serve": "http-server ./dist --cors -r ./dist/assets/robots.txt --proxy http://localhost:8080?",
         "lint": "eslint src/** --max-warnings=0 && tsc --noEmit",
         "lint:tsc": "tsc --noEmit",

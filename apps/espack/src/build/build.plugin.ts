@@ -7,13 +7,10 @@ export enum BuildLifecycles {
     BEFORE_BUILD = 'beforeBuild',
     BUILD = 'onBuild',
     AFTER_BUILD = 'afterBuild',
+    AFTER_WRITE = 'afterWrite',
     WATCH = 'registerCustomWatcher',
     CLEANUP = 'onCleanup'
 }
-
-type BuildLifecycleHooks = {
-    [Key in BuildLifecycles]: unknown;
-};
 
 export interface IBasePluginContext {
     buildsDir: string;
@@ -30,58 +27,26 @@ export interface IBuiltPluginContext<T> extends IBuildReadyPluginContext {
     pluginBuildResult: T;
 }
 
-export class EspackPlugin<T = unknown> implements BuildLifecycleHooks {
-    protected readonly errorPrefix: string;
-    protected readonly name: string;
-    protected readonly hookInto: BuildLifecycles[];
-
-    public constructor(name: string, hookInto: BuildLifecycles[]) {
-        this.name = name;
-        this.hookInto = hookInto;
-        this.errorPrefix = `[Plugin ${this.name} error]:`;
-    }
-
-    private _notImplementedErrorFactory(lifecycle: BuildLifecycles): Error {
-        return new Error(`${this.errorPrefix} ${lifecycle} is not implemented!`);
-    }
-
-    public hookEnabled(lifecycle: BuildLifecycles): boolean {
-        return this.hookInto.includes(lifecycle);
-    }
-
-    public beforeResourceCheck(context: IBasePluginContext): void {
-        throw this._notImplementedErrorFactory(BuildLifecycles.BEFORE_RESOURCE_CHECK);
-    }
-
-    public onResourceCheck(context: IBasePluginContext): Promise<void> {
-        throw this._notImplementedErrorFactory(BuildLifecycles.RESOURCE_CHECK);
-    }
-
-    public afterResourceCheck(context: IBasePluginContext): void {
-        throw this._notImplementedErrorFactory(BuildLifecycles.AFTER_RESOURCE_CHECK);
-    }
-
-    public beforeBuild(context: IBuildReadyPluginContext): void {
-        throw this._notImplementedErrorFactory(BuildLifecycles.BEFORE_BUILD);
-    }
-
-    public onBuild(context: IBuildReadyPluginContext): Promise<T> {
-        throw this._notImplementedErrorFactory(BuildLifecycles.BUILD);
-    }
-
-    public afterBuild(context: IBuiltPluginContext<T>): void {
-        throw this._notImplementedErrorFactory(BuildLifecycles.AFTER_BUILD);
-    }
-
-    public registerCustomWatcher(context: IBuiltPluginContext<T>): ICleanup {
-        throw this._notImplementedErrorFactory(BuildLifecycles.WATCH);
-    }
-
-    public onCleanup(context: IBuiltPluginContext<T>): void {
-        throw this._notImplementedErrorFactory(BuildLifecycles.CLEANUP);
-    }
-
-    public getName(): string {
-        return this.name;
-    }
+export interface IEspackPlugin<T = unknown> {
+    readonly name: string;
+    [BuildLifecycles.BEFORE_RESOURCE_CHECK]?: (context: IBasePluginContext) => void;
+    [BuildLifecycles.RESOURCE_CHECK]?: (context: IBasePluginContext) => Promise<void>;
+    [BuildLifecycles.AFTER_RESOURCE_CHECK]?: (context: IBasePluginContext) => void;
+    [BuildLifecycles.BEFORE_BUILD]?: (context: IBuildReadyPluginContext) => void;
+    [BuildLifecycles.BUILD]?: (context: IBuildReadyPluginContext) => Promise<T>;
+    [BuildLifecycles.AFTER_BUILD]?: (context: IBuiltPluginContext<T>) => void;
+    [BuildLifecycles.AFTER_WRITE]?: (context: IBuiltPluginContext<T>) => void;
+    [BuildLifecycles.WATCH]?: (context: IBuiltPluginContext<T>) => ICleanup;
+    [BuildLifecycles.CLEANUP]?: (context: IBuiltPluginContext<T>) => void;
+    [key: string]: unknown;
 }
+
+type RequiredField<T, Field extends keyof T> = {
+    [P in keyof Pick<T, Field>]-?: NonNullable<T[P]>;
+};
+
+export type DeterministicEspackPlugin<Key extends keyof IEspackPlugin<T>, T = unknown> = RequiredField<
+    IEspackPlugin<T>,
+    Key
+> &
+    Omit<IEspackPlugin<T>, Key>;

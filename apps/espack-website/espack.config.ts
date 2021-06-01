@@ -1,6 +1,6 @@
 import { createBuildProfiles, DefaultBuildProfiles, IBuilds, ImportFormat, Platforms } from '@es-pack/espack';
-import { EspackCopyPlugin } from '@es-pack/copy-plugin';
-import { EspackHtmlPlugin, IHtmlInjection } from '@es-pack/html-plugin';
+import { espackCopyPluginFactory } from '@es-pack/copy-plugin';
+import { espackHtmlPluginFactory, IHtmlInjection } from '@es-pack/html-plugin';
 import { globalExternals } from '@fal-works/esbuild-plugin-global-externals';
 import React from 'react';
 
@@ -78,7 +78,7 @@ const builds: IBuilds = {
                 }
             ],
             plugins: [
-                new EspackCopyPlugin({
+                espackCopyPluginFactory({
                     basedir: './public',
                     assets: [
                         'android-chrome-192x192.png',
@@ -91,7 +91,7 @@ const builds: IBuilds = {
                         'robots.txt'
                     ]
                 }),
-                new EspackHtmlPlugin({
+                espackHtmlPluginFactory({
                     inputFile: './public/index.html',
                     minify: isProdBuild,
                     injectHtml

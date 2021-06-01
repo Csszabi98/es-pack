@@ -1,5 +1,5 @@
 import * as esbuild from 'esbuild';
-import type { EspackPlugin } from './build.plugin';
+import type { IEspackPlugin } from './build.plugin';
 
 export enum Asset {
     HTML = 'html',
@@ -70,7 +70,8 @@ export type DefaultEntryAssetTransformations = {
 
 export interface IBuild {
     buildProfiles?: BuildProfiles;
-    plugins?: EspackPlugin[];
+    // eslint-disable-next-line
+    plugins?: IEspackPlugin<any>[];
     scripts: IEntryAsset[];
 }
 

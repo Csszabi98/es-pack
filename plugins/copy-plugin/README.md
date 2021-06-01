@@ -1,3 +1,5 @@
+### A plugin for espack to copy files
+
 <p align="center">
   <img src="https://user-images.githubusercontent.com/38193720/116794320-7b15ab00-aacc-11eb-8b4f-71aafd37b5eb.png" 
     alt="espack: A build tool running on esbuild">
@@ -6,7 +8,6 @@
 </p>
 
 # @es-pack/copy-plugin
-### A plugin for espack to copy files
 
 ## Installation
 
@@ -25,7 +26,7 @@ export default {
     builds: [
         {
             plugins: [
-                new EspackCopyPlugin({
+                espackCopyPluginFactory({
                     basedir: './webassets',
                     assets: [
                         'favicon.ico',
@@ -33,7 +34,7 @@ export default {
                         'robots.txt'
                     ]
                 }),
-                new EspackCopyPlugin({
+                espackCopyPluginFactory({
                     basedir: './public',
                     assets: [
                         '404.html'

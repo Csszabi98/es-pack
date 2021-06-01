@@ -1,6 +1,6 @@
 import { createBuildProfiles, DefaultBuildProfiles, ImportFormat, Platforms } from '@es-pack/espack';
-import { EspackCopyPlugin } from '@es-pack/copy-plugin';
-import { EspackHtmlPlugin } from '@es-pack/html-plugin';
+import { espackCopyPluginFactory } from '@es-pack/copy-plugin';
+import { espackHtmlPluginFactory } from '@es-pack/html-plugin';
 
 const NODE_ENV = 'process.env.NODE_ENV';
 const isProdBuild = process.env.NODE_ENV === DefaultBuildProfiles.PROD;
@@ -36,7 +36,7 @@ export default {
                 }
             ],
             plugins: [
-                new EspackCopyPlugin({
+                espackCopyPluginFactory({
                     basedir: './public',
                     assets: [
                         'android-chrome-192x192.png',
@@ -49,7 +49,7 @@ export default {
                         'robots.txt'
                     ]
                 }),
-                new EspackHtmlPlugin({
+                espackHtmlPluginFactory({
                     inputFile: './public/index.html',
                     outputFile: 'index.html',
                     minify: isProdBuild
