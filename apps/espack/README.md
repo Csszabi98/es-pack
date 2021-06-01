@@ -160,7 +160,7 @@ esbuild, and also an option to override the default build profile options for ev
             - for example using the following plugin:
             ```javascript
             plugins: [
-                new EspackHtmlPlugin()
+                espackHtmlPluginFactory()
             ]
             ```
             - will result in injecting all your generated files let them be javascript or css into a html
