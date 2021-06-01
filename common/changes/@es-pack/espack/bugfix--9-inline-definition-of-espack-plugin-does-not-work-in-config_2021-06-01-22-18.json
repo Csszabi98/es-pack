@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "@es-pack/espack",
+      "comment": "Rewritten using the new classless plugin api. Added the afterWrite lifecycle.",
+      "type": "major"
+    }
+  ],
+  "packageName": "@es-pack/espack",
+  "email": "csizmadia98@gmail.com"
+}
