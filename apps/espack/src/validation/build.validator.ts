@@ -30,8 +30,8 @@ const esbuildPluginSchema: Joi.ObjectSchema<Plugin> = Joi.object<Plugin>({
 
 const espackPluginInstanceSchema: Joi.ObjectSchema<IEspackPlugin> = Joi.object({
     name: Joi.string().required(),
-    ...Object.keys(BuildLifecycles).map(lifecycle => ({
-        [lifecycle]: Joi.function().arity(1).required()
+    ...Object.values(BuildLifecycles).map(lifecycle => ({
+        [lifecycle]: Joi.function().arity(1)
     }))
 }).unknown(true);
 const espackPluginArraySchema: Joi.ArraySchema = Joi.array().items(espackPluginInstanceSchema);

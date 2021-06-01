@@ -1,3 +1,5 @@
+### A sass plugin for esbuild written in typescript.
+
 <p align="center">
   <img src="https://user-images.githubusercontent.com/38193720/116794320-7b15ab00-aacc-11eb-8b4f-71aafd37b5eb.png" 
     alt="espack: A build tool running on esbuild">
@@ -6,7 +8,6 @@
 </p>
 
 # @es-pack/esbuild-sass-plugin
-### A sass plugin for esbuild written in typescript.
 
 ## Installation with esbuild
 

@@ -1,3 +1,5 @@
+## A build tool running on [esbuild](https://github.com/evanw/esbuild)
+
 <p align="center">
   <img src="https://user-images.githubusercontent.com/38193720/116794320-7b15ab00-aacc-11eb-8b4f-71aafd37b5eb.png" 
     alt="espack: A build tool running on esbuild">
@@ -6,7 +8,6 @@
 </p>
 
 # espack
-## A build tool running on [esbuild](https://github.com/evanw/esbuild)
 
 Espack on its own is just a nice wrapper api around esbuild, with an easy single file configuration for
 any number of builds.
@@ -259,10 +260,10 @@ exports.default = {
 
 ## How to define espack plugins?
 
-- Every espack plugin must extend the EspackPlugin base class
+- Every espack plugin must be an object with name property (string)
 - You can choose which lifecycles of the build process you want to
 hook into with your plugin by providing the enabled lifecycles to the
-super class's constructor after the name.
+object as properties.
 - Espack currently lets you hook into the following lifecycles of the build process:
     - **beforeResourceCheck**: Executed by esbuild before checking for build resource 
       accessibility. Context available in this lifecycle: buildsDir, scripts, defaultBuildProfiles
@@ -349,6 +350,10 @@ super class's constructor after the name.
         ```
         - most of this structure has been copied over from esbuild, so this is subject to change, for
         the latest structure see the esbuild documentation.
+    - **afterWrite**: This lifecycle is run after espack has finished writing the build results to the disk, 
+      or in watch mode on every rebuild after writing to the disk. 
+      Context available in this lifecycle: The results of esbuild and plugin build (only esbuild result in watch mode)
+      are passed onto the plugin.
     - **registerCustomWatcher**: This lifecycle lets you register your custom watcher functions. You need to return
     a cleanup function which frees up your resources if watch is cancelled.
     Context available in this lifecycle: buildsDir, scripts, defaultBuildProfiles, buildReadyScripts, buildResults,
@@ -357,21 +362,24 @@ super class's constructor after the name.
     here.
     Context available in this lifecycle: buildsDir, scripts, defaultBuildProfiles, buildReadyScripts, buildResults,
     pluginBuildResult
+- When any lifecycle is provided on the plugin object as a property the plugin execution for that lifecycle
+will be automatically enabled. So if you don't want your plugin to run on certain lifecycles simply don't provide a method
+for them.
 - Example plugin to console.log every output file's path:
 ```javascript
-class EspackReportPlugin extends EspackPlugin {
-    constructor() {
-        const enabledLifecycles = [ BuildLifecycles.AFTER_BUILD ];
-        super('@es-pack/report-plugin', enabledLifecycles);
-    }
-
-    afterBuild(context) {
+const espackReportPluginFactory = () => {
+    const afterBuild = (context) => {
         const { buildResults } = context;
         buildResults.forEach(
             ({ buildResult }) =>
                 buildResult.outputFiles && console.log(buildResult.outputFiles.map(outputFile => outputFile.path))
         );
-    }
+    };
+    
+    return {
+        name: '@es-pack/report-plugin',
+        afterBuild
+    };
 }
 ```
 
