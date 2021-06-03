@@ -56,8 +56,9 @@ The plugin can be reused any number of times.
 
 - **basedir**: The root dir to copy assets from. Defaults to the current working directory of espack.
 - **assets**: Array of assets (string paths) to copy, relative to the basedir. This entry is required.
-- **outdir**: Directory to output the copied assets into relative to espack's baseDir. Defaults to 
-"assets".
+- **outdir**: Directory to output the copied assets into relative to espack's baseDir and the outdir of 
+the current build. Defaults to "assets". So when the current basedir is "dist", and the outdir is "public"
+the plugin will default to "dist/public/assets".
 
 ## Watch mode
 

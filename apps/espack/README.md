@@ -266,16 +266,16 @@ hook into with your plugin by providing the enabled lifecycles to the
 object as properties.
 - Espack currently lets you hook into the following lifecycles of the build process:
     - **beforeResourceCheck**: Executed by esbuild before checking for build resource 
-      accessibility. Context available in this lifecycle: buildsDir, scripts, defaultBuildProfiles
+      accessibility. Context available in this lifecycle: buildsDir, scripts, defaultBuildProfiles, buildProfiles (for current build), the current build profile
     - **onResourceCheck**: Executed parallel to espack's own resource checking mechanisms.
       You can check for any required resources by your plugin, espack will wait for every plugin
-      to complete before proceeding onward. Context available in this lifecycle: buildsDir, scripts, defaultBuildProfiles
+      to complete before proceeding onward. Context available in this lifecycle: buildsDir, scripts, defaultBuildProfiles, buildProfiles, the current build profile
     - **afterResourceCheck**: Executed after the resource check process has been done. You can do 
       any additional modifications you wish to make to the context before the scripts are processed in the next cycle.
-      Context available in this lifecycle: buildsDir, scripts, defaultBuildProfiles
+      Context available in this lifecycle: buildsDir, scripts, defaultBuildProfiles, buildProfiles, the current build profile
     - **beforeBuild**: Executed right before the build process begins with esbuild. The input scripts and build 
       profiles have been processed by this point, into a digestible format by esbuild.
-      Context available in this lifecycle: buildsDir, scripts, defaultBuildProfiles, buildReadyScripts
+      Context available in this lifecycle: buildsDir, scripts, defaultBuildProfiles, buildProfiles, the current build profile, buildReadyScripts
         - buildReadyScripts structure:
         ```json5
         {
@@ -290,12 +290,12 @@ object as properties.
       resource heavy build operation here, which will be executed parallel to the esbuild build. The result of your 
       build operation will be passed into your plugin in the next lifecycle, so there is no need for you to save it's 
       result.
-      Context available in this lifecycle: buildsDir, scripts, defaultBuildProfiles, buildReadyScripts
+      Context available in this lifecycle: buildsDir, scripts, defaultBuildProfiles, buildProfiles (for current build), the current build profile, buildReadyScripts
     - **afterBuild**: This lifecycle is run after esbuild has finished, or in watch mode after every rebuild. The results
       of esbuild and plugin build (only esbuild result in watch mode) are passed onto the plugin. Espack will write the
       results of esbuild after this lifecycle to the disk, so you can modify the esbuild results if you want to, though
       this is generally not recommended! (such operations should be done through esbuild plugins!)
-      Context available in this lifecycle: buildsDir, scripts, defaultBuildProfiles, buildReadyScripts, buildResults, 
+      Context available in this lifecycle: buildsDir, scripts, defaultBuildProfiles, buildProfiles (for current build), the current build profile, buildReadyScripts, buildResults, 
       pluginBuildResult (if any, also generic)
         - **buildResults** structure:
         ```json5
@@ -356,11 +356,11 @@ object as properties.
       are passed onto the plugin.
     - **registerCustomWatcher**: This lifecycle lets you register your custom watcher functions. You need to return
     a cleanup function which frees up your resources if watch is cancelled.
-    Context available in this lifecycle: buildsDir, scripts, defaultBuildProfiles, buildReadyScripts, buildResults,
+    Context available in this lifecycle: buildsDir, scripts, defaultBuildProfiles, buildProfiles (for current build), the current build profile, buildReadyScripts, buildResults,
     pluginBuildResult
     - **onCleanup**: This lifecycle is executed along with the espack shutdown process. Free up any resources you want
     here.
-    Context available in this lifecycle: buildsDir, scripts, defaultBuildProfiles, buildReadyScripts, buildResults,
+    Context available in this lifecycle: buildsDir, scripts, defaultBuildProfiles, buildProfiles (for current build), the current build profile, buildReadyScripts, buildResults,
     pluginBuildResult
 - When any lifecycle is provided on the plugin object as a property the plugin execution for that lifecycle
 will be automatically enabled. So if you don't want your plugin to run on certain lifecycles simply don't provide a method
