@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "@es-pack/html-plugin",
+      "comment": "Updated to reflect the fixed outdir changes.",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@es-pack/html-plugin",
+  "email": "csizmadia98@gmail.com"
+}

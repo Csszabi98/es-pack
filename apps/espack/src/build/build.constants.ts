@@ -47,6 +47,7 @@ const defaultEntryAssetTransformations: IEntryAssetTransformations = {
     minifyIdentifiers: false,
     minifySyntax: false,
     minifyWhitespace: false,
+    outdir: '',
     resolveExtensions: ['.tsx', '.ts', '.jsx', '.js', '.css', '.json'],
     sourcesContent: false,
     target: ['chrome58', 'firefox57', 'safari11', 'edge60', 'node12.9.0'],

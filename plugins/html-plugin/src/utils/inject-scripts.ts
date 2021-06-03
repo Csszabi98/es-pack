@@ -56,7 +56,7 @@ const getInjectables = (
         const outputScripts: OutputFile[] = outputFiles.filter(file => file.path.endsWith(`.${FileExtensions.JAVASCRIPT}`));
         const outputStyles: OutputFile[] = outputFiles.filter(file => file.path.endsWith(`.${FileExtensions.CSS}`));
 
-        const relativeBuildPath: string = path.relative(baseDir, buildResult.build.buildProfile.outdir);
+        const relativeBuildPath: string = buildResult.build.buildProfile.outdir;
 
         const injectableScripts: string[] = getInjectableAssets(
             relativeBuildPath,

@@ -4,10 +4,18 @@ import {
     IBasePluginContext,
     IBuildReadyPluginContext,
     IBuiltPluginContext,
-    DeterministicEspackPlugin
+    DeterministicEspackMarkedPlugin,
+    IEspackMarkedPlugin
 } from '../build/build.plugin';
 import { getPluginsForLifecycle } from '../utils/get-plugins-for-lifecycle';
-import { BuildProfiles, IBuild, IBuildResult, ICleanup, IDeterministicEntryAsset } from '../build/build.model';
+import {
+    BuildProfiles,
+    DefaultBuildProfiles,
+    IBuild,
+    IBuildResult,
+    ICleanup,
+    IDeterministicEntryAsset
+} from '../build/build.model';
 import { createBuildReadyScripts, executeBuilds, unlinkOld, Watcher, writeChanges } from './builder.helpers';
 import { checkScripts } from './builder.utils';
 import { BuildFailure, BuildResult, OutputFile } from 'esbuild';
@@ -24,31 +32,46 @@ interface IBuilder {
     singleBuildMode: boolean;
 }
 
+interface IBuildOptionRelatedProperties {
+    buildProfile: string;
+    defaultBuildProfiles: BuildProfiles;
+    buildProfiles: BuildProfiles;
+}
+
 export const builder = async ({
     watch,
     buildsDir = DEFAULT_BUILDS_DIR,
-    buildProfile,
+    buildProfile = DefaultBuildProfiles.PROD,
     singleBuildMode,
-    defaultBuildProfiles,
+    defaultBuildProfiles = {},
     defaultPlugins,
-    build: { scripts, buildProfiles, plugins }
+    build: { scripts, buildProfiles = {}, plugins }
 }: IBuilder): Promise<ICleanup> => {
-    const allPlugins: IEspackPlugin[] = [...(defaultPlugins || []), ...(plugins || [])];
+    const allPlugins: readonly IEspackMarkedPlugin[] = [
+        ...(defaultPlugins || []),
+        ...(plugins || [])
+    ].map((plugin, index) => ({ ...plugin, id: Symbol(index) }));
+
+    const buildOptionRelatedProperties: IBuildOptionRelatedProperties = {
+        buildProfile,
+        defaultBuildProfiles,
+        buildProfiles
+    };
 
     const basePluginContext: IBasePluginContext = {
-        buildsDir: buildsDir,
-        scripts,
-        defaultBuildProfiles
+        ...buildOptionRelatedProperties,
+        buildsDir,
+        scripts
     };
     // Before check resources
-    const beforeResourceCheckPlugins: DeterministicEspackPlugin<BuildLifecycles.BEFORE_RESOURCE_CHECK>[] = getPluginsForLifecycle(
+    const beforeResourceCheckPlugins: DeterministicEspackMarkedPlugin<BuildLifecycles.BEFORE_RESOURCE_CHECK>[] = getPluginsForLifecycle(
         allPlugins,
         BuildLifecycles.BEFORE_RESOURCE_CHECK
     );
     beforeResourceCheckPlugins.forEach(plugin => plugin.beforeResourceCheck(basePluginContext));
 
     // Check resources
-    const onResourceCheckPlugins: DeterministicEspackPlugin<BuildLifecycles.RESOURCE_CHECK>[] = getPluginsForLifecycle(
+    const onResourceCheckPlugins: DeterministicEspackMarkedPlugin<BuildLifecycles.RESOURCE_CHECK>[] = getPluginsForLifecycle(
         allPlugins,
         BuildLifecycles.RESOURCE_CHECK
     );
@@ -64,7 +87,7 @@ export const builder = async ({
     }
 
     // After check resources
-    const afterResourceCheckPlugins: DeterministicEspackPlugin<BuildLifecycles.AFTER_RESOURCE_CHECK>[] = getPluginsForLifecycle(
+    const afterResourceCheckPlugins: DeterministicEspackMarkedPlugin<BuildLifecycles.AFTER_RESOURCE_CHECK>[] = getPluginsForLifecycle(
         allPlugins,
         BuildLifecycles.AFTER_RESOURCE_CHECK
     );
@@ -72,11 +95,8 @@ export const builder = async ({
 
     // Before build
     const buildReadyScripts: IDeterministicEntryAsset[] = createBuildReadyScripts({
-        buildsDir,
+        ...buildOptionRelatedProperties,
         scripts,
-        buildProfile,
-        defaultBuildProfiles,
-        buildProfiles,
         watch,
         singleBuildMode
     });
@@ -85,20 +105,21 @@ export const builder = async ({
         buildReadyScripts
     };
 
-    const beforeBuildPlugins: DeterministicEspackPlugin<BuildLifecycles.BEFORE_BUILD>[] = getPluginsForLifecycle(
+    const beforeBuildPlugins: DeterministicEspackMarkedPlugin<BuildLifecycles.BEFORE_BUILD>[] = getPluginsForLifecycle(
         allPlugins,
         BuildLifecycles.BEFORE_BUILD
     );
     beforeBuildPlugins.forEach(plugin => plugin.beforeBuild(buildReadyPluginContext));
 
     let buildResults: IBuildResult[] = [];
-    const builtPluginContexts: IBuiltPluginContext<unknown>[] = [];
+    const afterWritePluginContexts: IBuiltPluginContext<unknown>[] = [];
+    const afterBuildPluginContexts: IBuiltPluginContext<unknown>[] = [];
 
-    const afterBuildPlugins: DeterministicEspackPlugin<BuildLifecycles.AFTER_BUILD>[] = getPluginsForLifecycle(
+    const afterBuildPlugins: DeterministicEspackMarkedPlugin<BuildLifecycles.AFTER_BUILD>[] = getPluginsForLifecycle(
         allPlugins,
         BuildLifecycles.AFTER_BUILD
     );
-    const afterWritePlugins: DeterministicEspackPlugin<BuildLifecycles.AFTER_WRITE>[] = getPluginsForLifecycle(
+    const afterWritePlugins: DeterministicEspackMarkedPlugin<BuildLifecycles.AFTER_WRITE>[] = getPluginsForLifecycle(
         allPlugins,
         BuildLifecycles.AFTER_WRITE
     );
@@ -123,7 +144,7 @@ export const builder = async ({
                 buildResults.splice(previousBuildResultIndex, 1, newBuildResult);
 
                 console.log('[watch] executing plugins...');
-                afterBuildPlugins.forEach((plugin, index) => plugin.afterBuild(builtPluginContexts[index]));
+                afterBuildPlugins.forEach((plugin, index) => plugin.afterBuild(afterBuildPluginContexts[index]));
                 console.log('[watch] plugins executed...');
 
                 console.log('[watch] build writing changes');
@@ -141,7 +162,7 @@ export const builder = async ({
                     console.log('[watch] stale files cleaned');
                 }
 
-                afterWritePlugins.forEach((plugin, index) => plugin.afterWrite(builtPluginContexts[index]));
+                afterWritePlugins.forEach((plugin, index) => plugin.afterWrite(afterWritePluginContexts[index]));
             }
 
             if (error) {
@@ -155,57 +176,47 @@ export const builder = async ({
     }
 
     // Build, inject info from build
-    const onBuildPlugins: DeterministicEspackPlugin<BuildLifecycles.BUILD>[] = getPluginsForLifecycle(
+    const onBuildPlugins: DeterministicEspackMarkedPlugin<BuildLifecycles.BUILD>[] = getPluginsForLifecycle(
         allPlugins,
         BuildLifecycles.BUILD
     );
     const buildPlugins: Promise<unknown>[] = onBuildPlugins.map(plugin => plugin.onBuild(buildReadyPluginContext));
 
     const results: [IBuildResult[], unknown[]] = await Promise.all([
-        executeBuilds(buildReadyScripts, onWatch),
+        executeBuilds(buildReadyScripts, buildsDir, onWatch),
         Promise.all(buildPlugins)
     ]);
     buildResults = results[0];
     const pluginBuildResults: unknown[] = results[1];
 
-    builtPluginContexts.push(
-        ...pluginBuildResults
-            .filter((__, index) => onBuildPlugins[index][BuildLifecycles.AFTER_BUILD])
-            .map(pluginBuildResult => ({
-                ...buildReadyPluginContext,
-                buildResults,
-                pluginBuildResult
-            }))
-    );
+    const builtPluginContextFactory = (plugins: { id: symbol }[]): IBuiltPluginContext<unknown>[] =>
+        plugins.map(plugin => ({
+            ...buildReadyPluginContext,
+            buildResults,
+            pluginBuildResult: pluginBuildResults[onBuildPlugins.findIndex(buildPlugin => buildPlugin.id === plugin.id)]
+        }));
+
+    afterBuildPluginContexts.push(...builtPluginContextFactory(afterBuildPlugins));
+    afterWritePluginContexts.push(...builtPluginContextFactory(afterWritePlugins));
 
     // After build
-    afterBuildPlugins.forEach((plugin, index) => plugin.afterBuild(builtPluginContexts[index]));
+    afterBuildPlugins.forEach((plugin, index) => plugin.afterBuild(afterBuildPluginContexts[index]));
 
     console.log('Writing changes...');
     buildResults.forEach(writeChanges);
     console.log('Changes written...');
 
-    afterWritePlugins.forEach((plugin, index) => plugin.afterWrite(builtPluginContexts[index]));
-
-    const watchPluginContexts: IBuiltPluginContext<unknown>[] = [];
-    watchPluginContexts.push(
-        ...pluginBuildResults
-            .filter((__, index) => onBuildPlugins[index][BuildLifecycles.WATCH])
-            .map(pluginBuildResult => ({
-                ...buildReadyPluginContext,
-                buildResults,
-                pluginBuildResult
-            }))
-    );
+    afterWritePlugins.forEach((plugin, index) => plugin.afterWrite(afterBuildPluginContexts[index]));
 
     let pluginWatchCleanups: ICleanup[] | undefined;
     if (watch) {
         console.log('Registering watchers...');
         // On watch
-        const onWatchPlugins: DeterministicEspackPlugin<BuildLifecycles.WATCH>[] = getPluginsForLifecycle(
+        const onWatchPlugins: DeterministicEspackMarkedPlugin<BuildLifecycles.WATCH>[] = getPluginsForLifecycle(
             allPlugins,
             BuildLifecycles.WATCH
         );
+        const watchPluginContexts: IBuiltPluginContext<unknown>[] = builtPluginContextFactory(onWatchPlugins);
         pluginWatchCleanups = onWatchPlugins.map((plugin, index) =>
             plugin.registerCustomWatcher(watchPluginContexts[index])
         );
@@ -217,11 +228,11 @@ export const builder = async ({
             // Cleanup
             buildResults.forEach(build => build.buildResult.stop && build.buildResult.stop());
 
-            const onCleanupPlugins: DeterministicEspackPlugin<BuildLifecycles.CLEANUP>[] = getPluginsForLifecycle(
+            const onCleanupPlugins: DeterministicEspackMarkedPlugin<BuildLifecycles.CLEANUP>[] = getPluginsForLifecycle(
                 allPlugins,
                 BuildLifecycles.CLEANUP
             );
-            onCleanupPlugins.forEach((plugin, index) => plugin.onCleanup(builtPluginContexts[index]));
+            onCleanupPlugins.forEach((plugin, index) => plugin.onCleanup(afterBuildPluginContexts[index]));
 
             if (pluginWatchCleanups) {
                 pluginWatchCleanups.forEach(watchJob => watchJob.stop());
