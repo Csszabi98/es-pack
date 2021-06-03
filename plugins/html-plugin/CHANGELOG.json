@@ -2,6 +2,26 @@
   "name": "@es-pack/html-plugin",
   "entries": [
     {
+      "version": "2.0.1",
+      "tag": "@es-pack/html-plugin_v2.0.1",
+      "date": "Thu, 03 Jun 2021 21:17:58 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Updated to reflect the fixed outdir changes."
+          }
+        ],
+        "dependency": [
+          {
+            "comment": "Updating dependency \"@es-pack/espack\" to `2.1.0`"
+          },
+          {
+            "comment": "Updating dependency \"@es-pack/espack\" to `2.1.0`"
+          }
+        ]
+      }
+    },
+    {
       "version": "2.0.0",
       "tag": "@es-pack/html-plugin_v2.0.0",
       "date": "Tue, 01 Jun 2021 22:48:46 GMT",

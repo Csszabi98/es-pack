@@ -1,6 +1,13 @@
 # Change Log - @es-pack/html-plugin
 
-This log was last generated on Tue, 01 Jun 2021 22:48:46 GMT and should not be manually modified.
+This log was last generated on Thu, 03 Jun 2021 21:17:58 GMT and should not be manually modified.
+
+## 2.0.1
+Thu, 03 Jun 2021 21:17:58 GMT
+
+### Patches
+
+- Updated to reflect the fixed outdir changes.
 
 ## 2.0.0
 Tue, 01 Jun 2021 22:48:46 GMT

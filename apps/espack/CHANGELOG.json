@@ -2,6 +2,18 @@
   "name": "@es-pack/espack",
   "entries": [
     {
+      "version": "2.1.0",
+      "tag": "@es-pack/espack_v2.1.0",
+      "date": "Thu, 03 Jun 2021 21:17:58 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Changed outdir to not include the buildsDir, added buildProfiles, and current buildProfile to the BasePluginContext, fixed plugin contexts not being properly passed to the plugins issue."
+          }
+        ]
+      }
+    },
+    {
       "version": "2.0.0",
       "tag": "@es-pack/espack_v2.0.0",
       "date": "Tue, 01 Jun 2021 22:48:46 GMT",

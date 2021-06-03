@@ -1,6 +1,11 @@
 # Change Log - @es-pack/esbuild-sass-plugin
 
-This log was last generated on Tue, 01 Jun 2021 22:48:46 GMT and should not be manually modified.
+This log was last generated on Thu, 03 Jun 2021 21:17:58 GMT and should not be manually modified.
+
+## 1.0.4
+Thu, 03 Jun 2021 21:17:58 GMT
+
+_Version update only_
 
 ## 1.0.3
 Tue, 01 Jun 2021 22:48:46 GMT
