@@ -9,6 +9,7 @@ export type Watcher = (buildId: string, error: BuildFailure | undefined, result:
 
 export const executeBuilds = async (
     scripts: IDeterministicEntryAsset[],
+    buildsDir: string,
     onWatch: Watcher | undefined
 ): Promise<IBuildResult[]> => {
     const commonBuilds: ICommonBuild[] = scripts.reduce<ICommonBuild[]>((acc, curr) => {
@@ -43,6 +44,7 @@ export const executeBuilds = async (
                 build,
                 buildResult: await esbuilder({
                     ...build.buildProfile,
+                    outdir: path.join(buildsDir, build.buildProfile.outdir),
                     entryPoints: build.builds.map(script => script.src),
                     watch: onWatch
                         ? {
@@ -60,17 +62,15 @@ export const executeBuilds = async (
 };
 
 interface ICreateBuildReadyScripts {
-    buildsDir: string;
     scripts: IEntryAsset[];
-    buildProfile: string | undefined;
-    defaultBuildProfiles: BuildProfiles | undefined;
-    buildProfiles: BuildProfiles | undefined;
+    buildProfile: string;
+    defaultBuildProfiles: BuildProfiles;
+    buildProfiles: BuildProfiles;
     watch: boolean;
     singleBuildMode: boolean;
 }
 
 export const createBuildReadyScripts = ({
-    buildsDir,
     scripts,
     buildProfile,
     defaultBuildProfiles,
@@ -82,7 +82,6 @@ export const createBuildReadyScripts = ({
         createBuildReadyScript({
             script,
             watch,
-            buildsDir,
             singleBuildMode,
             currentBuildIndex: index,
             buildProfile,

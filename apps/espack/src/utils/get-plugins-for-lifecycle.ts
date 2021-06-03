@@ -1,7 +1,7 @@
-import { BuildLifecycles, DeterministicEspackPlugin, IEspackPlugin } from '../build/build.plugin';
+import { DeterministicEspackMarkedPlugin, IEspackMarkedPlugin, IPluginHooks } from '../build/build.plugin';
 
-export const getPluginsForLifecycle = <T extends BuildLifecycles>(
-    plugins: IEspackPlugin[],
+export const getPluginsForLifecycle = <T extends keyof IPluginHooks>(
+    plugins: readonly IEspackMarkedPlugin[],
     lifecycle: T
-): DeterministicEspackPlugin<T>[] =>
-    (plugins.filter(plugin => plugin[lifecycle]) as unknown) as DeterministicEspackPlugin<T>[];
+): DeterministicEspackMarkedPlugin<T>[] =>
+    (plugins.filter(plugin => plugin[lifecycle]) as unknown) as DeterministicEspackMarkedPlugin<T>[];

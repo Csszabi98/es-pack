@@ -1,4 +1,3 @@
-import path from 'path';
 import {
     DEFAULT_ENTRY_ASSET_TRANSFORMATIONS,
     ENTRY_POINT_NOT_EXISTS_ERROR_MESSAGE,
@@ -26,22 +25,16 @@ const mapEnvironmentVariables = (environmentVariables: Record<string, string>): 
         {}
     );
 
-const getGlobalBuildProfile = (buildProfileName: DefaultBuildProfiles, buildsDir: string): IProfiles => {
+const getGlobalBuildProfile = (buildProfileName: DefaultBuildProfiles): IProfiles => {
     return {
-        buildProfile: {
-            ...DEFAULT_ENTRY_ASSET_TRANSFORMATIONS[buildProfileName],
-            outdir: buildsDir
-        }
+        buildProfile: DEFAULT_ENTRY_ASSET_TRANSFORMATIONS[buildProfileName]
     };
 };
 
 const extractPartialBuildProfile = (
-    buildProfiles: BuildProfiles | undefined,
+    buildProfiles: BuildProfiles,
     buildProfileName: string
 ): IIncompleteProfiles | undefined => {
-    if (!buildProfiles) {
-        return;
-    }
     const buildProfile: Partial<IEntryAssetTransformations> | undefined = buildProfiles[buildProfileName];
     if (!buildProfile) {
         return;
@@ -52,28 +45,26 @@ const extractPartialBuildProfile = (
 
 interface ICreateBuildableScriptProps {
     script: IEntryAsset;
-    buildsDir: string;
     watch: boolean;
     singleBuildMode: boolean;
     currentBuildIndex: number;
-    buildProfile?: string;
-    defaultBuildProfiles?: BuildProfiles;
-    buildProfiles?: BuildProfiles;
+    buildProfile: string;
+    defaultBuildProfiles: BuildProfiles;
+    buildProfiles: BuildProfiles;
 }
 
 export const createBuildableScript = ({
     script,
-    buildsDir,
     singleBuildMode,
     currentBuildIndex,
-    buildProfile = DefaultBuildProfiles.PROD,
+    buildProfile,
     defaultBuildProfiles,
     buildProfiles
 }: ICreateBuildableScriptProps): IDeterministicEntryAsset => {
     const defaultBuildProfile: DefaultBuildProfiles =
         StringToDefaultBuildProfiles[buildProfile] || DefaultBuildProfiles.PROD;
-    const { src, buildProfiles: scriptBuildProfiles } = script;
-    const globalOptions: IProfiles = getGlobalBuildProfile(defaultBuildProfile, buildsDir);
+    const { src, buildProfiles: scriptBuildProfiles = {} } = script;
+    const globalOptions: IProfiles = getGlobalBuildProfile(defaultBuildProfile);
     const defaultOptions: IIncompleteProfiles | undefined = extractPartialBuildProfile(defaultBuildProfiles, buildProfile);
     const buildOptions: IIncompleteProfiles | undefined = extractPartialBuildProfile(buildProfiles, buildProfile);
     const scriptOptions: IIncompleteProfiles | undefined = extractPartialBuildProfile(scriptBuildProfiles, buildProfile);
@@ -92,10 +83,8 @@ export const createBuildableScript = ({
         result.buildProfile.define = mapEnvironmentVariables(result.buildProfile.define);
 
         const { outdir } = result.buildProfile;
-        if (!singleBuildMode && outdir === buildsDir) {
-            result.buildProfile.outdir = path.join(buildsDir, `build_${currentBuildIndex}`);
-        } else if (outdir !== buildsDir) {
-            result.buildProfile.outdir = path.join(buildsDir, outdir);
+        if (!singleBuildMode && outdir === '') {
+            result.buildProfile.outdir = `build_${currentBuildIndex}`;
         }
 
         if (!result.buildProfile.minify) {

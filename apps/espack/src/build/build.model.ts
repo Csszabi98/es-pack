@@ -36,7 +36,6 @@ type OmmitedEntryAssetTransformations =
     | 'metafile'
     | 'banner'
     | 'outbase'
-    | 'outdir'
     | 'nodePaths'
     | 'outExtension'
     | 'publicPath'

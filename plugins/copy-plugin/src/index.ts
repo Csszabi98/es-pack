@@ -1,13 +1,6 @@
 import fs, { FSWatcher } from 'fs';
 import path from 'path';
-import {
-    checkAssetsExist,
-    IEspackPlugin,
-    IBasePluginContext,
-    IBuildReadyPluginContext,
-    IBuiltPluginContext,
-    ICleanup
-} from '@es-pack/espack';
+import { checkAssetsExist, IEspackPlugin, IBuildReadyPluginContext, IBuiltPluginContext, ICleanup } from '@es-pack/espack';
 import Joi from 'joi';
 import { copyPluginOptionsSchema } from './validation/validator';
 
@@ -53,12 +46,16 @@ export const espackCopyPluginFactory = (options: IEspackCopyPluginOptions): IEsp
         return path.join(deterministicOptions.basedir, asset);
     };
 
-    const onResourceCheck = (context: IBasePluginContext): Promise<void> => {
+    const onResourceCheck = (): Promise<void> => {
         return checkAssetsExist([...deterministicOptions.assets.map(mapBasedirToAsset)]);
     };
 
     const onBuild = async (context: IBuildReadyPluginContext): Promise<void> => {
-        const assetsDir: string = path.join(context.buildsDir, deterministicOptions.outdir);
+        const outdir: string =
+            context.buildProfiles[context.buildProfile]?.outdir ||
+            context.defaultBuildProfiles[context.buildProfile]?.outdir ||
+            '';
+        const assetsDir: string = path.join(context.buildsDir, outdir, deterministicOptions.outdir);
         if (!fs.existsSync(assetsDir)) {
             fs.mkdirSync(assetsDir);
         }
