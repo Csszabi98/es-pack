@@ -4,6 +4,5 @@ export * from './build-config';
 export * from './check-scripts';
 export * from './create-build-profiles';
 export * from './get-argument';
-export * from './get-plugins-for-lifecycle';
 export * from './unlink-output-files';
 export * from './write-output-files';
