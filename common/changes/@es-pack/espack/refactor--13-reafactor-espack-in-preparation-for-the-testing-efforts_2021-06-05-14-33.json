@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "@es-pack/espack",
+      "comment": "Renamed certain interfaces: IBuilds -> IEspackBuilds, IBuild -> IEspackBuild, IEspackBuilds now have the esbuild build result under the esbuildBuildResult property rather than the buildResult. Exposed the builder function to be able to run espack programmatically.",
+      "type": "major"
+    }
+  ],
+  "packageName": "@es-pack/espack",
+  "email": "csizmadia98@gmail.com"
+}

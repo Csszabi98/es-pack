@@ -1,4 +1,4 @@
-import { FileExtensions, IBuildResult, ImportFormat, Platforms } from '@es-pack/espack';
+import { FileExtensions, IEspackBuildResult, ImportFormat, Platforms } from '@es-pack/espack';
 import { OutputFile } from 'esbuild';
 import path from 'path';
 import { IEspackPluginState } from '../html-plugin';
@@ -44,12 +44,12 @@ const getInjectableAssets = (
 
 const getInjectables = (
     baseDir: string,
-    buildResult: IBuildResult,
+    buildResult: IEspackBuildResult,
     enabledScriptInjections?: string[],
     enabledStyleInjections?: string[],
     hashSeparator?: string
 ): [string[], string[]] => {
-    const outputFiles: OutputFile[] | undefined = buildResult.buildResult.outputFiles;
+    const outputFiles: OutputFile[] | undefined = buildResult.esbuildBuildResult.outputFiles;
     if (outputFiles) {
         const isBrowserTarget: boolean = buildResult.build.buildProfile.platform === Platforms.BROWSER;
 
@@ -80,7 +80,7 @@ const getInjectables = (
 export const injectScripts = (
     baseDir: string,
     options: IEspackPluginState,
-    buildResults: IBuildResult[],
+    buildResults: IEspackBuildResult[],
     pluginBuildResult: string
 ): string => {
     const { inject, injectStyle, injectionSeparator, injectionPrefix, hashSeparator } = options;

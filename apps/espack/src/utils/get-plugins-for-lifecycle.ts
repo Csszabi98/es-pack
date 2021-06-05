@@ -1,4 +1,4 @@
-import { DeterministicEspackMarkedPlugin, IEspackMarkedPlugin, IPluginHooks } from '../build/build.plugin';
+import { DeterministicEspackMarkedPlugin, IEspackMarkedPlugin, IPluginHooks } from '../model';
 
 export const getPluginsForLifecycle = <T extends keyof IPluginHooks>(
     plugins: readonly IEspackMarkedPlugin[],

@@ -1,11 +1,10 @@
 import fs from 'fs';
-import { DefaultBuildProfiles, IBuilds, ICleanup } from './build/build.model';
+import { DefaultBuildProfiles, IEspackBuilds, ICleanup } from './model';
 import { builder } from './builder/builder';
-import { getArgument } from './utils/get-argument';
+import { buildConfig, getArgument } from './utils';
 import { buildsSchema } from './validation/build.validator';
 import { FileExtensions, isFile } from './utils';
 import Joi from 'joi';
-import { buildConfig } from './utils/build-config';
 
 interface IEspackResult {
     cleanup: ICleanup[];
@@ -40,7 +39,7 @@ export const espack = async (): Promise<IEspackResult> => {
         );
     }
 
-    const espackConfig: IBuilds | undefined = await buildConfig(configPath);
+    const espackConfig: IEspackBuilds | undefined = await buildConfig(configPath);
     if (!espackConfig) {
         throw new Error(`Missing default export from config ${configPath}!`);
     }

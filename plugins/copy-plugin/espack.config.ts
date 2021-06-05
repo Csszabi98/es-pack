@@ -1,7 +1,7 @@
-import { createBuildProfiles, IBuilds, ImportFormat, Platforms, DefaultBuildProfiles } from '@es-pack/espack';
+import { createBuildProfiles, IEspackBuilds, ImportFormat, Platforms, DefaultBuildProfiles } from '@es-pack/espack';
 import { peerDependencies, dependencies } from './package.json';
 
-const builds: IBuilds = {
+const builds: IEspackBuilds = {
     defaultBuildProfiles: createBuildProfiles(
         {
             platform: Platforms.NODE,

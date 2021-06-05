@@ -6,27 +6,27 @@ import {
     IBuiltPluginContext,
     DeterministicEspackMarkedPlugin,
     IEspackMarkedPlugin
-} from '../build/build.plugin';
-import { getPluginsForLifecycle } from '../utils/get-plugins-for-lifecycle';
+} from '../model';
 import {
     BuildProfiles,
     DefaultBuildProfiles,
-    IBuild,
-    IBuildResult,
+    IEspackBuild,
+    IEspackBuildResult,
     ICleanup,
     IDeterministicEntryAsset
-} from '../build/build.model';
-import { createBuildReadyScripts, executeBuilds, unlinkOld, Watcher, writeChanges } from './builder.helpers';
-import { checkScripts } from './builder.utils';
+} from '../model';
+import { checkScripts, getPluginsForLifecycle, unlinkOld, writeOutputFiles } from '../utils';
 import { BuildFailure, BuildResult, OutputFile } from 'esbuild';
-import { DEFAULT_BUILDS_DIR } from '../build/build.constants';
 import fs from 'fs';
+import { DEFAULT_BUILDS_DIR } from '../constants/build.constants';
+import { ProfileBuilder } from './profile-builder';
+import { buildWithEsbuild, EsbuildWatcher } from './build-with-esbuild';
 
 interface IBuilder {
     defaultBuildProfiles?: BuildProfiles;
     defaultPlugins?: IEspackPlugin[];
     buildsDir?: string;
-    build: IBuild;
+    build: IEspackBuild;
     watch: boolean;
     buildProfile?: string;
     singleBuildMode: boolean;
@@ -94,12 +94,12 @@ export const builder = async ({
     afterResourceCheckPlugins.forEach(plugin => plugin.afterResourceCheck(basePluginContext));
 
     // Before build
-    const buildReadyScripts: IDeterministicEntryAsset[] = createBuildReadyScripts({
+    const buildReadyScripts: IDeterministicEntryAsset[] = new ProfileBuilder({
         ...buildOptionRelatedProperties,
         scripts,
         watch,
         singleBuildMode
-    });
+    }).build();
     const buildReadyPluginContext: IBuildReadyPluginContext = {
         ...basePluginContext,
         buildReadyScripts
@@ -111,7 +111,7 @@ export const builder = async ({
     );
     beforeBuildPlugins.forEach(plugin => plugin.beforeBuild(buildReadyPluginContext));
 
-    let buildResults: IBuildResult[] = [];
+    let buildResults: IEspackBuildResult[] = [];
     const afterWritePluginContexts: IBuiltPluginContext<unknown>[] = [];
     const afterBuildPluginContexts: IBuiltPluginContext<unknown>[] = [];
 
@@ -124,7 +124,7 @@ export const builder = async ({
         BuildLifecycles.AFTER_WRITE
     );
     // TODO: Extract this logic
-    let onWatch: Watcher | undefined;
+    let onWatch: EsbuildWatcher | undefined;
     if (watch) {
         onWatch = async (buildId: string, error: BuildFailure | undefined, result: BuildResult | undefined) => {
             if (result) {
@@ -135,10 +135,10 @@ export const builder = async ({
                 const previousBuildResultIndex: number = buildResults.findIndex(
                     buildResult => buildResult.buildId === buildId
                 );
-                const previousBuildResult: IBuildResult = buildResults[previousBuildResultIndex];
-                const newBuildResult: IBuildResult = {
+                const previousBuildResult: IEspackBuildResult = buildResults[previousBuildResultIndex];
+                const newBuildResult: IEspackBuildResult = {
                     ...previousBuildResult,
-                    buildResult: result
+                    esbuildBuildResult: result
                 };
 
                 buildResults.splice(previousBuildResultIndex, 1, newBuildResult);
@@ -148,13 +148,15 @@ export const builder = async ({
                 console.log('[watch] plugins executed...');
 
                 console.log('[watch] build writing changes');
-                writeChanges(newBuildResult);
+                writeOutputFiles(newBuildResult);
                 console.log('[watch] build changes written');
                 console.timeEnd(label);
 
-                const staleFiles: OutputFile[] | undefined = previousBuildResult.buildResult.outputFiles?.filter(
+                const staleFiles: OutputFile[] | undefined = previousBuildResult.esbuildBuildResult.outputFiles?.filter(
                     oldOutFile =>
-                        !newBuildResult.buildResult.outputFiles?.some(newOutFile => newOutFile.path === oldOutFile.path)
+                        !newBuildResult.esbuildBuildResult.outputFiles?.some(
+                            newOutFile => newOutFile.path === oldOutFile.path
+                        )
                 );
                 if (staleFiles?.length) {
                     console.log('[watch] cleaning stale files...');
@@ -182,8 +184,8 @@ export const builder = async ({
     );
     const buildPlugins: Promise<unknown>[] = onBuildPlugins.map(plugin => plugin.onBuild(buildReadyPluginContext));
 
-    const results: [IBuildResult[], unknown[]] = await Promise.all([
-        executeBuilds(buildReadyScripts, buildsDir, onWatch),
+    const results: [IEspackBuildResult[], unknown[]] = await Promise.all([
+        buildWithEsbuild(buildReadyScripts, buildsDir, onWatch),
         Promise.all(buildPlugins)
     ]);
     buildResults = results[0];
@@ -203,7 +205,7 @@ export const builder = async ({
     afterBuildPlugins.forEach((plugin, index) => plugin.afterBuild(afterBuildPluginContexts[index]));
 
     console.log('Writing changes...');
-    buildResults.forEach(writeChanges);
+    buildResults.forEach(writeOutputFiles);
     console.log('Changes written...');
 
     afterWritePlugins.forEach((plugin, index) => plugin.afterWrite(afterBuildPluginContexts[index]));
@@ -226,7 +228,7 @@ export const builder = async ({
     return {
         stop: () => {
             // Cleanup
-            buildResults.forEach(build => build.buildResult.stop && build.buildResult.stop());
+            buildResults.forEach(build => build.esbuildBuildResult.stop && build.esbuildBuildResult.stop());
 
             const onCleanupPlugins: DeterministicEspackMarkedPlugin<BuildLifecycles.CLEANUP>[] = getPluginsForLifecycle(
                 allPlugins,

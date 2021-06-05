@@ -1,8 +1,8 @@
-import { BuildProfiles, DefaultBuildProfiles, IEntryAssetTransformations } from '../build/build.model';
 import deepCopy from 'deep-copy';
+import { BuildProfile, BuildProfiles, DefaultBuildProfiles } from '../model';
 
 type CreateBuildProfiles = (
-    commonOptions: Partial<IEntryAssetTransformations>,
+    commonOptions: Partial<BuildProfile>,
     profileOverrides?: BuildProfiles,
     disableDefaultProfileExtension?: boolean
 ) => BuildProfiles;
@@ -17,7 +17,7 @@ export const createBuildProfiles: CreateBuildProfiles = (
     profileOverrides,
     disableDefaultProfileExtension = false
 ) => {
-    const options: Partial<IEntryAssetTransformations> = deepCopy(commonOptions);
+    const options: Partial<BuildProfile> = deepCopy(commonOptions);
 
     let profiles: BuildProfiles = disableDefaultProfileExtension ? {} : deepCopy(defaultProfiles);
     if (profileOverrides) {

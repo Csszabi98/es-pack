@@ -1,4 +1,4 @@
-import { createBuildProfiles, DefaultBuildProfiles, IBuilds, ImportFormat, Platforms } from '@es-pack/espack';
+import { createBuildProfiles, DefaultBuildProfiles, IEspackBuilds, ImportFormat, Platforms } from '@es-pack/espack';
 import { espackCopyPluginFactory } from '@es-pack/copy-plugin';
 import { espackHtmlPluginFactory, IHtmlInjection } from '@es-pack/html-plugin';
 import { globalExternals } from '@fal-works/esbuild-plugin-global-externals';
@@ -32,7 +32,7 @@ const injectHtml: IHtmlInjection = {
     beforeBodyEnd: isProdBuild ? reactScriptsMap[DefaultBuildProfiles.PROD] : reactScriptsMap[DefaultBuildProfiles.DEV]
 };
 
-const builds: IBuilds = {
+const builds: IEspackBuilds = {
     defaultBuildProfiles: createBuildProfiles(
         {
             platform: Platforms.BROWSER,

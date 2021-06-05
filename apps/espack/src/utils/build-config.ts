@@ -1,5 +1,5 @@
 import { build, PluginBuild } from 'esbuild';
-import { IBuilds, ImportFormat, Platforms } from '../build/build.model';
+import { IEspackBuilds, ImportFormat, Platforms } from '../model';
 import { NodeVM } from 'vm2';
 
 const compileConfig = async (configPath: string): Promise<string> =>
@@ -27,7 +27,7 @@ const compileConfig = async (configPath: string): Promise<string> =>
         })
     ).outputFiles[0].text;
 
-export const buildConfig = async (configPath: string): Promise<IBuilds | undefined> => {
+export const buildConfig = async (configPath: string): Promise<IEspackBuilds | undefined> => {
     try {
         const configString: string = await compileConfig(configPath);
 
