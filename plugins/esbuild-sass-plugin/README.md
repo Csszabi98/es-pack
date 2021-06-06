@@ -54,9 +54,7 @@ export default {
     builds: [
         {
             scripts: [
-                {
-                    src: './src/index.js'
-                }
+                './src/index.js'
             ]
         }
     ]

@@ -42,9 +42,7 @@ export default {
                 }),
             ],
             scripts: [
-                {
-                    src: './src/index.ts'
-                }
+                './src/index.ts'
             ]
         }
     ]
