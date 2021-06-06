@@ -1,7 +1,15 @@
 import Joi from 'joi';
 import { Plugin } from 'esbuild';
-import { BuildLifecycles, IEspackPlugin } from '../build/build.plugin';
-import { IBuilds, IEntryAsset, IEntryAssetTransformations, ImportFormat, Platforms, IBuild } from '../build/build.model';
+import {
+    IEspackBuilds,
+    IEntryAsset,
+    BuildProfile,
+    ImportFormat,
+    Platforms,
+    IEspackBuild,
+    BuildLifecycles,
+    IEspackPlugin
+} from '../model';
 
 const JoiStringArray: Joi.ArraySchema = Joi.array().items(Joi.string());
 const JoiRequiredString: Joi.StringSchema = Joi.string().required();
@@ -36,7 +44,7 @@ const espackPluginInstanceSchema: Joi.ObjectSchema<IEspackPlugin> = Joi.object({
 }).unknown(true);
 const espackPluginArraySchema: Joi.ArraySchema = Joi.array().items(espackPluginInstanceSchema);
 
-const entryAssetTransformationSchema: Joi.ObjectSchema<IEntryAssetTransformations> = Joi.object<IEntryAssetTransformations>({
+const entryAssetTransformationSchema: Joi.ObjectSchema<BuildProfile> = Joi.object<BuildProfile>({
     sourcemap: Joi.boolean(),
     bundle: Joi.boolean(),
     platform: Joi.string().valid(...Object.values(Platforms)),
@@ -83,22 +91,25 @@ const entryAssetTransformationSchema: Joi.ObjectSchema<IEntryAssetTransformation
     pure: JoiStringArray
 }).unknown(false);
 
-const entryAssetTransformationRecordSchema: Joi.ObjectSchema<Record<string, IEntryAssetTransformations>> = Joi.object<
-    Record<string, IEntryAssetTransformations>
+const entryAssetTransformationRecordSchema: Joi.ObjectSchema<Record<string, BuildProfile>> = Joi.object<
+    Record<string, BuildProfile>
 >({}).pattern(Joi.string(), entryAssetTransformationSchema);
 
-const entryAssetSchema: Joi.ObjectSchema<IEntryAsset> = Joi.object<IEntryAsset>({
-    src: JoiRequiredString,
-    buildProfiles: entryAssetTransformationRecordSchema
-}).unknown(false);
+const entryAssetSchema: Joi.AlternativesSchema = Joi.alternatives(
+    Joi.object<IEntryAsset>({
+        src: JoiRequiredString,
+        buildProfiles: entryAssetTransformationRecordSchema
+    }).unknown(false),
+    Joi.string()
+);
 
-const buildSchema: Joi.ObjectSchema<IBuild> = Joi.object<IBuild>({
+const buildSchema: Joi.ObjectSchema<IEspackBuild> = Joi.object<IEspackBuild>({
     scripts: Joi.array().items(entryAssetSchema).required(),
     plugins: espackPluginArraySchema,
     buildProfiles: entryAssetTransformationRecordSchema
 }).unknown(false);
 
-export const buildsSchema: Joi.ObjectSchema<IBuilds> = Joi.object<IBuilds>({
+export const buildsSchema: Joi.ObjectSchema<IEspackBuilds> = Joi.object<IEspackBuilds>({
     buildsDir: Joi.string(),
     defaultBuildProfiles: entryAssetTransformationRecordSchema,
     builds: Joi.array().items(buildSchema).required()

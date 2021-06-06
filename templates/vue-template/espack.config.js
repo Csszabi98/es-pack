@@ -1,10 +1,10 @@
 import vuePlugin from 'esbuild-vue';
-import { createBuildProfiles, DefaultBuildProfiles, ImportFormat, Platforms } from '@es-pack/espack';
+import { createBuildProfiles, ImportFormat, Platforms } from '@es-pack/espack';
 import { espackCopyPluginFactory } from '@es-pack/copy-plugin';
 import { espackHtmlPluginFactory } from '@es-pack/html-plugin';
 
 const NODE_ENV = 'process.env.NODE_ENV';
-const isProdBuild = process.env.NODE_ENV === DefaultBuildProfiles.PROD;
+const isProdBuild = process.env.NODE_ENV === 'production';
 
 export default {
     defaultBuildProfiles: createBuildProfiles(
@@ -15,25 +15,21 @@ export default {
             plugins: [vuePlugin()]
         },
         {
-            [DefaultBuildProfiles.DEV]: {
+            development: {
                 define: {
-                    [NODE_ENV]: DefaultBuildProfiles.DEV
+                    [NODE_ENV]: 'development'
                 }
             },
-            [DefaultBuildProfiles.PROD]: {
+            production: {
                 define: {
-                    [NODE_ENV]: DefaultBuildProfiles.PROD
+                    [NODE_ENV]: 'production'
                 }
             }
         }
     ),
     builds: [
         {
-            scripts: [
-                {
-                    src: './src/index.js'
-                }
-            ],
+            scripts: ['./src/index.js'],
             plugins: [
                 espackCopyPluginFactory({
                     basedir: './public',

@@ -32,7 +32,7 @@ production ready web development setup in no time! (see [templates](https://gith
 - execute any number of builds simultaneously
 - written in 100% typescript
 - easy to hook into plugin api
-- exposing all of esbuild's features while building on them
+- exposing all the esbuild features while building upon them
 
 ## Future goals:
 - Raising the test coverage
@@ -183,6 +183,8 @@ esbuild, and also an option to override the default build profile options for ev
                 }
             }
             ```
+          - Or a simple string representing the source path.
+          - You can mix both of them freely inside the scripts array.
 ## Example espack configs
 - javascript: 
 ```javascript
@@ -199,19 +201,18 @@ export default {
     builds: [
         {
             scripts: [
-                {
-                    src: './src/index.ts'
-                }
+                './src/index.ts'
             ]
         }
     ]
 };
 ```
 - typescript:
-```typescript
-import { createBuildProfiles, IBuilds, ImportFormat, Platforms } from '@es-pack/espack';
 
-const builds: IBuilds = {
+```typescript
+import { createBuildProfiles, IEspackBuilds, ImportFormat, Platforms } from '@es-pack/espack';
+
+const builds: IEspackBuilds = {
     defaultBuildProfiles: createBuildProfiles(
         {
             platform: Platforms.NODE,
@@ -222,9 +223,7 @@ const builds: IBuilds = {
     builds: [
         {
             scripts: [
-                {
-                    src: './src/index.ts'
-                }
+                './src/index.ts'
             ]
         }
     ]
@@ -234,7 +233,7 @@ export default builds;
 ```
 - Using cjs:
 ```javascript
-const { createBuildProfiles, IBuilds, ImportFormat, Platforms } = require('@es-pack/espack');
+const { createBuildProfiles, ImportFormat, Platforms } = require('@es-pack/espack');
 
 exports.default = {
     defaultBuildProfiles: createBuildProfiles(
@@ -247,9 +246,7 @@ exports.default = {
     builds: [
         {
             scripts: [
-                {
-                    src: './src/index.ts'
-                }
+                './src/index.ts'
             ]
         }
     ]
@@ -350,7 +347,7 @@ object as properties.
         ```
         - most of this structure has been copied over from esbuild, so this is subject to change, for
         the latest structure see the esbuild documentation.
-    - **afterWrite**: This lifecycle is run after espack has finished writing the build results to the disk, 
+    - **afterWrite**: This lifecycle is being run after espack has finished writing the build results to the disk, 
       or in watch mode on every rebuild after writing to the disk. 
       Context available in this lifecycle: The results of esbuild and plugin build (only esbuild result in watch mode)
       are passed onto the plugin.
@@ -358,7 +355,7 @@ object as properties.
     a cleanup function which frees up your resources if watch is cancelled.
     Context available in this lifecycle: buildsDir, scripts, defaultBuildProfiles, buildProfiles (for current build), the current build profile, buildReadyScripts, buildResults,
     pluginBuildResult
-    - **onCleanup**: This lifecycle is executed along with the espack shutdown process. Free up any resources you want
+    - **onCleanup**: This lifecycle is being executed along with the espack shutdown process. Free up any resources you want
     here.
     Context available in this lifecycle: buildsDir, scripts, defaultBuildProfiles, buildProfiles (for current build), the current build profile, buildReadyScripts, buildResults,
     pluginBuildResult
@@ -368,6 +365,7 @@ for them.
 - Example plugin to console.log every output file's path:
 ```javascript
 const espackReportPluginFactory = () => {
+    // Return a function for the lifecycles you want to hook into
     const afterBuild = (context) => {
         const { buildResults } = context;
         buildResults.forEach(

@@ -1,18 +1,6 @@
-import {
-    DefaultBuildProfiles,
-    DefaultEntryAssetTransformations,
-    IEntryAssetTransformations,
-    ImportFormat,
-    Platforms
-} from './build.model';
+import { BuildProfile, DefaultBuildProfiles, ImportFormat, Platforms } from '../model';
 
-export const BUILD_ENCODING: 'utf-8' = 'utf-8';
-
-export const ENTRY_POINT_NOT_EXISTS_ERROR_MESSAGE: string =
-    'Could not find the following entry points, check if all of them exist!';
-export const NON_EXISTENT_ENTRY_POINTS_ANNOUNCEMENT_MESSAGE: string = 'The following entry points are non existent:';
-
-const defaultEntryAssetTransformations: IEntryAssetTransformations = {
+const defaultEntryAssetTransformations: BuildProfile = {
     sourcemap: true,
     bundle: true,
     format: ImportFormat.IIFE,
@@ -56,7 +44,7 @@ const defaultEntryAssetTransformations: IEntryAssetTransformations = {
     platform: Platforms.NEUTRAL
 };
 
-export const DEFAULT_ENTRY_ASSET_TRANSFORMATIONS: DefaultEntryAssetTransformations = {
+export const DEFAULT_ENTRY_ASSET_TRANSFORMATIONS: Record<DefaultBuildProfiles, BuildProfile> = {
     [DefaultBuildProfiles.DEV]: {
         ...defaultEntryAssetTransformations
     },
@@ -72,5 +60,3 @@ export const DEFAULT_ENTRY_ASSET_TRANSFORMATIONS: DefaultEntryAssetTransformatio
         }
     }
 } as const;
-
-export const DEFAULT_BUILDS_DIR: string = 'dist';
