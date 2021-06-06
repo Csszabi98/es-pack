@@ -2,7 +2,12 @@ import path from 'path';
 import { build as esbuild, BuildFailure, BuildResult } from 'esbuild';
 import deepEqual from 'deep-equal';
 import { ICommonEspackBuild, IDeterministicEntryAsset, IEspackBuildResult } from '../model';
+import { EsbuildWatcher } from './esbuild-watcher-factory';
 
+/**
+ * Groups entry assets into a single executable esbuild build whenever their build profile does not differ.
+ * @param scripts Input entry assets to group
+ */
 export const groupBuilds = (scripts: IDeterministicEntryAsset[]): ICommonEspackBuild[] => {
     return scripts.reduce<ICommonEspackBuild[]>((acc, curr) => {
         const { src, buildProfile } = curr;
@@ -28,12 +33,12 @@ export const groupBuilds = (scripts: IDeterministicEntryAsset[]): ICommonEspackB
     }, []);
 };
 
-export type EsbuildWatcher = (buildId: string, error: BuildFailure | undefined, result: BuildResult | undefined) => void;
+export type GetEsbuildWatcher = () => Promise<EsbuildWatcher>;
 
-export const buildWithEsbuild = async (
+export const buildWithEsbuild = (
     scripts: IDeterministicEntryAsset[],
     buildsDir: string,
-    onWatch: EsbuildWatcher | undefined
+    getEsbuildWatcher: GetEsbuildWatcher | undefined
 ): Promise<IEspackBuildResult[]> =>
     Promise.all(
         groupBuilds(scripts).map(async (build, index) => {
@@ -46,14 +51,15 @@ export const buildWithEsbuild = async (
                     ...build.buildProfile,
                     outdir: path.join(buildsDir, build.buildProfile.outdir),
                     entryPoints: build.builds,
-                    watch: onWatch
+                    watch: getEsbuildWatcher
                         ? {
-                              onRebuild(error: BuildFailure | null, result: BuildResult | null) {
+                              async onRebuild(error: BuildFailure | null, result: BuildResult | null) {
+                                  const onWatch: EsbuildWatcher = await getEsbuildWatcher();
                                   onWatch(buildId, error || undefined, result || undefined);
                               }
                           }
                         : false,
-                    incremental: !!onWatch,
+                    incremental: !!getEsbuildWatcher,
                     write: false
                 })
             };

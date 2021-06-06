@@ -95,10 +95,13 @@ const entryAssetTransformationRecordSchema: Joi.ObjectSchema<Record<string, Buil
     Record<string, BuildProfile>
 >({}).pattern(Joi.string(), entryAssetTransformationSchema);
 
-const entryAssetSchema: Joi.ObjectSchema<IEntryAsset> = Joi.object<IEntryAsset>({
-    src: JoiRequiredString,
-    buildProfiles: entryAssetTransformationRecordSchema
-}).unknown(false);
+const entryAssetSchema: Joi.AlternativesSchema = Joi.alternatives(
+    Joi.object<IEntryAsset>({
+        src: JoiRequiredString,
+        buildProfiles: entryAssetTransformationRecordSchema
+    }).unknown(false),
+    Joi.string()
+);
 
 const buildSchema: Joi.ObjectSchema<IEspackBuild> = Joi.object<IEspackBuild>({
     scripts: Joi.array().items(entryAssetSchema).required(),

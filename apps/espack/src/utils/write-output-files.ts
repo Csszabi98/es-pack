@@ -1,9 +1,9 @@
 import path from 'path';
 import fs from 'fs';
-import { IEspackBuildResult } from '../model';
+import { BuildResult } from 'esbuild';
 
-export const writeOutputFiles = ({ esbuildBuildResult }: IEspackBuildResult): void =>
-    esbuildBuildResult.outputFiles?.forEach(outFile => {
+export const writeOutputFiles = ({ outputFiles }: BuildResult): void =>
+    outputFiles?.forEach(outFile => {
         const dir: string = path.dirname(outFile.path);
         if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir, { recursive: true });

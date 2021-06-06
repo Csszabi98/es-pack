@@ -10,15 +10,15 @@ import {
     IEspackMarkedPlugin,
     IEspackPlugin
 } from '../model';
-import { checkScripts, unlinkOld, writeOutputFiles } from '../utils';
-import { BuildFailure, BuildResult, OutputFile } from 'esbuild';
+import { checkScripts, writeOutputFiles } from '../utils';
 import fs from 'fs';
 import { DEFAULT_BUILDS_DIR } from '../constants/build.constants';
 import { ProfileBuilder } from './profile-builder';
-import { buildWithEsbuild, EsbuildWatcher } from './build-with-esbuild';
+import { buildWithEsbuild, GetEsbuildWatcher } from './build-with-esbuild';
 import { PluginExecutor } from './plugin-executor/plugin-executor';
 import { BuildReadyPluginExecutor, IPluginBuildResult } from './plugin-executor/build-ready-plugin-executor';
 import { BuiltPluginExecutor } from './plugin-executor/built-plugin-executor';
+import { EsbuildWatcher, esbuildWatcherFactory } from './esbuild-watcher-factory';
 
 interface IBuilder {
     defaultBuildProfiles?: BuildProfiles;
@@ -85,57 +85,21 @@ export const builder = async ({
         singleBuildMode
     }).build();
 
-    let buildResults: IEspackBuildResult[] = [];
-    // eslint-disable-next-line prefer-const
-    let builtPluginExecutor: BuiltPluginExecutor;
-
-    // TODO: Extract this logic
-    let onWatch: EsbuildWatcher | undefined;
+    let getEsbuildWatcher: GetEsbuildWatcher | undefined;
+    let resolveEsbuildWatcher: ((value: EsbuildWatcher) => void) | undefined;
     if (watch) {
-        onWatch = async (buildId: string, error: BuildFailure | undefined, result: BuildResult | undefined) => {
-            if (result) {
-                console.log('[watch] espack after works started...');
-                const label: string = '[watch] espack after works finished under';
-                console.time(label);
-
-                const previousBuildResultIndex: number = buildResults.findIndex(
-                    buildResult => buildResult.buildId === buildId
-                );
-                const previousBuildResult: IEspackBuildResult = buildResults[previousBuildResultIndex];
-                const newBuildResult: IEspackBuildResult = {
-                    ...previousBuildResult,
-                    esbuildBuildResult: result
-                };
-
-                buildResults.splice(previousBuildResultIndex, 1, newBuildResult);
-
-                console.log('[watch] executing plugins...');
-                builtPluginExecutor.executeLifecycle(BuildLifecycles.AFTER_BUILD);
-                console.log('[watch] plugins executed...');
-
-                console.log('[watch] build writing changes');
-                writeOutputFiles(newBuildResult);
-                console.log('[watch] build changes written');
-                console.timeEnd(label);
-
-                const staleFiles: OutputFile[] | undefined = previousBuildResult.esbuildBuildResult.outputFiles?.filter(
-                    oldOutFile =>
-                        !newBuildResult.esbuildBuildResult.outputFiles?.some(
-                            newOutFile => newOutFile.path === oldOutFile.path
-                        )
-                );
-                if (staleFiles?.length) {
-                    console.log('[watch] cleaning stale files...');
-                    unlinkOld(staleFiles);
-                    console.log('[watch] stale files cleaned');
-                }
-
-                builtPluginExecutor.executeLifecycle(BuildLifecycles.AFTER_WRITE);
+        let cachedWatcher: EsbuildWatcher | undefined;
+        const esbuildWatcherPromise: Promise<EsbuildWatcher> = new Promise(resolve => {
+            resolveEsbuildWatcher = resolve;
+        });
+        getEsbuildWatcher = async (): Promise<EsbuildWatcher> => {
+            if (!cachedWatcher) {
+                // Race condition can be safely ignored here, as the promise is only resolved once, and multiple
+                // modifications of the cachedWatcher variable would all set the same value to it.
+                // eslint-disable-next-line require-atomic-updates
+                cachedWatcher = await esbuildWatcherPromise;
             }
-
-            if (error) {
-                console.error(error.message);
-            }
+            return cachedWatcher;
         };
     }
 
@@ -154,24 +118,26 @@ export const builder = async ({
     const buildPlugins: Promise<IPluginBuildResult>[] = buildReadyPluginExecutor.executeLifecycle(BuildLifecycles.BUILD);
 
     const results: [IEspackBuildResult[], IPluginBuildResult[]] = await Promise.all([
-        buildWithEsbuild(buildReadyScripts, buildsDir, onWatch),
+        buildWithEsbuild(buildReadyScripts, buildsDir, getEsbuildWatcher),
         Promise.all(buildPlugins)
     ]);
-    buildResults = results[0];
-    const pluginBuildResults: IPluginBuildResult[] = results[1];
+    const [buildResults, pluginBuildResults] = results;
 
-    builtPluginExecutor = new BuiltPluginExecutor(allPlugins, {
+    const builtPluginExecutor: BuiltPluginExecutor = new BuiltPluginExecutor(allPlugins, {
         ...basePluginContext,
         buildReadyScripts,
         buildResults,
         pluginBuildResults
     });
+    if (resolveEsbuildWatcher) {
+        resolveEsbuildWatcher(esbuildWatcherFactory(builtPluginExecutor));
+    }
 
     // After build
     builtPluginExecutor.executeLifecycle(BuildLifecycles.AFTER_BUILD);
 
     console.log('Writing changes...');
-    buildResults.forEach(writeOutputFiles);
+    buildResults.forEach(espackBuildResult => writeOutputFiles(espackBuildResult.esbuildBuildResult));
     console.log('Changes written...');
 
     builtPluginExecutor.executeLifecycle(BuildLifecycles.AFTER_WRITE);
@@ -179,7 +145,7 @@ export const builder = async ({
     let pluginWatchCleanups: ICleanup[] | undefined;
     if (watch) {
         console.log('Registering watchers...');
-        // On watch
+        // On watch, register the plugin watchers
         pluginWatchCleanups = builtPluginExecutor.executeLifecycle(BuildLifecycles.WATCH);
         console.log('Watchers registered...');
     }

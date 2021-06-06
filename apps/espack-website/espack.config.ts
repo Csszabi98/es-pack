@@ -72,11 +72,7 @@ const builds: IEspackBuilds = {
     ),
     builds: [
         {
-            scripts: [
-                {
-                    src: './src/index.tsx'
-                }
-            ],
+            scripts: ['./src/index.tsx'],
             plugins: [
                 espackCopyPluginFactory({
                     basedir: './public',

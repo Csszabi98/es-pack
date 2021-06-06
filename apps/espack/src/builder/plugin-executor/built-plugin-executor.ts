@@ -1,3 +1,4 @@
+import { BuildResult } from 'esbuild';
 import { BuildReadyPluginExecutor, IPluginBuildResult } from './build-ready-plugin-executor';
 import {
     BuildLifecycles,
@@ -21,6 +22,20 @@ export class BuiltPluginExecutor extends BuildReadyPluginExecutor {
         super(plugins, baseContext);
         this.buildResults = baseContext.buildResults;
         this.pluginBuildResults = baseContext.pluginBuildResults;
+    }
+
+    public updateEsbuildBuildResult(buildId: string, esbuildBuildResult: BuildResult): BuildResult | undefined {
+        const espackBuildResult: IEspackBuildResult | undefined = this.buildResults.find(
+            espackBuildResult => espackBuildResult.buildId === buildId
+        );
+        if (!espackBuildResult) {
+            return;
+        }
+
+        const previousBuildResult: BuildResult = espackBuildResult.esbuildBuildResult;
+        espackBuildResult.esbuildBuildResult = esbuildBuildResult;
+
+        return previousBuildResult;
     }
 
     public executeLifecycle(
