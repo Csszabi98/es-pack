@@ -33,7 +33,7 @@
 ```javascript
 import { sassPlugin } from '@es-pack/esbuild-sass-plugin';
 
-const plugins = [sassPluin()];
+const plugins = [sassPlugin()];
 // ...
 ```
 - With espack add it the build options plugins array like the following:
