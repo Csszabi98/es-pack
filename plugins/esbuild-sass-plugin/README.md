@@ -12,20 +12,20 @@
 ## Installation with esbuild
 
 ### pnpm
-`pnpm add -D esbuild @es-pack/html-plugin`
+`pnpm add -D esbuild @es-pack/esbuild-sass-plugin`
 ### yarn
-`yarn add -D esbuild @es-pack/html-plugin`
+`yarn add -D esbuild @es-pack/esbuild-sass-plugin`
 ### npm
-`npm install -D esbuild @es-pack/html-plugin`
+`npm install -D esbuild @es-pack/esbuild-sass-plugin`
 
 ## Installation with espack
 
 ### pnpm
-`pnpm add -D esbuild @es-pack/espack @es-pack/html-plugin`
+`pnpm add -D esbuild @es-pack/espack @es-pack/esbuild-sass-plugin`
 ### yarn
-`yarn add -D esbuild @es-pack/espack @es-pack/html-plugin`
+`yarn add -D esbuild @es-pack/espack @es-pack/esbuild-sass-plugin`
 ### npm
-`npm install -D esbuild @es-pack/espack @es-pack/html-plugin`
+`npm install -D esbuild @es-pack/espack @es-pack/esbuild-sass-plugin`
 
 ## How to use it?
 
