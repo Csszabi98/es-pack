@@ -1,4 +1,4 @@
-### A sass plugin for esbuild written in typescript.
+### A Sass plugin for esbuild written in TypeScript.
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/38193720/116794320-7b15ab00-aacc-11eb-8b4f-71aafd37b5eb.png" 
@@ -12,20 +12,32 @@
 ## Installation with esbuild
 
 ### pnpm
-`pnpm add -D esbuild @es-pack/esbuild-sass-plugin`
+```console
+$ pnpm add -D esbuild @es-pack/esbuild-sass-plugin
+```
 ### yarn
-`yarn add -D esbuild @es-pack/esbuild-sass-plugin`
+```console
+$ yarn add -D esbuild @es-pack/esbuild-sass-plugin
+```
 ### npm
-`npm install -D esbuild @es-pack/esbuild-sass-plugin`
+```console
+$ npm install -D esbuild @es-pack/esbuild-sass-plugin
+```
 
 ## Installation with espack
 
 ### pnpm
-`pnpm add -D esbuild @es-pack/espack @es-pack/esbuild-sass-plugin`
+```console
+$ pnpm add -D esbuild @es-pack/espack @es-pack/esbuild-sass-plugin
+```
 ### yarn
-`yarn add -D esbuild @es-pack/espack @es-pack/esbuild-sass-plugin`
+```console
+$ yarn add -D esbuild @es-pack/espack @es-pack/esbuild-sass-plugin
+```
 ### npm
-`npm install -D esbuild @es-pack/espack @es-pack/esbuild-sass-plugin`
+```console
+$ npm install -D esbuild @es-pack/espack @es-pack/esbuild-sass-plugin
+```
 
 ## How to use it?
 
@@ -36,7 +48,7 @@ import { sassPlugin } from '@es-pack/esbuild-sass-plugin';
 const plugins = [sassPlugin()];
 // ...
 ```
-- With espack add it the build options plugins array like the following:
+- With espack, add it the build options plugins array like the following:
 ```javascript
 import { createBuildProfiles } from '@es-pack/espack';
 import { sassPlugin } from '@es-pack/esbuild-sass-plugin';
