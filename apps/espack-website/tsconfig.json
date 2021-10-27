@@ -1,8 +1,0 @@
-{
-    "extends": "@es-pack/ts-config/src/frontend-config.json",
-    "compilerOptions": {
-        "baseUrl": "."
-    },
-    "include": ["src", "espack.config.ts", "espack.plugins.ts"],
-    "exclude": ["node_modules", "*.spec.ts"]
-}
