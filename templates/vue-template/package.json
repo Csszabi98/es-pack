@@ -16,7 +16,7 @@
         "vue": "2.6.12"
     },
     "devDependencies": {
-        "esbuild": "0.11.11",
+        "esbuild": "0.13.9",
         "esbuild-vue": "0.3.0",
         "@es-pack/espack": "workspace:*",
         "@es-pack/copy-plugin": "workspace:*",

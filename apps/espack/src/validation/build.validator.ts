@@ -45,7 +45,8 @@ const espackPluginInstanceSchema: Joi.ObjectSchema<IEspackPlugin> = Joi.object({
 const espackPluginArraySchema: Joi.ArraySchema = Joi.array().items(espackPluginInstanceSchema);
 
 const entryAssetTransformationSchema: Joi.ObjectSchema<BuildProfile> = Joi.object<BuildProfile>({
-    sourcemap: Joi.boolean(),
+    allowOverwrite: Joi.boolean(),
+    sourcemap: Joi.alternatives().try(Joi.boolean(), Joi.string().valid('external', 'inline', 'both')),
     bundle: Joi.boolean(),
     platform: Joi.string().valid(...Object.values(Platforms)),
     format: Joi.string().valid(...Object.values(ImportFormat)),
@@ -60,12 +61,14 @@ const entryAssetTransformationSchema: Joi.ObjectSchema<BuildProfile> = Joi.objec
     external: JoiStringArray,
     entryNames: Joi.string(),
     globalName: Joi.string(),
+    ignoreAnnotations: Joi.boolean(),
     incremental: Joi.boolean(),
+    jsx: Joi.string().valid('transform', 'preserve'),
     jsxFactory: Joi.string(),
     jsxFragment: Joi.string(),
     keepNames: Joi.boolean(),
     loader: loaderSchema,
-    logLevel: Joi.string().valid('info', 'warning', 'error', 'silent'),
+    logLevel: Joi.string().valid('verbose', 'debug', 'info', 'warning', 'error', 'silent'),
     logLimit: Joi.number(),
     mainFields: JoiStringArray,
     minify: Joi.boolean(),
@@ -88,7 +91,8 @@ const entryAssetTransformationSchema: Joi.ObjectSchema<BuildProfile> = Joi.objec
     publicPath: Joi.string(),
     chunkNames: Joi.string(),
     inject: JoiStringArray,
-    pure: JoiStringArray
+    pure: JoiStringArray,
+    legalComments: Joi.string().valid('none', 'inline', 'eof', 'linked', 'external')
 }).unknown(false);
 
 const entryAssetTransformationRecordSchema: Joi.ObjectSchema<Record<string, BuildProfile>> = Joi.object<
