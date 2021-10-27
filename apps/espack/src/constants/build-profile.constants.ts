@@ -1,6 +1,9 @@
 import { BuildProfile, DefaultBuildProfiles, ImportFormat, Platforms } from '../model';
 
 const defaultEntryAssetTransformations: BuildProfile = {
+    allowOverwrite: false,
+    ignoreAnnotations: false,
+    legalComments: 'eof',
     sourcemap: true,
     bundle: true,
     format: ImportFormat.IIFE,
@@ -20,6 +23,7 @@ const defaultEntryAssetTransformations: BuildProfile = {
     external: [],
     globalName: '',
     incremental: false,
+    jsx: 'transform',
     jsxFactory: 'React.createElement',
     jsxFragment: 'React.Fragment',
     keepNames: false,

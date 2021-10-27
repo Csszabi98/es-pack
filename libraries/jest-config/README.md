@@ -7,9 +7,9 @@
   "devDependencies": {
     "@es-pack/jest-config": "workspace:*",
     "@types/jest": "26.0.22",
-    "esbuild": "0.11.11",
+    "esbuild": "0.13.9",
     "esbuild-jest": "0.5.0",
-    "jest": "26.6.3" 
+    "jest": "26.6.3"
   },
   "scrips": {
     "test": "jest --coverage --watch --collectCoverageOnlyFrom",

@@ -17,7 +17,7 @@
         "react-dom": "17.0.2"
     },
     "devDependencies": {
-        "esbuild": "0.11.11",
+        "esbuild": "0.13.9",
         "@es-pack/espack": "workspace:*",
         "@es-pack/copy-plugin": "workspace:*",
         "@es-pack/html-plugin": "workspace:*",
