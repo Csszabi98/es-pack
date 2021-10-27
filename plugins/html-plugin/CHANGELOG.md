@@ -1,6 +1,17 @@
 # Change Log - @es-pack/html-plugin
 
-This log was last generated on Thu, 03 Jun 2021 21:17:58 GMT and should not be manually modified.
+This log was last generated on Wed, 27 Oct 2021 21:57:58 GMT and should not be manually modified.
+
+## 3.0.0
+Wed, 27 Oct 2021 21:57:58 GMT
+
+### Breaking changes
+
+- Update esbuild version to 0.13.X
+
+### Patches
+
+- Adjusted to the new release of espack.
 
 ## 2.0.1
 Thu, 03 Jun 2021 21:17:58 GMT

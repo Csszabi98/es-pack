@@ -1,7 +1,7 @@
 {
     "name": "@es-pack/esbuild-sass-plugin",
     "author": "Szabolcs Csizmadia",
-    "version": "1.0.4",
+    "version": "2.0.0",
     "main": "./dist/cjs/index.js",
     "module": "./dist/esm/index.js",
     "exports": {

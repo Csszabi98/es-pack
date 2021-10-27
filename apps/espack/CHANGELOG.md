@@ -1,6 +1,18 @@
 # Change Log - @es-pack/espack
 
-This log was last generated on Thu, 03 Jun 2021 21:17:58 GMT and should not be manually modified.
+This log was last generated on Wed, 27 Oct 2021 21:57:58 GMT and should not be manually modified.
+
+## 3.0.0
+Wed, 27 Oct 2021 21:57:58 GMT
+
+### Breaking changes
+
+- Update esbuild version to 0.13.X, patch vm2 vulnerability with vm2 version 3.9.5
+- Renamed certain interfaces: IBuilds -> IEspackBuilds, IBuild -> IEspackBuild, IEspackBuilds now have the esbuild build result under the esbuildBuildResult property rather than the buildResult. Exposed the builder function to be able to run espack programmatically.
+
+### Minor changes
+
+- Scripts in the configs now can be provided as simple string entries if no build profiles is defined by their side.
 
 ## 2.1.0
 Thu, 03 Jun 2021 21:17:58 GMT
