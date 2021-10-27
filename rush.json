@@ -449,12 +449,6 @@
             "reviewCategory": "production",
             "shouldPublish": true
         },
-        {
-            "packageName": "@es-pack/espack-website",
-            "projectFolder": "apps/espack-website",
-            "reviewCategory": "production",
-            "shouldPublish": false
-        },
         // libraries
         {
             "packageName": "@es-pack/ts-config",

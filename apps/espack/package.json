@@ -26,14 +26,14 @@
         "test:ci": "jest --all --coverage"
     },
     "peerDependencies": {
-        "esbuild": "^0.11.0"
+        "esbuild": "^0.13.0"
     },
     "dependencies": {
         "deep-copy": "1.4.2",
         "deep-equal": "2.0.5",
         "joi": "17.4.0",
         "tslib": "2.2.0",
-        "vm2": "3.9.3"
+        "vm2": "3.9.5"
     },
     "devDependencies": {
         "@es-pack/jest-config": "workspace:*",
