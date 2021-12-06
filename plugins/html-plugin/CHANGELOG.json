@@ -2,6 +2,21 @@
   "name": "@es-pack/html-plugin",
   "entries": [
     {
+      "version": "3.0.1",
+      "tag": "@es-pack/html-plugin_v3.0.1",
+      "date": "Mon, 06 Dec 2021 23:38:15 GMT",
+      "comments": {
+        "dependency": [
+          {
+            "comment": "Updating dependency \"@es-pack/espack\" to `3.0.1`"
+          },
+          {
+            "comment": "Updating dependency \"@es-pack/espack\" to `3.0.1`"
+          }
+        ]
+      }
+    },
+    {
       "version": "3.0.0",
       "tag": "@es-pack/html-plugin_v3.0.0",
       "date": "Wed, 27 Oct 2021 21:57:58 GMT",

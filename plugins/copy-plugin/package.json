@@ -1,7 +1,7 @@
 {
     "name": "@es-pack/copy-plugin",
     "author": "Szabolcs Csizmadia",
-    "version": "3.0.0",
+    "version": "3.0.1",
     "main": "./dist/cjs/index.js",
     "module": "./dist/esm/index.js",
     "exports": {

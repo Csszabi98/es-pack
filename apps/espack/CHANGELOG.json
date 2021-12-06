@@ -2,6 +2,18 @@
   "name": "@es-pack/espack",
   "entries": [
     {
+      "version": "3.0.1",
+      "tag": "@es-pack/espack_v3.0.1",
+      "date": "Mon, 06 Dec 2021 23:38:15 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Enable define parameters to be of other types than string literals"
+          }
+        ]
+      }
+    },
+    {
       "version": "3.0.0",
       "tag": "@es-pack/espack_v3.0.0",
       "date": "Wed, 27 Oct 2021 21:57:58 GMT",

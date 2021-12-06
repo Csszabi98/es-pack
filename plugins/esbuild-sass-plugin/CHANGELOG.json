@@ -2,6 +2,18 @@
   "name": "@es-pack/esbuild-sass-plugin",
   "entries": [
     {
+      "version": "2.0.1",
+      "tag": "@es-pack/esbuild-sass-plugin_v2.0.1",
+      "date": "Mon, 06 Dec 2021 23:38:15 GMT",
+      "comments": {
+        "dependency": [
+          {
+            "comment": "Updating dependency \"@es-pack/espack\" to `3.0.1`"
+          }
+        ]
+      }
+    },
+    {
       "version": "2.0.0",
       "tag": "@es-pack/esbuild-sass-plugin_v2.0.0",
       "date": "Wed, 27 Oct 2021 21:57:58 GMT",

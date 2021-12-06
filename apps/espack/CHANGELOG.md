@@ -1,6 +1,13 @@
 # Change Log - @es-pack/espack
 
-This log was last generated on Wed, 27 Oct 2021 21:57:58 GMT and should not be manually modified.
+This log was last generated on Mon, 06 Dec 2021 23:38:15 GMT and should not be manually modified.
+
+## 3.0.1
+Mon, 06 Dec 2021 23:38:15 GMT
+
+### Patches
+
+- Enable define parameters to be of other types than string literals
 
 ## 3.0.0
 Wed, 27 Oct 2021 21:57:58 GMT
