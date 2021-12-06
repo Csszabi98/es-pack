@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "@es-pack/espack",
+      "comment": "Enable define parameters to be of other types than string literals",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@es-pack/espack",
+  "email": "csizmadia98@gmail.com"
+}
