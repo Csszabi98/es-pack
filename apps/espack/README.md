@@ -1,7 +1,7 @@
 ## A build tool running on [esbuild](https://github.com/evanw/esbuild)
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/38193720/116794320-7b15ab00-aacc-11eb-8b4f-71aafd37b5eb.png" 
+  <img src="https://user-images.githubusercontent.com/38193720/116794320-7b15ab00-aacc-11eb-8b4f-71aafd37b5eb.png"
     alt="espack: A build tool running on esbuild">
   <br>
   <a href="https://github.com/Csszabi98/es-pack/tree/main/plugins">Plugins</a>
@@ -14,8 +14,8 @@ any number of builds.
 
 However once you start using espack plugins it shows its true power!
 
-With pre-written plugins such as [EspackHtmlPlugin](https://github.com/Csszabi98/es-pack/tree/main/plugins/html-plugin) and 
-[EspackCopyPlugin](https://github.com/Csszabi98/es-pack/tree/main/plugins/html-plugin/copy-plugin) it's super easy to throw together a 
+With pre-written plugins such as [EspackHtmlPlugin](https://github.com/Csszabi98/es-pack/tree/main/plugins/html-plugin) and
+[EspackCopyPlugin](https://github.com/Csszabi98/es-pack/tree/main/plugins/html-plugin/copy-plugin) it's super easy to throw together a
 production ready web development setup in no time! (see [templates](https://github.com/Csszabi98/es-pack/tree/main/templates))
 
 ## Installation
@@ -38,7 +38,7 @@ production ready web development setup in no time! (see [templates](https://gith
 - Raising the test coverage
 - Creating documentation website
 - Writing more plugins
-- Warn about possible overwrite of output files when it might happen. 
+- Warn about possible overwrite of output files when it might happen.
     - Explanation:
         - Currently, you need to make sure yourself that your output scripts are not overwriting each other.
         As this is a really rare case and easy to diagnose, but can be complicated to implement, it has been
@@ -52,7 +52,7 @@ npx espack
 ```
 
 ## CLI options:
-- **profile**: The current build profile. There are two pre included build profiles: development/production. 
+- **profile**: The current build profile. There are two pre included build profiles: development/production.
 Defaults to production.
 ```shell
 pnpx espack --profile production
@@ -71,7 +71,7 @@ pnpx espack --watch
 
 ## Configuration options:
 - **buildsDir**: Output base directory of espack (defaults to dist)
-- **defaultBuildProfiles**: This entry allows you to describe any custom build profile to be used by 
+- **defaultBuildProfiles**: This entry allows you to describe any custom build profile to be used by
 esbuild, and also an option to override the default build profile options for every build.
     - **Defining your own build profiles**:
         ```json5
@@ -93,7 +93,7 @@ esbuild, and also an option to override the default build profile options for ev
         }
         ```
     - Overriding these options can get tedious and verbose, so espack provides a helper
-    function to make this process easier and more readable: 
+    function to make this process easier and more readable:
         ```javascript
         createBuildProfiles(commonOptions, profileOverrides, disableDefaultProfileExtension)
         ```
@@ -107,7 +107,7 @@ esbuild, and also an option to override the default build profile options for ev
             ```javascript
             import { DefaultBuildProfiles, ImportFormat, Platforms, createBuildProfiles } from '@es-pack/espack';
             import { dependencies } from './package.json';
-          
+
             const buildProfiles = createBuildProfiles(
                 {
                     platform: Platforms.NODE, // Set platfrom to node
@@ -124,7 +124,7 @@ esbuild, and also an option to override the default build profile options for ev
             - Define your own profiles:
             ```javascript
             import { ImportFormat, Platforms, createBuildProfiles } from '@es-pack/espack';
-          
+
             const buildProfiles = createBuildProfiles(
                 {
                     platform: Platforms.NODE,
@@ -186,7 +186,7 @@ esbuild, and also an option to override the default build profile options for ev
           - Or a simple string representing the source path.
           - You can mix both of them freely inside the scripts array.
 ## Example espack configs
-- javascript: 
+- javascript:
 ```javascript
 import { createBuildProfiles, ImportFormat, Platforms } from '@es-pack/espack';
 
@@ -252,7 +252,7 @@ exports.default = {
     ]
 };
 ```
-- for espack configs on common templates like web development see [templates](https://github.com/Csszabi98/es-pack/tree/main/templates)  
+- for espack configs on common templates like web development see [templates](https://github.com/Csszabi98/es-pack/tree/main/templates)
 
 
 ## How to define espack plugins?
@@ -262,15 +262,15 @@ exports.default = {
 hook into with your plugin by providing the enabled lifecycles to the
 object as properties.
 - Espack currently lets you hook into the following lifecycles of the build process:
-    - **beforeResourceCheck**: Executed by esbuild before checking for build resource 
+    - **beforeResourceCheck**: Executed by esbuild before checking for build resource
       accessibility. Context available in this lifecycle: buildsDir, scripts, defaultBuildProfiles, buildProfiles (for current build), the current build profile
     - **onResourceCheck**: Executed parallel to espack's own resource checking mechanisms.
       You can check for any required resources by your plugin, espack will wait for every plugin
       to complete before proceeding onward. Context available in this lifecycle: buildsDir, scripts, defaultBuildProfiles, buildProfiles, the current build profile
-    - **afterResourceCheck**: Executed after the resource check process has been done. You can do 
+    - **afterResourceCheck**: Executed after the resource check process has been done. You can do
       any additional modifications you wish to make to the context before the scripts are processed in the next cycle.
       Context available in this lifecycle: buildsDir, scripts, defaultBuildProfiles, buildProfiles, the current build profile
-    - **beforeBuild**: Executed right before the build process begins with esbuild. The input scripts and build 
+    - **beforeBuild**: Executed right before the build process begins with esbuild. The input scripts and build
       profiles have been processed by this point, into a digestible format by esbuild.
       Context available in this lifecycle: buildsDir, scripts, defaultBuildProfiles, buildProfiles, the current build profile, buildReadyScripts
         - buildReadyScripts structure:
@@ -280,19 +280,19 @@ object as properties.
             "buildProfile": {
                 // esbuild build options...
             }
-        }  
+        }
         ```
     - **onBuild**: The buildReadyScripts are grouped together based on their build options, if possible. Espack runs
       esbuild on these grouped options with the previously determined options. You can define your own
-      resource heavy build operation here, which will be executed parallel to the esbuild build. The result of your 
-      build operation will be passed into your plugin in the next lifecycle, so there is no need for you to save it's 
+      resource heavy build operation here, which will be executed parallel to the esbuild build. The result of your
+      build operation will be passed into your plugin in the next lifecycle, so there is no need for you to save it's
       result.
       Context available in this lifecycle: buildsDir, scripts, defaultBuildProfiles, buildProfiles (for current build), the current build profile, buildReadyScripts
     - **afterBuild**: This lifecycle is run after esbuild has finished, or in watch mode after every rebuild. The results
       of esbuild and plugin build (only esbuild result in watch mode) are passed onto the plugin. Espack will write the
       results of esbuild after this lifecycle to the disk, so you can modify the esbuild results if you want to, though
       this is generally not recommended! (such operations should be done through esbuild plugins!)
-      Context available in this lifecycle: buildsDir, scripts, defaultBuildProfiles, buildProfiles (for current build), the current build profile, buildReadyScripts, buildResults, 
+      Context available in this lifecycle: buildsDir, scripts, defaultBuildProfiles, buildProfiles (for current build), the current build profile, buildReadyScripts, buildResults,
       pluginBuildResult (if any, also generic)
         - **buildResults** structure:
         ```json5
@@ -347,8 +347,8 @@ object as properties.
         ```
         - most of this structure has been copied over from esbuild, so this is subject to change, for
         the latest structure see the esbuild documentation.
-    - **afterWrite**: This lifecycle is being run after espack has finished writing the build results to the disk, 
-      or in watch mode on every rebuild after writing to the disk. 
+    - **afterWrite**: This lifecycle is being run after espack has finished writing the build results to the disk,
+      or in watch mode on every rebuild after writing to the disk.
       Context available in this lifecycle: The results of esbuild and plugin build (only esbuild result in watch mode)
       are passed onto the plugin.
     - **registerCustomWatcher**: This lifecycle lets you register your custom watcher functions. You need to return
@@ -373,7 +373,7 @@ const espackReportPluginFactory = () => {
                 buildResult.outputFiles && console.log(buildResult.outputFiles.map(outputFile => outputFile.path))
         );
     };
-    
+
     return {
         name: '@es-pack/report-plugin',
         afterBuild
