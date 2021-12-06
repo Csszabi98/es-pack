@@ -41,17 +41,6 @@ export class ProfileBuilder {
         this._watch = watch;
     }
 
-    private static _mapEnvironmentVariables(environmentVariables: Record<string, string>): Record<string, string> {
-        return Object.entries(environmentVariables).reduce(
-            (acc, [key, value]) => ({
-                // TODO: Warning | Error for duplicate keys
-                ...acc,
-                [key]: `"${value}"`
-            }),
-            {}
-        );
-    }
-
     private static _extractPartialBuildProfile(
         buildProfiles: BuildProfiles,
         buildProfileName: string
@@ -97,8 +86,6 @@ export class ProfileBuilder {
                     ...scriptOptions
                 }
             };
-
-            result.buildProfile.define = ProfileBuilder._mapEnvironmentVariables(result.buildProfile.define);
 
             const { outdir } = result.buildProfile;
             if (!this._singleBuildMode && outdir === '') {
